@@ -58,9 +58,12 @@ public:
 
   //
   // Description:
-  //  Tells if the exact option iValue is specified as a parameter.
+  //  Tells if the option iValue is specified as a parameter.
   // Parameters:
-  //  iValue: The option we are looking for including any option prefix like the following characters: /, - or --
+  //  iValue: The option we are looking for.
+  //          May include any prefix like the following characters: "-name", "--name", "/name".
+  //          If the option is not found, the function will also try finding a value using the list
+  //          of known prefixes. See getOptionPrefixes() for more information.
   //  iCaseSensitive: Defines if the search is case sensitive or not. If not specified, the search is case sensitive.
   //  oIndex: The index where the option was found. Set to -1 if option iValue if not found.
   // Return:
@@ -72,13 +75,15 @@ public:
   
   //
   // Description:
-  //  Tells if the exact argument named value iValue is specified as a parameter.
+  //  Tells if the argument named value iValue is specified as a parameter.
   //  Named values are specified with the following format: [prefix]name=value (where prefix is optional)
   // Parameters:
-  //  iValueName: The option's name are looking for.
+  //  iValueName: The option's name we are looking for.
   //              The prefix is optional. Can be as simple as "name=value"
-  //              Must include any prefix like the following characters: "-name=", "--name=", "/name="
-  //              Must include the equal sign.
+  //              May include any prefix like the following characters: "-name=", "--name=", "/name=".
+  //              If the option is not found, the function will also try finding a value using the list
+  //              of known prefixes. See getOptionPrefixes() for more information.
+  //              The ending equal sign in the value name is optional. "/name" is identical to "/name="
   //  iCaseSensitive: Defines if the search is case sensitive or not. If not specified, the search is case sensitive.
   //  oIndex: The index where the option was found. Set to -1 if option if not found.
   //  oValue: The value of the option name. Set to empty string (or 0) if not found.
@@ -98,7 +103,9 @@ public:
   // Parameters:
   //  iValueName: The option's name are looking for.
   //              The prefix is optional. Can be as simple as "name"
-  //              Must include any prefix like the following characters: "-name", "--name", "/name"
+  //              May include any prefix like the following characters: "-name", "--name", "/name".
+  //              If the option is not found, the function will also try finding a value using the list
+  //              of known prefixes. See getOptionPrefixes() for more information.
   //  iCaseSensitive: Defines if the search is case sensitive or not. If not specified, the search is case sensitive.
   //  oIndex: The index where the option was found. Set to -1 if option if not found.
   //  oValue: The value of the option name. Set to empty string (or 0) if not found.
@@ -135,8 +142,10 @@ public:
   // Parameters:
   //  iValueName: The option's name we are looking for.
   //              The prefix is optional. Can be as simple as "name=value"
-  //              Must include any prefix like the following characters: "-name=", "--name=", "/name="
-  //              Must include the equal sign.
+  //              May include any prefix like the following characters: "-name=", "--name=", "/name=".
+  //              If the option is not found, the function will also try finding a value using the list
+  //              of known prefixes. See getOptionPrefixes() for more information.
+  //              The ending equal sign in the value name is optional. "/name" is identical to "/name="
   //  iCaseSensitive: Defines if the search is case sensitive or not. If not specified, the search is case sensitive.
   // Returns:
   //  Returns the option's value if found. Returns an empty string otherwise
@@ -163,7 +172,9 @@ public:
   // Parameters:
   //  iValueName: The option's name we are looking for.
   //              The prefix is optional. Can be as simple as "name"
-  //              Must include any prefix like the following characters: "-name", "--name", "/name"
+  //              May include any prefix like the following characters: "-name", "--name", "/name".
+  //              If the option is not found, the function will also try finding a value using the list
+  //              of known prefixes. See getOptionPrefixes() for more information.
   //  iCaseSensitive: Defines if the search is case sensitive or not. If not specified, the search is case sensitive.
   // Returns:
   //  Returns the option's value if found. Returns an empty string otherwise
@@ -171,11 +182,55 @@ public:
   std::string extractNextValue(const char * iValueName);
   std::string extractNextValue(const char * iValueName, bool iCaseSensitive);
 
+  //
+  // Description:
+  //  Returns the list of configured prefixes
+  // Returns:
+  //  Returns the list of configured prefixes
+  //
+  const StringList & getOptionPrefixes();
+
+  //
+  // Description:
+  //  Add the given prefix to the list of configured prefixes.
+  // Parameters:
+  //  iValue: A new argument option prefix. ie "-", "--" or "/"
+  // Returns:
+  //  Returns true if the prefix was added to the list. Returns false otherwise.
+  //
+  bool addOptionPrefix(const char * iValue);
+
+  //
+  // Description:
+  //  Removes the given prefix from the list of configured prefixes.
+  // Parameters:
+  //  iValue: The argument option prefix to remove. ie "-", "--" or "/"
+  // Returns:
+  //  Returns true if the prefix was removed from the list. Returns false otherwise.
+  //
+  bool removeOptionPrefix(const char * iValue);
+
+  //
+  // Description:
+  //  Clears/Empty the list of configured prefixes.
+  //
+  void clearOptionPrefixes();
+
 private:
 
   void rebuildArgv();
   char** mArgv;
   bool isValid(int iIndex) const;
+  static std::string equalize(const std::string & iValue);
+  static std::string equalize(const char * iValue);
+  static void equalize(std::string & iValue);
+  std::string rebuildArgumentPrefix(const char * iValueName, const std::string & iNewPrefix) const;
+
+  //find methods that searches for the exact iValue, iValueName disregarding the prefixes
+  bool findOption2(const char * iValue, bool iCaseSensitive, int & oIndex) const;
+  bool findValue2(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const;
+  bool findNextValue2(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const;
 
   StringList mArguments;
+  StringList mPrefixes;
 };
