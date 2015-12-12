@@ -772,3 +772,24 @@ TEST_F(TestArgumentList, testWrongPrefixes)
   ASSERT_FINDNEXTVALUE(   "-help",   true,  4, "count=5" ); //use - instead of --
 #undef ASSERT_FINDNEXTVALUE
 }
+
+TEST_F(TestArgumentList, testEqualize)
+{
+  //prepare
+  char* argv[] = {"test.exe", "/p=7", "/p", "-logfile=log.txt", "--help", "count=5", NULL};
+  int argc = sizeof(argv)/sizeof(argv[0]) - 1;
+
+  ArgumentList m;
+  m.init(argc, argv);
+  setDefaultOptionPrefix(m);
+
+  int index = 0;
+  std::string value;
+#define ASSERT_FINDVALUE( text, expectedResult, expectedIndex, expectedValue) index = -1; value="foobar"; ASSERT_TRUE( m.findValue(text, false /*not case sensitive*/, index, value) == expectedResult ); ASSERT_EQ( index, expectedIndex ); ASSERT_EQ( value, expectedValue );
+  ASSERT_FINDVALUE(   "/noEXIST",  false, -1,        "" );
+  ASSERT_FINDVALUE(  "-logFILE=",   true,  3, "log.txt" );
+  ASSERT_FINDVALUE(   "-logFILE",   true,  3, "log.txt" );
+  ASSERT_FINDVALUE(   "-LOGFILE",   true,  3, "log.txt" );
+  ASSERT_FINDVALUE(   "-logfile",   true,  3, "log.txt" );
+#undef ASSERT_FINDVALUE
+}
