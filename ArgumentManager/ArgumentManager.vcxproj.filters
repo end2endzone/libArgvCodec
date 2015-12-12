@@ -30,6 +30,9 @@
     <ClCompile Include="CmdPromptArgumentCodec.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CreateProcessArgumentCodec.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Rules.txt">
@@ -59,6 +62,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CmdPromptArgumentCodec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateProcessArgumentCodec.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

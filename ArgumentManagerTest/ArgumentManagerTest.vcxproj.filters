@@ -36,6 +36,12 @@
     <ClCompile Include="TestCmdPromptArgumentCodec.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestCreateProcessArgumentCodec.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentLister.h">
@@ -49,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="..\ArgumentManager\utils.h">
       <Filter>External Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestUtils.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

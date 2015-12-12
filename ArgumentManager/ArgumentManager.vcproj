@@ -179,6 +179,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CreateProcessArgumentCodec.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\dllmain.cpp"
 				>
 				<FileConfiguration
@@ -228,6 +232,10 @@
 			</File>
 			<File
 				RelativePath=".\CmdPromptArgumentCodec.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CreateProcessArgumentCodec.h"
 				>
 			</File>
 			<File

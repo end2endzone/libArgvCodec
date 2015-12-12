@@ -23,3 +23,5 @@ void initExecStubs();
 
 std::string systemDecodeArgument(const char * iValue);
 bool systemDecodeCommandLineArguments(const char * iCmdLine, ArgumentList::StringList & oArguments);
+std::string createProcessDecodeArgument(const char * iValue);
+bool createProcessDecodeCommandLineArguments(const char * iCmdLine, ArgumentList::StringList & oArguments);

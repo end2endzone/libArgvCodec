@@ -1,12 +1,12 @@
 #include "gtest_emulator.h"
 #include "CmdPromptArgumentCodec.h"
+#include "CreateProcessArgumentCodec.h"
 #include "ArgumentLister.h"
 #include "utils.h"
-#include "TestUtils.h"
 
 #define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
 
-TEST_F(TestCmdPromptArgumentCodec, testDecodeCommandLine)
+TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
@@ -24,11 +24,11 @@ TEST_F(TestCmdPromptArgumentCodec, testDecodeCommandLine)
 
     //compute the expected list of arguments
     ArgumentList::StringList expectedArgs;
-    bool success = systemDecodeCommandLineArguments(cmdLine.c_str(), expectedArgs);
+    bool success = createProcessDecodeCommandLineArguments(cmdLine.c_str(), expectedArgs);
     ASSERT_TRUE(success);
 
     //act
-    CmdPromptArgumentCodec c;
+    CreateProcessArgumentCodec c;
     ArgumentList actualArgs = c.decodeCommandLine(cmdLine.c_str());
 
     //debug
@@ -58,85 +58,7 @@ TEST_F(TestCmdPromptArgumentCodec, testDecodeCommandLine)
   }
 }
 
-TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
-{
-  const char * inputFilePrefix = "TestEncodeCommandLine";
-  const char * inputFilePostfix = ".txt";
-  
-  //discover test files
-  ArgumentList::StringList testFiles;
-  static const int MAX_ID_LENGTH = 3;
-  int fileId = 1;
-  std::string inputFile = getSequencedFile(inputFilePrefix, fileId, inputFilePostfix, MAX_ID_LENGTH);
-  bool fileFound = utils::fileExists( inputFile.c_str() );
-  while(fileFound)
-  {
-    testFiles.push_back(inputFile);
-
-    //prepare for next loop
-    fileId++;
-    inputFile = getSequencedFile(inputFilePrefix, fileId, inputFilePostfix, MAX_ID_LENGTH);
-    fileFound = utils::fileExists( inputFile.c_str() );
-  }
-  ASSERT_TRUE( testFiles.size() > 0 );
-
-  printf("\n");
-
-  //for each test files
-  for(size_t i=0; i<testFiles.size(); i++)
-  {
-    const std::string & testFile = testFiles[i];
-
-    //arrange
-    ArgumentList::StringList expectedArgs;
-    ASSERT_TRUE( utils::readTextFile(testFile.c_str(), expectedArgs) );
-    printf("Testing %d/%d, %s\n", i+1, testFiles.size(), testFile.c_str());
-
-    //insert fake .exe name
-    expectedArgs.insert(expectedArgs.begin(), "foo.exe");
-
-    ArgumentList arglist;
-    arglist.init(expectedArgs);
-
-    //act
-    CmdPromptArgumentCodec c;
-    std::string cmdLine = c.encodeCommandLine(arglist);
-
-    //decode the generated command line using the system's perspective
-    ArgumentList::StringList actualArgs;
-    bool success = systemDecodeCommandLineArguments(cmdLine.c_str(), actualArgs);
-    ASSERT_TRUE(success);
-
-    //debug
-    printf("  Expecting\n");
-    for(size_t j=1; j<expectedArgs.size(); j++)
-    {
-      const std::string & arg = expectedArgs[j];
-      printf("    argv[%d]=%s\n", j, arg.c_str() );
-    }
-    printf("  Actuals:\n");
-    for(size_t j=1; j<actualArgs.size(); j++)
-    {
-      const std::string & arg = actualArgs[j];
-      printf("    argv[%d]=%s\n", j, arg.c_str() );
-    }
-
-    //assert
-    ASSERT_EQ( expectedArgs.size(), actualArgs.size() );
-    //compare each argument
-    for(size_t j=1; j<expectedArgs.size(); j++) //skip first argument since executable names may differ
-    {
-      const char * expectedArg = expectedArgs[j].c_str();
-      const char * actualArg = actualArgs[j].c_str();
-      ASSERT_CSTR_EQ(expectedArg, actualArg);
-    }
-    printf("  success\n");
-
-    //next test file
-  }
-}
-
-TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine2)
+TEST_F(TestCreateProcessArgumentCodec, testEncodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
@@ -163,12 +85,12 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine2)
     arglist.init(expectedArgs);
 
     //act
-    CmdPromptArgumentCodec c;
+    CreateProcessArgumentCodec c;
     std::string cmdLine = c.encodeCommandLine(arglist);
 
     //compute the actual list of arguments
     ArgumentList::StringList actualArgs;
-    success = systemDecodeCommandLineArguments(cmdLine.c_str(), actualArgs);
+    success = createProcessDecodeCommandLineArguments(cmdLine.c_str(), actualArgs);
     ASSERT_TRUE(success);
 
     //debug
@@ -199,7 +121,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine2)
   }
 }
 
-void prepareTestCmdPromptEncodeArgument(const char * iRawArguementValue, std::string & oEscapedArgument, std::string & oSystemArgumentValue)
+void prepareTestCreateProcessEncodeArgument(const char * iRawArguementValue, std::string & oEscapedArgument, std::string & oSystemArgumentValue)
 {
   //arrange
   ArgumentList::StringList expectedArgs;
@@ -222,7 +144,7 @@ void prepareTestCmdPromptEncodeArgument(const char * iRawArguementValue, std::st
   printf("    argv[1]=%s\n", oSystemArgumentValue.c_str());
 }
 
-TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
+TEST_F(TestCreateProcessArgumentCodec, testEncodeArgument)
 {
   printf("\n");
 
@@ -232,7 +154,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
     ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
@@ -244,7 +166,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
     ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
@@ -256,7 +178,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
     ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
@@ -268,7 +190,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
     ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
@@ -280,7 +202,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
     ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
