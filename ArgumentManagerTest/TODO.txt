@@ -1,11 +1,11 @@
 - Rename project to (CommandLineEncoder & ArgumentDecoder) or (ArgumentEncoder, ArgumentDecoder, CommandLineEncoder, CommandLineDecoder)
-- Add support for validating arguments againts an argument list specification
+- Add support for validating arguments againts an argument list specification. This will allow users to specify the argument format/names/meaning and ask the manager to validate the given arguments against this specification. If will also provide a custom error message for invalid arguments.
 DONE! - Move global functions of ArgumentManager.cpp out to an utility class (or util.h/cpp files)
 DONE! - Change calls like c == '\\' && getSafeCharacter(cmdLine, i+1) == '\\' && getSafeCharacter(cmdLine, i+2) == '\\' && getSafeCharacter(cmdLine, i+3) == '\"'    by isSequence(cmdLine, i, "abcd")
 - Rename getCommandLineArgument() to getEscapedArgument() and make it static like: static std::string getEscapedArgument(const char * iValue)
-- Rename findExpectedCmdLineArguments() to getArgumentsAsSeenByCmd()
+DONE! - Rename findExpectedCmdLineArguments() to getArgumentsAsSeenByCmd()
 - Implement getArgumentsAsSeenByCreateProcess()
-- Remove usage of ArgumentLister. Create foo.h and foo.cpp that detects from argv[0] if .exe name is "foo.exe" and outputs in foo.exe.log the list of arguments. This way, the foo module can also export functions like getArgumentsAsSeenByCmd()
+DONE! - Remove usage of ArgumentLister. Create foo.h and foo.cpp that detects from argv[0] if .exe name is "foo.exe" and outputs in foo.exe.log the list of arguments. This way, the foo module can also export functions like getArgumentsAsSeenByCmd()
 - Reconsider reimplementing parseCmdLine() based on samples/rules listed within the function. Create a variable "int backSlashAccumulator" and "int doubleQuoteAccumulator" that accumulates until it sees a " character or the end of the string.
 - Move code into well named classes... Create IArgumentEncoder and the following implementations: CreateProcessArgumentEncoder, CmdPromptArgumentEncoder. Also create ArgumentList class.
   IArgumentEncoder
@@ -13,4 +13,14 @@ DONE! - Change calls like c == '\\' && getSafeCharacter(cmdLine, i+1) == '\\' &&
     std::string encodeArgument(const char * iValue);
     std::string encodeCommandLine(const ArgumentList & iArguments);
   }
+  IArgumentDecoder
+  {
+    std::string decodeArgument(const char * iValue);
+    ArgumentList decodeCommandLine(const char * iValue);
+  }
 - Make parseCmdLine(...) static and public
+- Implement the following tests:
+  - testCopyCtor
+  - testOperatorEqual
+  - testAssignmentOperator
+- Extract samples of ArgumentManager::parseCmdLine() as elements of a test case

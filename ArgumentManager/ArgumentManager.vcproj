@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Rules.txt"
+				>
+			</File>
+			<File
 				RelativePath=".\utils.cpp"
 				>
 			</File>
