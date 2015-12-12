@@ -3,6 +3,136 @@
 
 #define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
 
+bool isIdentical(ArgumentManager & m, int expectedArgc, char ** expectedArgv)
+{
+  int mArgc = m.getArgc();
+  char** mArgv = m.getArgv();
+  
+  if (mArgc != expectedArgc)
+    return false;
+
+  for(int i=0; i<mArgc; i++)
+  {
+    const char * mValue1 = m.getArgument(i);
+    const char * mValue2 = mArgv[i];
+
+    //should be same pointer
+    if (mValue1 != mValue2)
+      return false;
+
+    //mValue1 and expectedArgv contents should be identical
+    if (std::string(mValue1) != std::string(expectedArgv[i]))
+      return false;
+  }
+
+  //check last position for NULL string
+  if (expectedArgv[expectedArgc] != NULL)
+    return false;
+  if (mArgv[expectedArgc] != NULL)
+    return false;
+
+  return true;
+}
+
+int myReplace(std::string & iString, const char * iOldValue, const char * iNewValue)
+{
+  std::string tmpOldValue = iOldValue;
+  std::string tmpNewValue = iNewValue;
+
+  int numOccurance = 0;
+
+  if (tmpOldValue.size() > 0)
+  {
+    int startPos = 0;    
+    int findPos = -1;
+    do
+    {
+        findPos = iString.find(tmpOldValue, startPos);
+        if (findPos != std::string::npos)
+        {
+          iString.replace(findPos, tmpOldValue.length(), tmpNewValue);
+          startPos = findPos + tmpNewValue.length();
+          numOccurance++;
+        }
+    }
+    while (findPos != -1);
+  }
+  return numOccurance;
+}
+
+bool findExpectedCmdLineArguments(const char * iCmdLine, ArgumentManager::StringList & oArguments)
+{
+  oArguments.clear();
+
+  //build a command line to list arguments
+  std::string argListerPath = "ArgumentLister.exe";
+  
+  //build command line
+  std::string cmdLine;
+  cmdLine.append(argListerPath);
+  cmdLine.append(" ");
+  cmdLine.append(iCmdLine);
+
+  //run command line
+  system(cmdLine.c_str());
+
+  FILE * f = fopen("ArgumentLister.log", "r");
+  if (!f)
+    return false;
+
+  static const int BUFFER_SIZE = 102400;
+  char buffer[BUFFER_SIZE];
+
+  int argNumber = 0;
+  while( fgets(buffer, BUFFER_SIZE, f) != NULL )
+  {
+    //expected to read: arg0=test
+    std::string line = buffer;
+
+    //build arg template
+    sprintf(buffer, "argv[%d]=", argNumber);
+
+    //remove from line;
+    myReplace(line, buffer, "");
+
+    //remove ending CRLF at the end of the line;
+    myReplace(line, "\n", "");
+
+    oArguments.push_back(line);
+
+    argNumber++;
+  }
+
+  fclose(f);
+  return true;
+}
+
+TEST_F(ArgumentManager, testDEMO)
+{
+  const char * iCmdLine = "hi how are you today";
+
+  //arrange
+
+  //compute the expected list of arguments
+  ArgumentManager::StringList expectedArgs;
+  bool success = findExpectedCmdLineArguments(iCmdLine, expectedArgs);
+  ASSERT_TRUE(success);
+
+  //act
+  ArgumentManager mgr;
+  mgr.init(iCmdLine);
+
+  //assert
+  ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
+  //compare each argument
+  for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+  {
+    const char * expectedArg = expectedArgs[i].c_str();
+    const char * actualArg = mgr.getArgv()[i];
+    ASSERT_CSTR_EQ(expectedArg, actualArg);
+  }
+}
+
 TEST_F(ArgumentManager, testInitArgcArgv)
 {
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
@@ -62,6 +192,400 @@ TEST_F(ArgumentManager, testInitVector)
   ASSERT_EQ(args[3], std::string(argv2[3]));
   ASSERT_EQ(NULL, argv2[4]);
 }
+
+
+TEST_F(ArgumentManager, testInitString)
+{
+  const char * inputFile = "testInitString.txt";
+  FILE * f = fopen(inputFile, "r");
+  ASSERT_TRUE( f != NULL );
+
+  static const int BUFFER_SIZE = 10240;
+  char buffer[BUFFER_SIZE];
+
+  printf("\n");
+
+  ArgumentManager::StringList cmdLines;
+  while( fgets(buffer, BUFFER_SIZE, f) != NULL )
+  {
+    std::string cmdLine = buffer;
+    myReplace(cmdLine, "\n", "");
+
+    cmdLines.push_back(cmdLine);
+  }
+
+  for(size_t i=0; i<cmdLines.size(); i++)
+  {
+
+    if (i+1==15)
+    {
+      int a  = 0;
+    }
+
+    //arrange
+    const std::string cmdLine = cmdLines[i];
+    printf("Testing %d/%d: foo.exe %s\n", i+1, cmdLines.size(), cmdLine.c_str());
+
+    //compute the expected list of arguments
+    ArgumentManager::StringList expectedArgs;
+    bool success = findExpectedCmdLineArguments(cmdLine.c_str(), expectedArgs);
+    ASSERT_TRUE(success);
+
+    //act
+    ArgumentManager mgr;
+    mgr.init(cmdLine.c_str());
+
+    //debug
+    printf("  Expecting:\n");
+    for(size_t i=1; i<expectedArgs.size(); i++) //skip first argument since executable names may differ
+    {
+      const char * expectedArg = expectedArgs[i].c_str();
+      printf("   argv[%d]=%s\n", i, expectedArg);
+    }
+    printf("  Actuals:\n");
+    for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+    {
+      const char * actualArg = mgr.getArgv()[i];
+      printf("   argv[%d]=%s\n", i, actualArg);
+    }
+
+    //assert
+    ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
+    //compare each argument
+    for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+    {
+      const char * expectedArg = expectedArgs[i].c_str();
+      const char * actualArg = mgr.getArgv()[i];
+      ASSERT_CSTR_EQ(expectedArg, actualArg);
+    }
+    printf("  success\n");
+  }
+  fclose(f);
+}
+
+//TEST_F(ArgumentManager, testSingleStringInitBasic)
+//{
+//  const char * iCmdLine = "a b c";
+//  printf("Testing ArgumentManager::init(%s).", iCmdLine);
+//
+//  //arrange
+//
+//  //compute the expected list of arguments
+//  ArgumentManager::StringList expectedArgs;
+//  bool success = findExpectedCmdLineArguments(iCmdLine, expectedArgs);
+//  ASSERT_TRUE(success);
+//
+//  //act
+//  ArgumentManager mgr;
+//  mgr.init(iCmdLine);
+//
+//  //assert
+//  ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
+//  //compare each argument
+//  for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+//  {
+//    const char * expectedArg = expectedArgs[i].c_str();
+//    const char * actualArg = mgr.getArgv()[i];
+//    ASSERT_CSTR_EQ(expectedArg, actualArg);
+//  }
+//}
+//
+//TEST_F(ArgumentManager, testSingleStringInitString)
+//{
+//  const char * iCmdLine = "\"a b\" c";
+//  printf("Testing ArgumentManager::init(%s).", iCmdLine);
+//
+//  //arrange
+//
+//  //compute the expected list of arguments
+//  ArgumentManager::StringList expectedArgs;
+//  bool success = findExpectedCmdLineArguments(iCmdLine, expectedArgs);
+//  ASSERT_TRUE(success);
+//
+//  //act
+//  ArgumentManager mgr;
+//  mgr.init(iCmdLine);
+//
+//  //assert
+//  ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
+//  //compare each argument
+//  for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+//  {
+//    const char * expectedArg = expectedArgs[i].c_str();
+//    const char * actualArg = mgr.getArgv()[i];
+//    ASSERT_CSTR_EQ(expectedArg, actualArg);
+//  }
+//}
+//
+//TEST_F(ArgumentManager, testSingleStringInitFullString)
+//{
+//  const char * iCmdLine = "\"a b c\"";
+//  printf("Testing ArgumentManager::init(%s).", iCmdLine);
+//
+//  //arrange
+//
+//  //compute the expected list of arguments
+//  ArgumentManager::StringList expectedArgs;
+//  bool success = findExpectedCmdLineArguments(iCmdLine, expectedArgs);
+//  ASSERT_TRUE(success);
+//
+//  //act
+//  ArgumentManager mgr;
+//  mgr.init(iCmdLine);
+//
+//  //assert
+//  ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
+//  //compare each argument
+//  for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+//  {
+//    const char * expectedArg = expectedArgs[i].c_str();
+//    const char * actualArg = mgr.getArgv()[i];
+//    ASSERT_CSTR_EQ(expectedArg, actualArg);
+//  }
+//}
+//
+//TEST_F(ArgumentManager, testSingleStringInitNoEndingQuote)
+//{
+//  const char * iCmdLine = "\"a b c";
+//  printf("Testing ArgumentManager::init(%s).", iCmdLine);
+//
+//  //arrange
+//
+//  //compute the expected list of arguments
+//  ArgumentManager::StringList expectedArgs;
+//  bool success = findExpectedCmdLineArguments(iCmdLine, expectedArgs);
+//  ASSERT_TRUE(success);
+//
+//  //act
+//  ArgumentManager mgr;
+//  mgr.init(iCmdLine);
+//
+//  //assert
+//  ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
+//  //compare each argument
+//  for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+//  {
+//    const char * expectedArg = expectedArgs[i].c_str();
+//    const char * actualArg = mgr.getArgv()[i];
+//    ASSERT_CSTR_EQ(expectedArg, actualArg);
+//  }
+//}
+//
+//TEST_F(ArgumentManager, testSingleStringInitNoStartQuote)
+//{
+//  const char * iCmdLine = "a b c\"";
+//  printf("Testing ArgumentManager::init(%s).", iCmdLine);
+//
+//  //arrange
+//
+//  //compute the expected list of arguments
+//  ArgumentManager::StringList expectedArgs;
+//  bool success = findExpectedCmdLineArguments(iCmdLine, expectedArgs);
+//  ASSERT_TRUE(success);
+//
+//  //act
+//  ArgumentManager mgr;
+//  mgr.init(iCmdLine);
+//
+//  //assert
+//  ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
+//  //compare each argument
+//  for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+//  {
+//    const char * expectedArg = expectedArgs[i].c_str();
+//    const char * actualArg = mgr.getArgv()[i];
+//    ASSERT_CSTR_EQ(expectedArg, actualArg);
+//  }
+//}
+//
+//TEST_F(ArgumentManager, testSingleStringInitQuoteInString)
+//{
+//  const char * iCmdLine = "\"a b\" c\"";
+//  printf("Testing ArgumentManager::init(%s).", iCmdLine);
+//
+//  //arrange
+//
+//  //compute the expected list of arguments
+//  ArgumentManager::StringList expectedArgs;
+//  bool success = findExpectedCmdLineArguments(iCmdLine, expectedArgs);
+//  ASSERT_TRUE(success);
+//
+//  //act
+//  ArgumentManager mgr;
+//  mgr.init(iCmdLine);
+//
+//  //assert
+//  ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
+//  //compare each argument
+//  for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+//  {
+//    const char * expectedArg = expectedArgs[i].c_str();
+//    const char * actualArg = mgr.getArgv()[i];
+//    ASSERT_CSTR_EQ(expectedArg, actualArg);
+//  }
+//}
+//
+//TEST_F(ArgumentManager, testSingleStringInitEscapedQuote)
+//{
+//  const char * iCmdLine = "\"a b\\\" c\" d";
+//  printf("Testing ArgumentManager::init(%s).", iCmdLine);
+//
+//  //arrange
+//
+//  //compute the expected list of arguments
+//  ArgumentManager::StringList expectedArgs;
+//  bool success = findExpectedCmdLineArguments(iCmdLine, expectedArgs);
+//  ASSERT_TRUE(success);
+//
+//  //act
+//  ArgumentManager mgr;
+//  mgr.init(iCmdLine);
+//
+//  //assert
+//  ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
+//  //compare each argument
+//  for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+//  {
+//    const char * expectedArg = expectedArgs[i].c_str();
+//    const char * actualArg = mgr.getArgv()[i];
+//    ASSERT_CSTR_EQ(expectedArg, actualArg);
+//  }
+//}
+//
+//TEST_F(ArgumentManager, testSingleStringInitNoEndingQuoteEscapedQuote)
+//{
+//  const char * iCmdLine = "\"a b\\\" c d";
+//  printf("Testing ArgumentManager::init(%s).", iCmdLine);
+//
+//  //arrange
+//
+//  //compute the expected list of arguments
+//  ArgumentManager::StringList expectedArgs;
+//  bool success = findExpectedCmdLineArguments(iCmdLine, expectedArgs);
+//  ASSERT_TRUE(success);
+//
+//  //act
+//  ArgumentManager mgr;
+//  mgr.init(iCmdLine);
+//
+//  //assert
+//  ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
+//  //compare each argument
+//  for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+//  {
+//    const char * expectedArg = expectedArgs[i].c_str();
+//    const char * actualArg = mgr.getArgv()[i];
+//    ASSERT_CSTR_EQ(expectedArg, actualArg);
+//  }
+//}
+//
+//TEST_F(ArgumentManager, testSingleStringInitNoEndingQuoteBackslashEscapedQuote)
+//{
+//  const char * iCmdLine = "\"a b\\\\\" c d";
+//  printf("Testing ArgumentManager::init(%s).", iCmdLine);
+//
+//  //arrange
+//
+//  //compute the expected list of arguments
+//  ArgumentManager::StringList expectedArgs;
+//  bool success = findExpectedCmdLineArguments(iCmdLine, expectedArgs);
+//  ASSERT_TRUE(success);
+//
+//  //act
+//  ArgumentManager mgr;
+//  mgr.init(iCmdLine);
+//
+//  //assert
+//  ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
+//  //compare each argument
+//  for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+//  {
+//    const char * expectedArg = expectedArgs[i].c_str();
+//    const char * actualArg = mgr.getArgv()[i];
+//    ASSERT_CSTR_EQ(expectedArg, actualArg);
+//  }
+//}
+//
+//TEST_F(ArgumentManager, testSingleStringInitEscapedQuote2)
+//{
+//  const char * iCmdLine = "a b\\\" c d";
+//  printf("Testing ArgumentManager::init(%s).", iCmdLine);
+//
+//  //arrange
+//
+//  //compute the expected list of arguments
+//  ArgumentManager::StringList expectedArgs;
+//  bool success = findExpectedCmdLineArguments(iCmdLine, expectedArgs);
+//  ASSERT_TRUE(success);
+//
+//  //act
+//  ArgumentManager mgr;
+//  mgr.init(iCmdLine);
+//
+//  //assert
+//  ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
+//  //compare each argument
+//  for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+//  {
+//    const char * expectedArg = expectedArgs[i].c_str();
+//    const char * actualArg = mgr.getArgv()[i];
+//    ASSERT_CSTR_EQ(expectedArg, actualArg);
+//  }
+//}
+//
+//TEST_F(ArgumentManager, testSingleStringInitTab)
+//{
+//  const char * iCmdLine = "a b\\t c d";
+//  printf("Testing ArgumentManager::init(%s).", iCmdLine);
+//
+//  //arrange
+//
+//  //compute the expected list of arguments
+//  ArgumentManager::StringList expectedArgs;
+//  bool success = findExpectedCmdLineArguments(iCmdLine, expectedArgs);
+//  ASSERT_TRUE(success);
+//
+//  //act
+//  ArgumentManager mgr;
+//  mgr.init(iCmdLine);
+//
+//  //assert
+//  ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
+//  //compare each argument
+//  for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+//  {
+//    const char * expectedArg = expectedArgs[i].c_str();
+//    const char * actualArg = mgr.getArgv()[i];
+//    ASSERT_CSTR_EQ(expectedArg, actualArg);
+//  }
+//}
+//
+//TEST_F(ArgumentManager, testSingleStringInitEscapedBackslash)
+//{
+//  const char * iCmdLine = "a \\\\b c";
+//  printf("Testing ArgumentManager::init(%s).", iCmdLine);
+//
+//  //arrange
+//
+//  //compute the expected list of arguments
+//  ArgumentManager::StringList expectedArgs;
+//  bool success = findExpectedCmdLineArguments(iCmdLine, expectedArgs);
+//  ASSERT_TRUE(success);
+//
+//  //act
+//  ArgumentManager mgr;
+//  mgr.init(iCmdLine);
+//
+//  //assert
+//  ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
+//  //compare each argument
+//  for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
+//  {
+//    const char * expectedArg = expectedArgs[i].c_str();
+//    const char * actualArg = mgr.getArgv()[i];
+//    ASSERT_CSTR_EQ(expectedArg, actualArg);
+//  }
+//}
 
 TEST_F(ArgumentManager, testInsertEnd)
 {
@@ -184,37 +708,6 @@ TEST_F(ArgumentManager, testInsertMiddle)
   ASSERT_CSTR_EQ("", m.getArgument(5));
   ASSERT_CSTR_EQ("", m.getArgument(6));
   ASSERT_CSTR_EQ("", m.getArgument(7));
-}
-
-bool isIdentical(ArgumentManager & m, int expectedArgc, char ** expectedArgv)
-{
-  int mArgc = m.getArgc();
-  char** mArgv = m.getArgv();
-  
-  if (mArgc != expectedArgc)
-    return false;
-
-  for(int i=0; i<mArgc; i++)
-  {
-    const char * mValue1 = m.getArgument(i);
-    const char * mValue2 = mArgv[i];
-
-    //should be same pointer
-    if (mValue1 != mValue2)
-      return false;
-
-    //mValue1 and expectedArgv contents should be identical
-    if (std::string(mValue1) != std::string(expectedArgv[i]))
-      return false;
-  }
-
-  //check last position for NULL string
-  if (expectedArgv[expectedArgc] != NULL)
-    return false;
-  if (mArgv[expectedArgc] != NULL)
-    return false;
-
-  return true;
 }
 
 TEST_F(ArgumentManager, testRemoveEnd)
@@ -467,4 +960,16 @@ TEST_F(ArgumentManager, testExtractValue)
   ASSERT_EXTRACT( "-name=", false, "" );
   ASSERT_TRUE   ( m.getArgc() == argc - 3 );
 #undef ASSERT_EXTRACT
+}
+
+TEST_F(ArgumentManager, testCopyCtor)
+{
+}
+
+TEST_F(ArgumentManager, testOperatorEqual) //operator ==
+{
+}
+
+TEST_F(ArgumentManager, testAssignmentOperator) //operator =
+{
 }
