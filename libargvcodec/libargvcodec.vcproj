@@ -216,12 +216,32 @@
 				RelativePath=".\utils.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\ValidationRule.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ValidationRuleList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ValidationRuleSorter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Validator.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\advancedsort.h"
+				>
+			</File>
 			<File
 				RelativePath=".\ArgumentList.h"
 				>
@@ -256,6 +276,22 @@
 			</File>
 			<File
 				RelativePath=".\utils.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ValidationRule.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ValidationRuleList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ValidationRuleSorter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Validator.h"
 				>
 			</File>
 		</Filter>

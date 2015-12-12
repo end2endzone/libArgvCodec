@@ -187,18 +187,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TestArgumentList.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TestCmdPromptArgumentCodec.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TestCreateProcessArgumentCodec.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\TestUtils.cpp"
 				>
 			</File>
@@ -278,6 +266,26 @@
 			</File>
 			<File
 				RelativePath="..\libargvcodec\utils.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Tests"
+			>
+			<File
+				RelativePath=".\TestArgumentList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TestCmdPromptArgumentCodec.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TestCreateProcessArgumentCodec.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TestValidator.cpp"
 				>
 			</File>
 		</Filter>
