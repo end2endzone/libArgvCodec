@@ -28,3 +28,4 @@ DONE! - Rename the tool to libcleanargv or libcleanarg, libargvcodec. libargvcod
 DONE! - Implement case insensitive ArgumentList APIs.
 DONE! - Implement automatic insertion of the = sign for "-name=value" in the following APIs: extractValue() and findValue()
 DONE! - Implement automatic search for expected prefix if "name=value" not found. Search for "/", "-", and "--" expected prefixes.
+- Define all functions into libargvcodec namespace

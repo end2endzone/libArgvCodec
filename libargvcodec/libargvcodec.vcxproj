@@ -96,12 +96,16 @@
     </ClCompile>
     <ClCompile Include="os.cpp" />
     <ClCompile Include="utils.cpp" />
+    <ClCompile Include="ValidationResultList.cpp" />
+    <ClCompile Include="ValidationRuleSorter.cpp" />
+    <ClCompile Include="Validator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Rules.txt" />
     <None Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="advancedsort.h" />
     <ClInclude Include="ArgumentList.h" />
     <ClInclude Include="CmdPromptArgumentCodec.h" />
     <ClInclude Include="CreateProcessArgumentCodec.h" />
@@ -111,6 +115,10 @@
     <ClInclude Include="os.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="ValidationRuleList.h" />
+    <ClInclude Include="ValidationResultList.h" />
+    <ClInclude Include="ValidationRuleSorter.h" />
+    <ClInclude Include="Validator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

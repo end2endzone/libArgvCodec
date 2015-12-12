@@ -45,6 +45,9 @@
     <ClCompile Include="TestCreateProcessArgumentCodec.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="TestValidator.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentLister.h">
