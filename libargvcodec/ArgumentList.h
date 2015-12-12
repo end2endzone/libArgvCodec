@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ArgMgrExports.h"
+#include "libargvcodec.h"
 #include <string>
 #include <vector>
 
-class ARGMGR_API ArgumentList
+class LIBARGVCODEC_API ArgumentList
 {
 public:
   typedef std::vector<std::string> StringList;

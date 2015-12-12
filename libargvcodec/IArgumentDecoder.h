@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ArgMgrExports.h"
+#include "libargvcodec.h"
 #include "ArgumentList.h"
 
-class ARGMGR_API IArgumentDecoder
+class LIBARGVCODEC_API IArgumentDecoder
 {
 public:
 

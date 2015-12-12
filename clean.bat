@@ -1,11 +1,11 @@
 @echo off
 rmdir /q/s .\Debug
 rmdir /q/s .\Release
-del .\ArgumentManager\*.user
-del .\ArgumentManagerTest\*.user
-rmdir /q/s .\ArgumentManager\Debug
-rmdir /q/s .\ArgumentManager\Release
-rmdir /q/s .\ArgumentManagerTest\Debug
-rmdir /q/s .\ArgumentManagerTest\Release
+del .\libargvcodec\*.user
+del .\libargvcodectest\*.user
+rmdir /q/s .\libargvcodec\Debug
+rmdir /q/s .\libargvcodec\Release
+rmdir /q/s .\libargvcodectest\Debug
+rmdir /q/s .\libargvcodectest\Release
 del *.ncb
 del /ah *.suo

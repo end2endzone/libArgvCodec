@@ -13,60 +13,67 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="External Files">
+      <UniqueIdentifier>{c5e4da0a-57f4-4f96-8722-500bf25751e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp">
+    <ClCompile Include="ArgumentLister.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="os.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utils.cpp">
+    <ClCompile Include="gtest_emulator.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestArgumentList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ArgumentList.cpp">
+    <ClCompile Include="TestCmdPromptArgumentCodec.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CmdPromptArgumentCodec.cpp">
+    <ClCompile Include="TestCreateProcessArgumentCodec.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CreateProcessArgumentCodec.cpp">
+    <ClCompile Include="TestUtils.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libargvcodec\utils.cpp">
+      <Filter>External Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Rules.txt">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="TODO.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ArgMgrExports.h">
+    <ClInclude Include="ArgumentLister.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="os.h">
+    <ClInclude Include="gtest_emulator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils.h">
+    <ClInclude Include="TestUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IArgumentEncoder.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\libargvcodec\utils.h">
+      <Filter>External Files</Filter>
     </ClInclude>
-    <ClInclude Include="ArgumentList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IArgumentDecoder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdPromptArgumentCodec.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CreateProcessArgumentCodec.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="postbuild.bat">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="TestEncodeCommandLine001.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="TestEncodeCommandLine002.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="shellCommandLines.txt">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>
