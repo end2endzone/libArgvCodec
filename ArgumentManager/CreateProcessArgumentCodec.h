@@ -10,11 +10,11 @@ public:
   CreateProcessArgumentCodec();
   virtual ~CreateProcessArgumentCodec();
 
-  ////IArgumentEncoder
+  ////IArgumentEncoder interface
   //virtual std::string encodeArgument(const char * iValue);
   //virtual std::string encodeCommandLine(const ArgumentList & iArguments);
 
-  ////IArgumentDecoder
+  ////IArgumentDecoder interface
   //virtual std::string decodeArgument(const char * iValue);
   //virtual ArgumentList decodeCommandLine(const char * iValue);
 
