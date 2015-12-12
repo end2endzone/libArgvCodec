@@ -453,6 +453,12 @@ TEST_F(TestArgumentList, testFindIndex)
   ASSERT_EQ( m.findIndex("-logfile=log.txt"), 2 );
   ASSERT_EQ( m.findIndex("count=5"), 3 );
   ASSERT_EQ( m.findIndex(NULL), -1 );
+  bool caseSensitive = false;
+  ASSERT_EQ( m.findIndex("", caseSensitive), -1 );
+  ASSERT_EQ( m.findIndex("test.ExE", caseSensitive), 0 );
+  ASSERT_EQ( m.findIndex("/P", caseSensitive), 1 );
+  ASSERT_EQ( m.findIndex("-logFILE=log.txt", caseSensitive), 2 );
+  ASSERT_EQ( m.findIndex("Count=5", caseSensitive), 3 );
 }
 
 TEST_F(TestArgumentList, testFindOption)
@@ -465,7 +471,6 @@ TEST_F(TestArgumentList, testFindOption)
   m.init(argc, argv);
 
   //assert
-  //ASSERT_OPTION( "", true, -1 );
   int index = 0;
 #define ASSERT_FINDOPTION( text, result, expectedIndex) ASSERT_TRUE( m.findOption(text, index) == result ); ASSERT_EQ( index, expectedIndex );
   ASSERT_FINDOPTION( "", false, -1 );
@@ -474,7 +479,16 @@ TEST_F(TestArgumentList, testFindOption)
   ASSERT_FINDOPTION( "-logfile=log.txt", true, 2 );
   ASSERT_FINDOPTION( "count=5", true, 3 );
   ASSERT_FINDOPTION( NULL, false, -1 );
-#undef ASSERT_OPTION
+#undef ASSERT_FINDOPTION
+  bool caseSensitive = false;
+#define ASSERT_FINDOPTION( text, result, expectedIndex) ASSERT_TRUE( m.findOption(text, caseSensitive, index) == result ); ASSERT_EQ( index, expectedIndex );
+  ASSERT_FINDOPTION( "", false, -1 );
+  ASSERT_FINDOPTION( "test.ExE", true, 0 );
+  ASSERT_FINDOPTION( "/P", true, 1 );
+  ASSERT_FINDOPTION( "-logFILE=log.txt", true, 2 );
+  ASSERT_FINDOPTION( "Count=5", true, 3 );
+  ASSERT_FINDOPTION( NULL, false, -1 );
+#undef ASSERT_FINDOPTION
 }
 
 TEST_F(TestArgumentList, testExtractOption)
@@ -498,6 +512,20 @@ TEST_F(TestArgumentList, testExtractOption)
   ASSERT_TRUE ( m.extractOption("--help") );
   ASSERT_TRUE ( m.getArgc() == argc - 2 );
   ASSERT_FALSE( m.extractOption("--help") );
+  ASSERT_TRUE ( m.getArgc() == argc - 2 );
+
+  //prepare (again)
+  m.init(argc, argv);
+
+  //assert (again)
+  bool caseSensitive = false;
+  ASSERT_FALSE( m.extractOption("/noEXIST", caseSensitive) );
+  ASSERT_TRUE ( m.getArgc() == argc );
+  ASSERT_TRUE ( m.extractOption("/P", caseSensitive) );
+  ASSERT_TRUE ( m.getArgc() == argc - 1 );
+  ASSERT_FALSE( m.extractOption("/c", caseSensitive) );
+  ASSERT_TRUE ( m.getArgc() == argc - 1 );
+  ASSERT_TRUE ( m.extractOption("--hELp", caseSensitive) );
   ASSERT_TRUE ( m.getArgc() == argc - 2 );
 }
 
@@ -524,6 +552,24 @@ TEST_F(TestArgumentList, testExtractValue)
   ASSERT_EXTRACT( "-name=", false, "" );
   ASSERT_TRUE   ( m.getArgc() == argc - 3 );
 #undef ASSERT_EXTRACT
+
+  //prepare (again)
+  m.init(argc, argv);
+
+  //assert (again)
+  bool caseSensitive = false;
+#define ASSERT_EXTRACT( text, result, expectedValue) ASSERT_TRUE( m.extractValue(text, caseSensitive, value) == result ); ASSERT_EQ( value, expectedValue );
+  ASSERT_EXTRACT( "/noEXIST", false, "" );
+  ASSERT_TRUE   ( m.getArgc() == argc );
+  ASSERT_EXTRACT( "-logFILE=", true, "log.txt" );
+  ASSERT_TRUE   ( m.getArgc() == argc - 1 );
+  ASSERT_EXTRACT( "/P=", true, "7" );
+  ASSERT_TRUE   ( m.getArgc() == argc - 2 );
+  ASSERT_EXTRACT( "COunt=", true, "5" );
+  ASSERT_TRUE   ( m.getArgc() == argc - 3 );
+  ASSERT_EXTRACT( "-Name=", false, "" );
+  ASSERT_TRUE   ( m.getArgc() == argc - 3 );
+#undef ASSERT_EXTRACT
 }
 
 TEST_F(TestArgumentList, testExtractNextValue)
@@ -541,8 +587,18 @@ TEST_F(TestArgumentList, testExtractNextValue)
   ASSERT_EXTRACTNEXT( "/repeat",     true,   "5", argc-2 );
   ASSERT_EXTRACTNEXT( "/inputfile", false,   "",  argc-2 );
   ASSERT_EXTRACTNEXT( "/name",       true, "foo", argc-4 );
-#undef ASSERT_EXTRACT
+#undef ASSERT_EXTRACTNEXT
 
+  //prepare (again)
+  m.init(argc, argv);
+
+  //assert (again)
+  bool caseSensitive = false;
+#define ASSERT_EXTRACTNEXT( text, result, expectedValue, expectedListSize) ASSERT_TRUE( m.extractNextValue(text, caseSensitive, value) == result ); ASSERT_EQ( value, expectedValue ); ASSERT_EQ( m.getArgc(), expectedListSize );
+  ASSERT_EXTRACTNEXT( "/rePEAT",     true,   "5", argc-2 );
+  ASSERT_EXTRACTNEXT( "/inputFILE", false,   "",  argc-2 );
+  ASSERT_EXTRACTNEXT( "/nAMe",       true, "foo", argc-4 );
+#undef ASSERT_EXTRACTNEXT
 }
 
 TEST_F(TestArgumentList, testCopyCtor)
@@ -638,4 +694,17 @@ TEST_F(TestArgumentList, testFindNextValue)
   ASSERT_FINDNEXTVALUE("/repeat",    intValue,    true,   3, 5);
   ASSERT_FINDNEXTVALUE("/inputfile", stringValue, false, -1, "");
 #undef ASSERT_FINDNEXTVALUE
+
+  //prepare (again)
+  m.init(argc, argv);
+
+  //assert (again)
+  bool caseSensitive = false;
+#define ASSERT_FINDNEXTVALUE( name, value, callResult, expectedIndex, expectedValue) ASSERT_TRUE( m.findNextValue(name, caseSensitive, index, value) == callResult ); ASSERT_EQ( index, expectedIndex ); ASSERT_EQ( value, expectedValue );
+  ASSERT_FINDNEXTVALUE("/nAMe",      stringValue, true,   1, "foo");
+  ASSERT_FINDNEXTVALUE("/rePEAT",    stringValue, true,   3, "5");
+  ASSERT_FINDNEXTVALUE("/rePEAT",    intValue,    true,   3, 5);
+  ASSERT_FINDNEXTVALUE("/inputFILE", stringValue, false, -1, "");
+#undef ASSERT_FINDNEXTVALUE
+
 }
