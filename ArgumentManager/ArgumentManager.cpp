@@ -12,9 +12,29 @@
 
 #include "ArgumentManager.h"
 
-
 #define SAFE_DELETE(var)        {if (var) delete   var; var = NULL;}
 #define SAFE_DELETE_ARRAY(var)  {if (var) delete[] var; var = NULL;}
+
+void replace(std::string & iValue, const std::string & iOldStr, const std::string & iNewStr)
+{
+  size_t pos = 0;
+  while((pos = iValue.find(iOldStr, pos)) != std::string::npos)
+  {
+    iValue.replace(pos, iOldStr.length(), iNewStr);
+    pos += iNewStr.length();
+  }
+}
+void replace(std::string & iValue, const char * iOldStr, const char * iNewStr)
+{
+  size_t oldLength = std::string(iOldStr).length();
+  size_t newLength = std::string(iNewStr).length();
+  size_t pos = 0;
+  while((pos = iValue.find(iOldStr, pos)) != std::string::npos)
+  {
+    iValue.replace(pos, oldLength, iNewStr);
+    pos += newLength;
+  }
+}
 
 std::string getLastErrorDescription()
 {
@@ -146,6 +166,56 @@ char * ArgumentManager::getArgument(int iIndex)
   return mArgv[iIndex];
 }
 
+std::string ArgumentManager::getCommandLine()
+{
+  std::string cmdLine;
+
+  for(size_t i=0; i<mArguments.size(); i++)
+  {
+    std::string arg = getCommandLineArgument((int)i);
+    cmdLine.append(arg);
+    bool isLastArgument = !(i+1<mArguments.size());
+    if (!isLastArgument)
+      cmdLine.append(" ");
+  }
+
+  return cmdLine;
+}
+
+std::string ArgumentManager::getCommandLineArgument(int iIndex)
+{
+  //http://blogs.msdn.com/b/twistylittlepassagesallalike/archive/2011/04/23/everyone-quotes-arguments-the-wrong-way.aspx
+  //http://stackoverflow.com/questions/2393384/escape-string-for-process-start
+  //http://stackoverflow.com/questions/5510343/escape-command-line-arguments-in-c-sharp/6040946#6040946
+
+
+  //NOT IMPLEMENTED
+  //TODO: IMPLEMENT ArgumentManager::getCommandLine()
+
+  std::string arg = getArgument(iIndex);
+
+  //replace special shell characters
+  ::replace(arg, "^", "^^");
+  ::replace(arg, "&", "^&");
+  ::replace(arg, "|", "^|");
+  ::replace(arg, "(", "^(");
+  ::replace(arg, ")", "^)");
+  ::replace(arg, "<", "^<");
+  ::replace(arg, ">", "^>");
+  ::replace(arg, "%", "^%");
+  ::replace(arg, "!", "^!");
+  ::replace(arg, "\"", "^\"");
+
+  //ici
+  //deal with "
+  //deal with \
+
+  //check "My attempt at escaping" from http://stackoverflow.com/questions/2393384/escape-string-for-process-start
+
+
+  return arg;
+}
+
 bool ArgumentManager::insert(int iIndex, const char * iValue)
 {
   if (iValue == NULL)
@@ -252,49 +322,225 @@ bool ArgumentManager::isValid(int iIndex)
   return false;
 }
 
+//char getSafeCharacter(const char * iValue, int iIndex)
+//{
+//  if (iIndex < 0)
+//    return '\0';
+//  int length = (int)std::string(iValue).size();
+//  if (iIndex > length)
+//    return '\0';
+//  return iValue[i];
+//}
+
+char getSafeCharacter(const char * iValue, size_t iIndex)
+{
+  if (iIndex > std::string(iValue).size())
+    return '\0';
+  return iValue[iIndex];
+}
+
 bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArguments)
 {
   oArguments.clear();
 
   std::string accumulator;
-  std::string iCmdLineStr = iCmdLine;
+
+  //Remove ^ characters within the string.
+  //Caret characters are used to pass arguments from cmd.exe to foo.exe.
+  //They are not required once foo.exe has parsed the string
+  static const char * caretToken = "{DOUBLECARETTOKEN}";
+  std::string cmdLineTmp = iCmdLine;
+  ::replace(cmdLineTmp, "^^", caretToken);
+  ::replace(cmdLineTmp, "^", "");//remove all other single carret
+  ::replace(cmdLineTmp, caretToken, "^^");
+
+  const std::string cmdLineStr = cmdLineTmp;
+  const char * cmdLine = cmdLineStr.c_str();
 
   bool inString = false;
 
   char previous = '\0';
 
-  for(size_t i=0; i<iCmdLineStr.size(); i++)
+  //Build an array that matches string's length to help mapping quotes
+  enum QUOTESTYLE
   {
-    char c = iCmdLine[i];
-    bool hasPreviousCharacter = (i>0);
-    bool hasNextCharacter = (i<iCmdLineStr.size()-1);
-    bool isLastCharacter = !hasNextCharacter;
+    undefined,        //skipped characters
+    separator,        //a space
+    opening,          //opening " character
+    closing,          //closing " character
+    plain,
+    escapeCommand,    //for \ character which escapes the following character
+    escapedQuote,     //for " escaped characters
+    escapedBackslash, //for \ escaped characters
+    literalCommand,   //for ^ character which escapes the following character
+    literalCharacter, //for characters escaped with ^
+    sequence2,        //for handling special sequence of 2 characters long (including current character)
+    sequence3,        //for handling special sequence of 3 characters long (including current character)
+    sequence4,        //for handling special sequence of 4 characters long (including current character)
+  };
+  QUOTESTYLE * styles = new QUOTESTYLE[cmdLineStr.size()];
+  for(size_t i=0; i<cmdLineStr.size(); i++)
+  {
+    styles[i] = undefined;
+  }
 
-    bool isQuoteStart = (c == '\"' && (i==0 || iCmdLine[i-1]==' '));
+  bool openingQuotePossibleEmptyArgument = false;
+  bool closingQuotePossibleEmptyArgument = false;
 
-    if (c == '\"' && inString == false)
+  for(size_t i=0; i<cmdLineStr.size(); i++)
+  {
+    char c = cmdLine[i];
+
+    ////build safe array of previous and next characters
+    //char previous[2] = {0};
+    //char next[2] = {0};
+    //if (i>1)
+    //  previous[0] = cmdLine[i-1];
+    //if (i>2)
+    //  previous[1] = cmdLine[i-2];
+    //if (i+1<cmdLineStr.size())
+    //  next[0] = cmdLine[i+1];
+    //if (i+2<cmdLineStr.size())
+    //  next[1] = cmdLine[i+2];
+
+//#define offset(expr) (getSafeCharacter(cmdLine, expr))
+
+    bool isLastCharacter = !(i+1<cmdLineStr.size());
+
+    if (c == '\"' && getSafeCharacter(cmdLine, i+1) == '\"' && getSafeCharacter(cmdLine, i+2) == '\"' ) // for """ character sequence
     {
-      //starting a new string
-      inString = true;
+      //must be defined as skipped, plain, opening
+      styles[i  ] = sequence3;
+      styles[i+1] = plain;
+
+      accumulator.push_back('\"');
+
+      i=i+2; //skip next 2 characters
     }
-    else if (c == '\"' && inString == true)
+    else if (c == '^' && getSafeCharacter(cmdLine, i+1) == '^')
     {
-      //endding a new string
-      inString = false;
+      //escaped caret
+      styles[i  ] = literalCommand;
+      styles[i+1] = literalCharacter;
 
-      bool forceFlush = ( !hasNextCharacter ||                        //is the last argument specified
-                          (hasNextCharacter && iCmdLine[i+1] == ' ')  //matches the end of an argument
-                          ); //deal with "" arguments
+      //keep next ^ character as plain text
+      accumulator.push_back( '^' );
 
-      //flush accumulator;
-      if (accumulator != "" || forceFlush )
+      i++; //skip next character
+    }
+    if (c == '^')
+    {
+      styles[i] = literalCommand;
+      //skipped
+    }
+    else if (c == '\"')
+    {
+      //deal with " characters...
+
+      if (getSafeCharacter(cmdLine, i-1) == '\"' && styles[i-1] == closing) //quote directly follows closer
       {
-        oArguments.push_back(accumulator);
-        accumulator = "";
+        //plain text character
+        styles[i] = plain;
+        accumulator.push_back(c);
       }
+      else if ( !inString )
+      {
+        //opening double-quote
+        styles[i] = opening;
+
+        //starting a new string
+        inString = true;
+
+        //check if this opening quote could be an empty parameter ?
+        char previous = getSafeCharacter(cmdLine, i-1);
+        openingQuotePossibleEmptyArgument = (previous == '\0' || previous == ' ' || previous == '\t');
+
+        //forget about the " character
+      }
+      else if ( inString )
+      {
+        //closing double-quote
+        styles[i] = closing;
+
+        //ends a new string
+        inString = false;
+
+        //bool forceFlush = (previous[0] == '\"' && styles[i-1] == opening); //double double-quotes
+
+        //check if this closing quote could be an empty parameter ?
+        char next = getSafeCharacter(cmdLine, i+1);
+        closingQuotePossibleEmptyArgument = (next == '\0' || next == ' ' || next == '\t');
+
+        bool forceFlush = openingQuotePossibleEmptyArgument && closingQuotePossibleEmptyArgument;
+
+        //flush accumulator;
+        if (/*accumulator != "" ||*/ forceFlush )
+        {
+          oArguments.push_back(accumulator);
+          accumulator = "";
+        }
+
+        forceFlush = false;
+
+        //forget about the " character
+      }
+
+    }
+    else if (/*inString &&*/ c == '\\' && getSafeCharacter(cmdLine, i+1) == '\"')
+    {
+      //escaped double-quote
+      styles[i  ] = escapeCommand;
+      styles[i+1] = escapedQuote;
+
+      //keep next " as plain character
+      accumulator.push_back('\"');
+
+      i++; //skip next character
+    }
+    else if (/*inString &&*/        c == '\\' && 
+      getSafeCharacter(cmdLine, i+1) == '\\' &&
+      getSafeCharacter(cmdLine, i+2) == '\\' &&
+      getSafeCharacter(cmdLine, i+3) == '\\' ) //sequence of \\\\ 
+    {
+      //escaped backslash
+      styles[i  ] = sequence4;
+      styles[i+1] = escapedBackslash;
+      styles[i+2] = escapeCommand;
+      styles[i+3] = escapedBackslash;
+
+      //add escaped characters
+      accumulator.push_back('\\');
+      accumulator.push_back('\\');
+
+      i=i+3; //skip next characters
+    }
+    else if (/*inString &&*/ c == '\\' && getSafeCharacter(cmdLine, i+1) == '\\' && getSafeCharacter(cmdLine, i+2) == '\\' && getSafeCharacter(cmdLine, i+3) == '\"' ) //sequence of \\\"
+    {
+      //escaped backslash
+      styles[i  ] = escapeCommand;
+      styles[i+1] = escapedBackslash;
+
+      //keep next " as plain character
+      accumulator.push_back('\\');
+
+      i++; //skip next character
+    }
+    else if (/*inString &&*/ c == '\\' && getSafeCharacter(cmdLine, i+1) == '\\' && getSafeCharacter(cmdLine, i+2) == '\"' ) //sequence of \\"
+    {
+      //escaped backslash
+      styles[i  ] = escapeCommand;
+      styles[i+1] = escapedBackslash;
+
+      //keep next " as plain character
+      accumulator.push_back('\\');
+
+      i++; //skip next character
     }
     else if ((c == ' ' || c == '\t') && inString == false)
     {
+      //separator character
+      styles[i] = separator;
+
       //flush accumulator;
       if (accumulator != "")
       {
@@ -302,51 +548,99 @@ bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArgument
         accumulator = "";
       }
     }
-    //else if (c == '\\' && inString == false)
-    //{
-    //  //do not escape character
-    //  accumulator.push_back(c);
-    //}
-
-    //NEVER ESCAPE \\ as \
-    //ie: foo.exe a\\b
-    // argv[1]=a\\b
-    //ie: foo.exe "a\\b"
-    // argv[1]=a\\b
-    //else if (c == '\\' && hasNextCharacter && iCmdLine[i+1] == '\\')
-    //{
-    //  //escaping next \ character
-    //  accumulator.push_back('\\');
-    //  i++; //skip escaped character
-    //}
-
-    //////////////////ESCAPE \\ only when they are within a string.
-    //////////////////ie:   "a b\\" c d
-    //////////////////argv[1]=a b\
-    //////////////////argv[2]=c
-    //////////////////argv[3]=d
-    ////////////////else if (c == '\\' && hasNextCharacter && iCmdLine[i+1] == '\\' && inString == true)
-    ////////////////{
-    ////////////////  //escaping next \ character
-    ////////////////  accumulator.push_back('\\');
-    ////////////////  i++; //skip escaped character
-    ////////////////}
-
-    else if (c == '\\' && hasNextCharacter && iCmdLine[i+1] == '\"')
-    {
-      //escaping next " character
-      accumulator.push_back('\"');
-      i++; //skip escaped character
-    }
     else
     {
-      //normal character
+      //plain text character
+      styles[i] = plain;
       accumulator.push_back(c);
     }
 
-    //remember previous
-    previous = c;
   }
+
+  //for(size_t i=0; i<cmdLineStr.size(); i++)
+  //{
+  //  char c = cmdLine[i];
+  //  bool hasPreviousCharacter = (i>0);
+  //  bool hasNextCharacter = (i<cmdLineStr.size()-1);
+  //  bool isLastCharacter = !hasNextCharacter;
+
+  //  bool isQuoteStart = (c == '\"' && (i==0 || cmdLine[i-1]==' '));
+
+  //  if (c == '\"' && inString == false)
+  //  {
+  //    //starting a new string
+  //    inString = true;
+  //  }
+  //  else if (c == '\"' && inString == true)
+  //  {
+  //    //endding a new string
+  //    inString = false;
+
+  //    bool forceFlush = ( !hasNextCharacter ||                        //is the last argument specified
+  //                        (hasNextCharacter && cmdLine[i+1] == ' ')  //matches the end of an argument
+  //                        ); //deal with "" arguments
+
+  //    //flush accumulator;
+  //    if (accumulator != "" || forceFlush )
+  //    {
+  //      oArguments.push_back(accumulator);
+  //      accumulator = "";
+  //    }
+  //  }
+  //  else if ((c == ' ' || c == '\t') && inString == false)
+  //  {
+  //    //flush accumulator;
+  //    if (accumulator != "")
+  //    {
+  //      oArguments.push_back(accumulator);
+  //      accumulator = "";
+  //    }
+  //  }
+  //  //else if (c == '\\' && inString == false)
+  //  //{
+  //  //  //do not escape character
+  //  //  accumulator.push_back(c);
+  //  //}
+
+  //  //NEVER ESCAPE \\ as \
+  //  //ie: foo.exe a\\b
+  //  // argv[1]=a\\b
+  //  //ie: foo.exe "a\\b"
+  //  // argv[1]=a\\b
+  //  //else if (c == '\\' && hasNextCharacter && cmdLine[i+1] == '\\')
+  //  //{
+  //  //  //escaping next \ character
+  //  //  accumulator.push_back('\\');
+  //  //  i++; //skip escaped character
+  //  //}
+
+  //  //////////////////ESCAPE \\ only when they are within a string.
+  //  //////////////////ie:   "a b\\" c d
+  //  //////////////////argv[1]=a b\
+  //  //////////////////argv[2]=c
+  //  //////////////////argv[3]=d
+  //  ////////////////else if (c == '\\' && hasNextCharacter && cmdLine[i+1] == '\\' && inString == true)
+  //  ////////////////{
+  //  ////////////////  //escaping next \ character
+  //  ////////////////  accumulator.push_back('\\');
+  //  ////////////////  i++; //skip escaped character
+  //  ////////////////}
+
+  //  else if (c == '\\' && hasNextCharacter && cmdLine[i+1] == '\"')
+  //  {
+  //    //escaping next " character
+  //    accumulator.push_back('\"');
+  //    i++; //skip escaped character
+  //  }
+  //  else
+  //  {
+  //    //normal character
+  //    accumulator.push_back(c);
+  //  }
+
+  //  //remember previous
+  //  previous = c;
+  //}
 
   //flush accumulator;
   if (accumulator != "")
@@ -355,6 +649,85 @@ bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArgument
     accumulator = "";
   }
 
+  //DEBUG:
+  //printf("DEBUG: %s\n", cmdLine);
+  //printf("DEBUG: ");
+  //for(size_t i=0; i<cmdLineStr.size(); i++)
+  //{
+  //  switch (styles[i])
+  //  {
+  //  case undefined:
+  //    printf("u");
+  //    break;
+  //  case separator:
+  //    printf("s");
+  //    break;
+  //  case opening:
+  //    printf("o");
+  //    break;
+  //  case closing:
+  //    printf("c");
+  //    break;
+  //  case plain:
+  //    printf("p");
+  //    break;
+  //  default :
+  //    printf("?");
+  //    break;
+  //  };
+  //}
+  //printf("\n");
+  for(size_t i=0; i<cmdLineStr.size(); i++)
+  {
+    const char * style = "";
+    switch (styles[i])
+    {
+    case undefined:
+      style = "undefined";
+      break;
+    case separator:
+      style = "separator";
+      break;
+    case opening:
+      style = "opening";
+      break;
+    case closing:
+      style = "closing";
+      break;
+    case plain:
+      style = "plain";
+      break;
+    case escapeCommand:
+      style = "escapeCommand";
+      break;
+    case escapedQuote:
+      style = "escapedQuote";
+      break;
+    case escapedBackslash:
+      style = "escapedBackslash";
+      break;
+    case literalCommand:
+      style = "literalCommand";
+      break;
+    case literalCharacter:
+      style = "literalCharacter";
+      break;
+    case sequence2:
+      style = "sequence2";
+      break;
+    case sequence3:
+      style = "sequence3";
+      break;
+    case sequence4:
+      style = "sequence4";
+      break;
+    default :
+      style = "????";
+      break;
+    };
+    printf("DEBUG: %c => %s\n", cmdLine[i], style);
+  }
+  
   return true;
 }
 

@@ -1,0 +1,3 @@
+- Rename project to (CommandLineEncoder & ArgumentDecoder) or (ArgumentEncoder, ArgumentDecoder, CommandLineEncoder, CommandLineDecoder)
+- Add support for validating arguments againts an argument list specification
+- Move global functions of ArgumentManager.cpp out to an utility class (or util.h/cpp files)

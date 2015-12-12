@@ -19,10 +19,6 @@ std::string getExePath()
   return std::string(arg0);
 }
 
-//#include <string>
-//#include <vector>
-//typedef std::vector<std::string> StringList;
-
 //int _tmain(int argc, _TCHAR* argv[])
 int main(int argc, char* argv[])
 {
