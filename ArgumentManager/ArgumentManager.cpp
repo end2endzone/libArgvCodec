@@ -259,7 +259,7 @@ std::string ArgumentManager::getCommandLineArgument(int iIndex)
 
     //Rule 3.
     //but watch out for arguments that ends with \ character
-    size_t numTrailingBackslashes = findNumTrailingBackslashes(escapedArg.c_str());
+    size_t numTrailingBackslashes = utils::findNumTrailingBackslashes(escapedArg.c_str());
     if (numTrailingBackslashes > 0)
     {
       escapedArg.append(numTrailingBackslashes, '\\');
@@ -275,7 +275,7 @@ std::string ArgumentManager::getCommandLineArgument(int iIndex)
 
     //Rule 3.
     //but watch out for arguments that ends with \ character
-    size_t numTrailingBackslashes = findNumTrailingBackslashes(escapedArg.c_str());
+    size_t numTrailingBackslashes = utils::findNumTrailingBackslashes(escapedArg.c_str());
     if (numTrailingBackslashes > 0)
     {
       escapedArg.append(numTrailingBackslashes, '\\');
@@ -899,275 +899,275 @@ bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArgument
 }
 
 
-bool /*THIS IS DISABLED CODE ArgumentManager::parseCmdLine*/aaa(const char * iCmdLine, StringList & oArguments)
-{
-//#define PARSECMDLINE_DEBUG
-
-  oArguments.clear();
-
-  std::string accumulator;
-
-  //Remove ^ characters within the string.
-  //Caret characters are used to pass arguments from cmd.exe to foo.exe.
-  //They are not required once foo.exe has parsed the string
-  static const char * caretToken = "{DOUBLECARETTOKEN}";
-  std::string cmdLineTmp = iCmdLine;
-  strReplace(cmdLineTmp, "^^", caretToken);
-  strReplace(cmdLineTmp, "^", "");//remove all other single carret
-  strReplace(cmdLineTmp, caretToken, "^^");
-
-  const std::string cmdLineStr = cmdLineTmp;
-  const char * cmdLine = cmdLineStr.c_str();
-
-  bool inString = false;
-
-  char previous = '\0';
-
-  //Build an array that matches string's length to help mapping quotes
-  enum CHARACTER_CODES
-  {
-    undefined,        //skipped/unprocessed characters
-    separator,        //a space
-    opening,          //opening " character
-    closing,          //closing " character
-    plain,
-    escapeCommand,    //for \ character which escapes the following character
-    escapedQuote,     //for " escaped characters
-    escapedBackslash, //for \ escaped characters
-    literalCommand,   //for ^ character which escapes the following character
-    literalCharacter, //for characters escaped with ^
-    sequence2,        //for handling special sequence of 2 characters long (including current character)
-    sequence3,        //for handling special sequence of 3 characters long (including current character)
-    sequence4,        //for handling special sequence of 4 characters long (including current character)
-  };
-  CHARACTER_CODES * codes = new CHARACTER_CODES[cmdLineStr.size()];
-  for(size_t i=0; i<cmdLineStr.size(); i++)
-  {
-    codes[i] = undefined;
-  }
-
-  bool openingQuotePossibleEmptyArgument = false;
-  bool closingQuotePossibleEmptyArgument = false;
-
-  for(size_t i=0; i<cmdLineStr.size(); i++)
-  {
-    char c = cmdLine[i];
-
-    bool isLastCharacter = !(i+1<cmdLineStr.size());
-
-    if ( matchesSequence(cmdLine, i, "\"\"\"") ) // for """ character sequence
-    {
-      //must be defined as skipped, plain, opening
-      codes[i  ] = sequence3;
-      codes[i+1] = plain;
-
-      accumulator.push_back('\"');
-
-      i=i+2; //skip next 2 characters
-    }
-    else if ( matchesSequence(cmdLine, i, "^^") )
-    {
-      //escaped caret
-      codes[i  ] = literalCommand;
-      codes[i+1] = literalCharacter;
-
-      //keep next ^ character as plain text
-      accumulator.push_back( '^' );
-
-      i++; //skip next character
-    }
-    if (c == '^')
-    {
-      codes[i] = literalCommand;
-      //skipped
-    }
-    else if (c == '\"')
-    {
-      //deal with " characters...
-
-      if (getSafeCharacter(cmdLine, i-1) == '\"' && codes[i-1] == closing) //quote directly follows closer
-      {
-        //plain text character
-        codes[i] = plain;
-        accumulator.push_back(c);
-      }
-      else if ( !inString )
-      {
-        //opening double-quote
-        codes[i] = opening;
-
-        //starting a new string
-        inString = true;
-
-        //check if this opening quote could be an empty parameter ?
-        char previous = getSafeCharacter(cmdLine, i-1);
-        openingQuotePossibleEmptyArgument = (previous == '\0' || previous == ' ' || previous == '\t');
-
-        //forget about the " character
-      }
-      else if ( inString )
-      {
-        //closing double-quote
-        codes[i] = closing;
-
-        //ends a new string
-        inString = false;
-
-        //check if this closing quote could be an empty parameter ?
-        char next = getSafeCharacter(cmdLine, i+1);
-        closingQuotePossibleEmptyArgument = (next == '\0' || next == ' ' || next == '\t');
-
-        bool forceFlush = openingQuotePossibleEmptyArgument && closingQuotePossibleEmptyArgument;
-
-        //flush accumulator if required. Deals with arguments like: a "" b  where "" is an actual empty argument
-        if ( forceFlush )
-        {
-          oArguments.push_back(accumulator);
-          accumulator = "";
-        }
-
-        forceFlush = false;
-
-        //forget about the " character
-      }
-
-    }
-    else if ( matchesSequence(cmdLine, i, "\\\"") )
-    {
-      //escaped double-quote
-      codes[i  ] = escapeCommand;
-      codes[i+1] = escapedQuote;
-
-      //keep next " as plain character
-      accumulator.push_back('\"');
-
-      i++; //skip next character
-    }
-    else if ( matchesSequence(cmdLine, i, "\\\\\\\\") ) //sequence of \\\\ consecutive
-    {
-      //escaped backslash
-      codes[i  ] = sequence4;
-      codes[i+1] = escapedBackslash;
-      codes[i+2] = escapeCommand;
-      codes[i+3] = escapedBackslash;
-
-      //add escaped characters
-      accumulator.push_back('\\');
-      accumulator.push_back('\\');
-
-      i=i+3; //skip next characters
-    }
-    else if ( matchesSequence(cmdLine, i, "\\\\\\\"") ) //sequence of \\\" consecutive
-    {
-      //escaped backslash
-      codes[i  ] = escapeCommand;
-      codes[i+1] = escapedBackslash;
-
-      //keep next " as plain character
-      accumulator.push_back('\\');
-
-      i++; //skip next character
-    }
-    else if ( matchesSequence(cmdLine, i, "\\\\\"") ) //sequence of \\" consecutive
-    {
-      //escaped backslash
-      codes[i  ] = escapeCommand;
-      codes[i+1] = escapedBackslash;
-
-      //keep next " as plain character
-      accumulator.push_back('\\');
-
-      i++; //skip next character
-    }
-    else if ((c == ' ' || c == '\t') && inString == false)
-    {
-      //separator character
-      codes[i] = separator;
-
-      //flush accumulator;
-      if (accumulator != "")
-      {
-        oArguments.push_back(accumulator);
-        accumulator = "";
-      }
-    }
-    else
-    {
-      //plain text character
-      codes[i] = plain;
-      accumulator.push_back(c);
-    }
-
-    //next character
-  }
-
-  //flush accumulator;
-  if (accumulator != "")
-  {
-    oArguments.push_back(accumulator);
-    accumulator = "";
-  }
-
-#ifdef PARSECMDLINE_DEBUG
-  //DEBUG:
-  for(size_t i=0; i<cmdLineStr.size(); i++)
-  {
-    const char * style = "";
-    switch (codes[i])
-    {
-    case undefined:
-      style = "undefined";
-      break;
-    case separator:
-      style = "separator";
-      break;
-    case opening:
-      style = "opening";
-      break;
-    case closing:
-      style = "closing";
-      break;
-    case plain:
-      style = "plain";
-      break;
-    case escapeCommand:
-      style = "escapeCommand";
-      break;
-    case escapedQuote:
-      style = "escapedQuote";
-      break;
-    case escapedBackslash:
-      style = "escapedBackslash";
-      break;
-    case literalCommand:
-      style = "literalCommand";
-      break;
-    case literalCharacter:
-      style = "literalCharacter";
-      break;
-    case sequence2:
-      style = "sequence2";
-      break;
-    case sequence3:
-      style = "sequence3";
-      break;
-    case sequence4:
-      style = "sequence4";
-      break;
-    default :
-      style = "????";
-      break;
-    };
-    printf("DEBUG: %c => %s\n", cmdLine[i], style);
-  }
-#endif
-
-  delete[] codes;
-  codes = NULL;
-
-  return true;
-}
-
+//bool /*THIS IS DISABLED CODE ArgumentManager::parseCmdLine*/aaa(const char * iCmdLine, StringList & oArguments)
+//{
+////#define PARSECMDLINE_DEBUG
+//
+//  oArguments.clear();
+//
+//  std::string accumulator;
+//
+//  //Remove ^ characters within the string.
+//  //Caret characters are used to pass arguments from cmd.exe to foo.exe.
+//  //They are not required once foo.exe has parsed the string
+//  static const char * caretToken = "{DOUBLECARETTOKEN}";
+//  std::string cmdLineTmp = iCmdLine;
+//  strReplace(cmdLineTmp, "^^", caretToken);
+//  strReplace(cmdLineTmp, "^", "");//remove all other single carret
+//  strReplace(cmdLineTmp, caretToken, "^^");
+//
+//  const std::string cmdLineStr = cmdLineTmp;
+//  const char * cmdLine = cmdLineStr.c_str();
+//
+//  bool inString = false;
+//
+//  char previous = '\0';
+//
+//  //Build an array that matches string's length to help mapping quotes
+//  enum CHARACTER_CODES
+//  {
+//    undefined,        //skipped/unprocessed characters
+//    separator,        //a space
+//    opening,          //opening " character
+//    closing,          //closing " character
+//    plain,
+//    escapeCommand,    //for \ character which escapes the following character
+//    escapedQuote,     //for " escaped characters
+//    escapedBackslash, //for \ escaped characters
+//    literalCommand,   //for ^ character which escapes the following character
+//    literalCharacter, //for characters escaped with ^
+//    sequence2,        //for handling special sequence of 2 characters long (including current character)
+//    sequence3,        //for handling special sequence of 3 characters long (including current character)
+//    sequence4,        //for handling special sequence of 4 characters long (including current character)
+//  };
+//  CHARACTER_CODES * codes = new CHARACTER_CODES[cmdLineStr.size()];
+//  for(size_t i=0; i<cmdLineStr.size(); i++)
+//  {
+//    codes[i] = undefined;
+//  }
+//
+//  bool openingQuotePossibleEmptyArgument = false;
+//  bool closingQuotePossibleEmptyArgument = false;
+//
+//  for(size_t i=0; i<cmdLineStr.size(); i++)
+//  {
+//    char c = cmdLine[i];
+//
+//    bool isLastCharacter = !(i+1<cmdLineStr.size());
+//
+//    if ( matchesSequence(cmdLine, i, "\"\"\"") ) // for """ character sequence
+//    {
+//      //must be defined as skipped, plain, opening
+//      codes[i  ] = sequence3;
+//      codes[i+1] = plain;
+//
+//      accumulator.push_back('\"');
+//
+//      i=i+2; //skip next 2 characters
+//    }
+//    else if ( matchesSequence(cmdLine, i, "^^") )
+//    {
+//      //escaped caret
+//      codes[i  ] = literalCommand;
+//      codes[i+1] = literalCharacter;
+//
+//      //keep next ^ character as plain text
+//      accumulator.push_back( '^' );
+//
+//      i++; //skip next character
+//    }
+//    if (c == '^')
+//    {
+//      codes[i] = literalCommand;
+//      //skipped
+//    }
+//    else if (c == '\"')
+//    {
+//      //deal with " characters...
+//
+//      if (getSafeCharacter(cmdLine, i-1) == '\"' && codes[i-1] == closing) //quote directly follows closer
+//      {
+//        //plain text character
+//        codes[i] = plain;
+//        accumulator.push_back(c);
+//      }
+//      else if ( !inString )
+//      {
+//        //opening double-quote
+//        codes[i] = opening;
+//
+//        //starting a new string
+//        inString = true;
+//
+//        //check if this opening quote could be an empty parameter ?
+//        char previous = getSafeCharacter(cmdLine, i-1);
+//        openingQuotePossibleEmptyArgument = (previous == '\0' || previous == ' ' || previous == '\t');
+//
+//        //forget about the " character
+//      }
+//      else if ( inString )
+//      {
+//        //closing double-quote
+//        codes[i] = closing;
+//
+//        //ends a new string
+//        inString = false;
+//
+//        //check if this closing quote could be an empty parameter ?
+//        char next = getSafeCharacter(cmdLine, i+1);
+//        closingQuotePossibleEmptyArgument = (next == '\0' || next == ' ' || next == '\t');
+//
+//        bool forceFlush = openingQuotePossibleEmptyArgument && closingQuotePossibleEmptyArgument;
+//
+//        //flush accumulator if required. Deals with arguments like: a "" b  where "" is an actual empty argument
+//        if ( forceFlush )
+//        {
+//          oArguments.push_back(accumulator);
+//          accumulator = "";
+//        }
+//
+//        forceFlush = false;
+//
+//        //forget about the " character
+//      }
+//
+//    }
+//    else if ( matchesSequence(cmdLine, i, "\\\"") )
+//    {
+//      //escaped double-quote
+//      codes[i  ] = escapeCommand;
+//      codes[i+1] = escapedQuote;
+//
+//      //keep next " as plain character
+//      accumulator.push_back('\"');
+//
+//      i++; //skip next character
+//    }
+//    else if ( matchesSequence(cmdLine, i, "\\\\\\\\") ) //sequence of \\\\ consecutive
+//    {
+//      //escaped backslash
+//      codes[i  ] = sequence4;
+//      codes[i+1] = escapedBackslash;
+//      codes[i+2] = escapeCommand;
+//      codes[i+3] = escapedBackslash;
+//
+//      //add escaped characters
+//      accumulator.push_back('\\');
+//      accumulator.push_back('\\');
+//
+//      i=i+3; //skip next characters
+//    }
+//    else if ( matchesSequence(cmdLine, i, "\\\\\\\"") ) //sequence of \\\" consecutive
+//    {
+//      //escaped backslash
+//      codes[i  ] = escapeCommand;
+//      codes[i+1] = escapedBackslash;
+//
+//      //keep next " as plain character
+//      accumulator.push_back('\\');
+//
+//      i++; //skip next character
+//    }
+//    else if ( matchesSequence(cmdLine, i, "\\\\\"") ) //sequence of \\" consecutive
+//    {
+//      //escaped backslash
+//      codes[i  ] = escapeCommand;
+//      codes[i+1] = escapedBackslash;
+//
+//      //keep next " as plain character
+//      accumulator.push_back('\\');
+//
+//      i++; //skip next character
+//    }
+//    else if ((c == ' ' || c == '\t') && inString == false)
+//    {
+//      //separator character
+//      codes[i] = separator;
+//
+//      //flush accumulator;
+//      if (accumulator != "")
+//      {
+//        oArguments.push_back(accumulator);
+//        accumulator = "";
+//      }
+//    }
+//    else
+//    {
+//      //plain text character
+//      codes[i] = plain;
+//      accumulator.push_back(c);
+//    }
+//
+//    //next character
+//  }
+//
+//  //flush accumulator;
+//  if (accumulator != "")
+//  {
+//    oArguments.push_back(accumulator);
+//    accumulator = "";
+//  }
+//
+//#ifdef PARSECMDLINE_DEBUG
+//  //DEBUG:
+//  for(size_t i=0; i<cmdLineStr.size(); i++)
+//  {
+//    const char * style = "";
+//    switch (codes[i])
+//    {
+//    case undefined:
+//      style = "undefined";
+//      break;
+//    case separator:
+//      style = "separator";
+//      break;
+//    case opening:
+//      style = "opening";
+//      break;
+//    case closing:
+//      style = "closing";
+//      break;
+//    case plain:
+//      style = "plain";
+//      break;
+//    case escapeCommand:
+//      style = "escapeCommand";
+//      break;
+//    case escapedQuote:
+//      style = "escapedQuote";
+//      break;
+//    case escapedBackslash:
+//      style = "escapedBackslash";
+//      break;
+//    case literalCommand:
+//      style = "literalCommand";
+//      break;
+//    case literalCharacter:
+//      style = "literalCharacter";
+//      break;
+//    case sequence2:
+//      style = "sequence2";
+//      break;
+//    case sequence3:
+//      style = "sequence3";
+//      break;
+//    case sequence4:
+//      style = "sequence4";
+//      break;
+//    default :
+//      style = "????";
+//      break;
+//    };
+//    printf("DEBUG: %c => %s\n", cmdLine[i], style);
+//  }
+//#endif
+//
+//  delete[] codes;
+//  codes = NULL;
+//
+//  return true;
+//}
+//
 int ArgumentManager::findIndex(const char * iValue)
 {
   if (iValue == NULL)
