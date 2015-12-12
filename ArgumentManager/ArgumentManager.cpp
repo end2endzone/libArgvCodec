@@ -7,16 +7,93 @@
 // Windows Header Files:
 #include <windows.h>
 
+#include "psapi.h"
+#pragma comment(lib,"psapi.lib")
+
 #include "ArgumentManager.h"
 
 
 #define SAFE_DELETE(var)        {if (var) delete   var; var = NULL;}
 #define SAFE_DELETE_ARRAY(var)  {if (var) delete[] var; var = NULL;}
 
+std::string getLastErrorDescription()
+{
+  DWORD dwLastError = ::GetLastError();
+  char lpErrorBuffer[10240] = {0};
+  DWORD dwErrorBufferSize = sizeof(lpErrorBuffer);
+  if(dwLastError != 0)    // Don't want to see a "operation done successfully" error ;-)
+  {
+    ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,                 // It´s a system error
+                     NULL,                                      // No string to be formatted needed
+                     dwLastError,                               // Hey Windows: Please explain this error!
+                     MAKELANGID(LANG_NEUTRAL,SUBLANG_DEFAULT),  // Do it in the standard language
+                     lpErrorBuffer,                             // Put the message here
+                     dwErrorBufferSize-1,                       // Number of bytes to store the message
+                     NULL);
+    char lpDescBuffer[10240] = {0};
+    sprintf(lpDescBuffer, "Error %d, %s", dwLastError, lpErrorBuffer);
+    return std::string(lpDescBuffer);
+  }
+  return std::string();
+}
+
+std::string getLocalDllPath()
+{
+  std::string path;
+  char buffer[MAX_PATH] = {0};
+  HMODULE hModule = NULL;
+  if (!GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+          GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+          (LPCSTR) /*&getLocalExeName*/ __FUNCTION__,
+          &hModule))
+  {
+    return getLastErrorDescription();
+  }
+  /*get the path of this DLL*/
+  GetModuleFileName(hModule, buffer, sizeof(buffer));
+  if (buffer[0] != '\0')
+  {
+    /*remove .dll from path*/
+    buffer[std::string(buffer).size() - 4] = '\0';
+    path = buffer;
+  }
+  return path;
+}
+
+std::string getLocalExePath()
+{
+  std::string path;
+  //HANDLE hProcess = OpenProcess(
+  //  PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
+  //  FALSE,
+  //  ::GetCurrentProcessId()
+  //);
+  HANDLE hProcess = GetCurrentProcess();
+  if (hProcess) 
+  {
+    char buffer[MAX_PATH] = {0};
+    if (GetModuleFileNameEx(hProcess, 0, buffer, MAX_PATH))
+    {
+      path = buffer;
+    }
+    else
+    {
+      return getLastErrorDescription();
+    }
+    CloseHandle(hProcess);
+  }
+  return path;
+}
+
 ArgumentManager::ArgumentManager() :
   mArgv(NULL)
 {
+}
 
+ArgumentManager::ArgumentManager(const ArgumentManager & iArgumentManager) :
+  mArgv(NULL)
+{
+  (*this) = iArgumentManager;
 }
 
 ArgumentManager::~ArgumentManager()
@@ -34,7 +111,29 @@ void ArgumentManager::init(int argc, char** argv)
   init(tmp);
 }
 
-void ArgumentManager::init(const std::vector<std::string> & iArguments)
+void ArgumentManager::init(const char * iCmdLine)
+{
+  init(iCmdLine, true);
+}
+
+void ArgumentManager::init(const char * iCmdLine, bool iIncludeExec)
+{
+  StringList args;
+
+  bool parseSuccess = parseCmdLine(iCmdLine, args);
+  if (!parseSuccess)
+    args.clear();
+
+  //insert .exe path
+  if (iIncludeExec)
+  {
+    args.insert( args.begin(), getLocalExePath() );
+  }
+
+  init(args);
+}
+
+void ArgumentManager::init(const StringList & iArguments)
 {
   mArguments = iArguments;
   rebuildArgv();
@@ -103,6 +202,24 @@ char** ArgumentManager::getArgv()
   return mArgv;
 }
 
+const ArgumentManager & ArgumentManager::operator = (const ArgumentManager & iArgumentManager)
+{
+  this->init(iArgumentManager.mArguments);
+  return (*this);
+}
+
+bool ArgumentManager::operator == (const ArgumentManager & iArgumentManager) const
+{
+  bool equals = (this->mArguments == iArgumentManager.mArguments);
+  return equals;
+}
+
+bool ArgumentManager::operator != (const ArgumentManager & iArgumentManager) const
+{
+  bool notEquals = (this->mArguments != iArgumentManager.mArguments);
+  return notEquals;
+}
+
 void ArgumentManager::rebuildArgv()
 {
   SAFE_DELETE_ARRAY(mArgv);
@@ -133,6 +250,112 @@ bool ArgumentManager::isValid(int iIndex)
     return true;
   }
   return false;
+}
+
+bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArguments)
+{
+  oArguments.clear();
+
+  std::string accumulator;
+  std::string iCmdLineStr = iCmdLine;
+
+  bool inString = false;
+
+  char previous = '\0';
+
+  for(size_t i=0; i<iCmdLineStr.size(); i++)
+  {
+    char c = iCmdLine[i];
+    bool hasPreviousCharacter = (i>0);
+    bool hasNextCharacter = (i<iCmdLineStr.size()-1);
+    bool isLastCharacter = !hasNextCharacter;
+
+    bool isQuoteStart = (c == '\"' && (i==0 || iCmdLine[i-1]==' '));
+
+    if (c == '\"' && inString == false)
+    {
+      //starting a new string
+      inString = true;
+    }
+    else if (c == '\"' && inString == true)
+    {
+      //endding a new string
+      inString = false;
+
+      bool forceFlush = ( !hasNextCharacter ||                        //is the last argument specified
+                          (hasNextCharacter && iCmdLine[i+1] == ' ')  //matches the end of an argument
+                          ); //deal with "" arguments
+
+      //flush accumulator;
+      if (accumulator != "" || forceFlush )
+      {
+        oArguments.push_back(accumulator);
+        accumulator = "";
+      }
+    }
+    else if ((c == ' ' || c == '\t') && inString == false)
+    {
+      //flush accumulator;
+      if (accumulator != "")
+      {
+        oArguments.push_back(accumulator);
+        accumulator = "";
+      }
+    }
+    //else if (c == '\\' && inString == false)
+    //{
+    //  //do not escape character
+    //  accumulator.push_back(c);
+    //}
+
+    //NEVER ESCAPE \\ as \
+    //ie: foo.exe a\\b
+    // argv[1]=a\\b
+    //ie: foo.exe "a\\b"
+    // argv[1]=a\\b
+    //else if (c == '\\' && hasNextCharacter && iCmdLine[i+1] == '\\')
+    //{
+    //  //escaping next \ character
+    //  accumulator.push_back('\\');
+    //  i++; //skip escaped character
+    //}
+
+    //////////////////ESCAPE \\ only when they are within a string.
+    //////////////////ie:   "a b\\" c d
+    //////////////////argv[1]=a b\
+    //////////////////argv[2]=c
+    //////////////////argv[3]=d
+    ////////////////else if (c == '\\' && hasNextCharacter && iCmdLine[i+1] == '\\' && inString == true)
+    ////////////////{
+    ////////////////  //escaping next \ character
+    ////////////////  accumulator.push_back('\\');
+    ////////////////  i++; //skip escaped character
+    ////////////////}
+
+    else if (c == '\\' && hasNextCharacter && iCmdLine[i+1] == '\"')
+    {
+      //escaping next " character
+      accumulator.push_back('\"');
+      i++; //skip escaped character
+    }
+    else
+    {
+      //normal character
+      accumulator.push_back(c);
+    }
+
+    //remember previous
+    previous = c;
+  }
+
+  //flush accumulator;
+  if (accumulator != "")
+  {
+    oArguments.push_back(accumulator);
+    accumulator = "";
+  }
+
+  return true;
 }
 
 int ArgumentManager::findIndex(const char * iValue)
@@ -193,6 +416,23 @@ bool ArgumentManager::findValue(const char * iValueName, int & oIndex, std::stri
   return false;
 }
 
+bool ArgumentManager::findValue(const char * iValueName, int & oIndex, int & oValue)
+{
+  oIndex = -1;
+  oValue = 0;
+
+  int index = 0;
+  std::string sValue;
+  bool found = findValue(iValueName, index, sValue);
+  if (!found)
+    return false;
+  if (sValue != "")
+  {
+    oValue = atoi(sValue.c_str());
+  }
+  return true;
+}
+
 bool ArgumentManager::extractOption(const char * iValue)
 {
   if (iValue == NULL)
@@ -218,6 +458,21 @@ bool ArgumentManager::extractValue(const char * iValueName, std::string & oValue
     return this->remove(index);
   }
   return false;
+}
+
+bool ArgumentManager::extractValue(const char * iValueName, int & oValue)
+{
+  oValue = 0;
+
+  std::string sValue;
+  bool found = extractValue(iValueName, sValue);
+  if (!found)
+    return false;
+  if (sValue != "")
+  {
+    oValue = atoi(sValue.c_str());
+  }
+  return true;
 }
 
 std::string ArgumentManager::extractValue(const char * iValueName)

@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
   for(int i=0; i<argc; i++)
   {
     //printf(   "arg%d=%s\n", i, argv[i]);
-    fprintf(f, "arg%d=%s\n", i, argv[i]);
+    fprintf(f, "argv[%d]=%s\n", i, argv[i]);
   }
 
   fclose(f);

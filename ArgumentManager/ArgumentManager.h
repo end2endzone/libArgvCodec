@@ -7,15 +7,26 @@
 class ARGMGR_API ArgumentManager
 {
 public:
+  typedef std::vector<std::string> StringList;
+
   ArgumentManager();
+  ArgumentManager(const ArgumentManager & iArgumentManager);
   virtual ~ArgumentManager();
 
   void init(int argc, char** argv);
-  void init(const std::vector<std::string> & iArguments);
+  void init(const char * iCmdLine);
+  void init(const char * iCmdLine, bool iIncludeExec);
+  void init(const StringList & iArguments);
+
   char * getArgument(int iIndex);
 
   int getArgc();
   char** getArgv();
+
+  //logical methods
+  const ArgumentManager & operator = (const ArgumentManager & iArgumentManager);
+  bool operator == (const ArgumentManager & iArgumentManager) const;
+  bool operator != (const ArgumentManager & iArgumentManager) const;
 
   //manipulation methods
   bool insert(int iIndex, const char * iValue);
@@ -62,11 +73,12 @@ public:
   //              Must include any prefix like the following characters: "-name=", "--name="
   //              Must include the equal sign.
   //  oIndex: The index where the option was found. Set to -1 if option if not found.
-  //  oValue: The value of the option name. Set to empty string if not found.
+  //  oValue: The value of the option name. Set to empty string (or 0) if not found.
   // Return:
   //  Returns the true if the option's name is specified. Returns false otherwise.
   //
   bool findValue(const char * iValueName, int & oIndex, std::string & oValue);
+  bool findValue(const char * iValueName, int & oIndex, int & oValue);
 
   //
   // Description:
@@ -81,6 +93,7 @@ public:
   //  Removes the option from the argument list if found.
   //
   bool extractValue(const char * iValueName, std::string & oValue);
+  bool extractValue(const char * iValueName, int & oValue);
 
   //
   // Description:
@@ -96,10 +109,11 @@ public:
   std::string extractValue(const char * iValueName);
 
 private:
+
   void rebuildArgv();
   char** mArgv;
   bool isValid(int iIndex);
+  bool parseCmdLine(const char * iCmdLine, StringList & oArguments);
 
-  typedef std::vector<std::string> StringList;
   StringList mArguments;
 };
