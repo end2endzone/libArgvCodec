@@ -22,16 +22,6 @@ std::string getExePath()
 //int _tmain(int argc, _TCHAR* argv[])
 int main(int argc, char* argv[])
 {
-  //gArgumentMgr.init(argc, argv);
-  //if ( gArgumentMgr.contains("LIST_ARGUMENTS") )
-  //{
-  //  for(int i=0; i<argc; i++)
-  //  {
-  //    printf("arg%d=%s\n", i, argv[i]);
-  //  }
-	 // return 0;
-  //}
-
   RUN_ALL_TESTS();
 
   system("PAUSE");

@@ -1,4 +1,8 @@
 - Rename project to (CommandLineEncoder & ArgumentDecoder) or (ArgumentEncoder, ArgumentDecoder, CommandLineEncoder, CommandLineDecoder)
 - Add support for validating arguments againts an argument list specification
-- Move global functions of ArgumentManager.cpp out to an utility class (or util.h/cpp files)
-- Change calls like c == '\\' && getSafeCharacter(cmdLine, i+1) == '\\' && getSafeCharacter(cmdLine, i+2) == '\\' && getSafeCharacter(cmdLine, i+3) == '\"'    by isSequence(cmdLine, i, "abcd")
+DONE! - Move global functions of ArgumentManager.cpp out to an utility class (or util.h/cpp files)
+DONE! - Change calls like c == '\\' && getSafeCharacter(cmdLine, i+1) == '\\' && getSafeCharacter(cmdLine, i+2) == '\\' && getSafeCharacter(cmdLine, i+3) == '\"'    by isSequence(cmdLine, i, "abcd")
+- Rename getCommandLineArgument() to getEscapedArgument() and make it static like: static std::string getEscapedArgument(const char * iValue)
+- Rename findExpectedCmdLineArguments() to getArgumentsAsSeenByCmd()
+- Implement getArgumentsAsSeenByCreateProcess()
+- Remove usage of ArgumentLister. Create foo.h and foo.cpp that detects from argv[0] if .exe name is "foo.exe" and outputs in foo.exe.log the list of arguments. This way, the foo module can also export functions like getArgumentsAsSeenByCmd()
