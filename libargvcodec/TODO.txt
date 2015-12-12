@@ -25,3 +25,5 @@ DONE!   - testOperatorEqual
 DONE!   - testAssignmentOperator
 DONE! - Extract samples of ArgumentManager::parseCmdLine() as elements of a test case
 DONE! - Rename the tool to libcleanargv or libcleanarg, libargvcodec. libargvcodec WINS
+- Implement case insensitive ArgumentList APIs.
+- Implement automatic insertion of the = sign for "-name=value" in the following APIs: extractValue() and findValue()

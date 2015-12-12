@@ -526,6 +526,25 @@ TEST_F(TestArgumentList, testExtractValue)
 #undef ASSERT_EXTRACT
 }
 
+TEST_F(TestArgumentList, testExtractNextValue)
+{
+  //prepare
+  char* argv[] = {"test.exe", "/name", "foo", "/repeat", "5", "/inputfile", NULL};
+  int argc = sizeof(argv)/sizeof(argv[0]) - 1;
+
+  ArgumentList m;
+  m.init(argc, argv);
+
+  //assert
+  std::string value;
+#define ASSERT_EXTRACTNEXT( text, result, expectedValue, expectedListSize) ASSERT_TRUE( m.extractNextValue(text, value) == result ); ASSERT_EQ( value, expectedValue ); ASSERT_EQ( m.getArgc(), expectedListSize );
+  ASSERT_EXTRACTNEXT( "/repeat",     true,   "5", argc-2 );
+  ASSERT_EXTRACTNEXT( "/inputfile", false,   "",  argc-2 );
+  ASSERT_EXTRACTNEXT( "/name",       true, "foo", argc-4 );
+#undef ASSERT_EXTRACT
+
+}
+
 TEST_F(TestArgumentList, testCopyCtor)
 {
   ArgumentList a;
@@ -598,4 +617,25 @@ TEST_F(TestArgumentList, testAssignmentOperator) //operator =
 
   ASSERT_TRUE( a.getArgc() == b.getArgc() );
   ASSERT_TRUE( a == b );
+}
+
+TEST_F(TestArgumentList, testFindNextValue)
+{
+  //prepare
+  char* argv[] = {"test.exe", "/name", "foo", "/repeat", "5", "/inputfile", NULL};
+  int argc = sizeof(argv)/sizeof(argv[0]) - 1;
+
+  ArgumentList m;
+  m.init(argc, argv);
+
+  //assert
+  int index = 0;
+  std::string stringValue;
+  int intValue = 0;
+#define ASSERT_FINDNEXTVALUE( name, value, callResult, expectedIndex, expectedValue) ASSERT_TRUE( m.findNextValue(name, index, value) == callResult ); ASSERT_EQ( index, expectedIndex ); ASSERT_EQ( value, expectedValue );
+  ASSERT_FINDNEXTVALUE("/name",      stringValue, true,   1, "foo");
+  ASSERT_FINDNEXTVALUE("/repeat",    stringValue, true,   3, "5");
+  ASSERT_FINDNEXTVALUE("/repeat",    intValue,    true,   3, 5);
+  ASSERT_FINDNEXTVALUE("/inputfile", stringValue, false, -1, "");
+#undef ASSERT_FINDNEXTVALUE
 }

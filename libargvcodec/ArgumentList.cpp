@@ -221,6 +221,50 @@ bool ArgumentList::findValue(const char * iValueName, int & oIndex, int & oValue
     return false;
   if (sValue != "")
   {
+    oIndex = index;
+    oValue = atoi(sValue.c_str());
+  }
+  return true;
+}
+
+bool ArgumentList::findNextValue(const char * iValueName, int & oIndex, std::string & oValue) const
+{
+  oIndex = -1;
+  oValue= "";
+  if (iValueName == NULL)
+    return false;
+  for(size_t i=0; i<mArguments.size(); i++)
+  {
+    const std::string & arg = mArguments[i];
+    if (arg == iValueName)
+    {
+      //find option.
+      //look for the next argument as the value
+      if (i+1 < mArguments.size())
+      {
+        //good a value is available
+        oIndex = (int)i;
+        oValue = mArguments[i+1];
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool ArgumentList::findNextValue(const char * iValueName, int & oIndex, int & oValue) const
+{
+  oIndex = -1;
+  oValue = 0;
+
+  int index = 0;
+  std::string sValue;
+  bool found = findNextValue(iValueName, index, sValue);
+  if (!found)
+    return false;
+  if (sValue != "")
+  {
+    oIndex = index;
     oValue = atoi(sValue.c_str());
   }
   return true;
@@ -272,16 +316,56 @@ std::string ArgumentList::extractValue(const char * iValueName)
 {
   if (iValueName == NULL)
     return "";
-  int index = 0;
   std::string value;
-  bool found = findValue(iValueName, index, value);
+  bool found = extractValue(iValueName, value);
   if (found)
   {
-    bool removed = this->remove(index);
-    if (removed)
-      return value;
-    else
-      return "";
+    return value;
+  }
+  return "";
+}
+
+bool ArgumentList::extractNextValue(const char * iValueName, std::string & oValue)
+{
+  oValue = "";
+  if (iValueName == NULL)
+    return false;
+  int index = 0;
+  bool found = findNextValue(iValueName, index, oValue);
+  if (found)
+  {
+    bool success = true;
+    success = success && this->remove(index); //the option
+    success = success && this->remove(index); //the value
+    return success;
+  }
+  return false;
+}
+
+bool ArgumentList::extractNextValue(const char * iValueName, int & oValue)
+{
+  oValue = 0;
+
+  std::string sValue;
+  bool found = extractNextValue(iValueName, sValue);
+  if (!found)
+    return false;
+  if (sValue != "")
+  {
+    oValue = atoi(sValue.c_str());
+  }
+  return true;
+}
+
+std::string ArgumentList::extractNextValue(const char * iValueName)
+{
+  if (iValueName == NULL)
+    return "";
+  std::string value;
+  bool found = extractNextValue(iValueName, value);
+  if (found)
+  {
+    return value;
   }
   return "";
 }

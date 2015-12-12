@@ -68,7 +68,8 @@ public:
   //  Named values are specified with the following format: [prefix]name=value (where prefix is optional)
   // Parameters:
   //  iValueName: The option's name are looking for.
-  //              Must include any prefix like the following characters: "-name=", "--name="
+  //              The prefix is optional. Can be as simple as "name=value"
+  //              Must include any prefix like the following characters: "-name=", "--name=", "/name="
   //              Must include the equal sign.
   //  oIndex: The index where the option was found. Set to -1 if option if not found.
   //  oValue: The value of the option name. Set to empty string (or 0) if not found.
@@ -77,6 +78,23 @@ public:
   //
   bool findValue(const char * iValueName, int & oIndex, std::string & oValue) const;
   bool findValue(const char * iValueName, int & oIndex, int & oValue) const;
+
+  //
+  // Description:
+  //  Finds the value that follows the exact named argument.
+  //  Named values are specified with the following format: [prefix]name value (where prefix is optional)
+  //  Note that argument names and values are not separated by an equal sign but specified as 2 single parameters.
+  // Parameters:
+  //  iValueName: The option's name are looking for.
+  //              The prefix is optional. Can be as simple as "name"
+  //              Must include any prefix like the following characters: "-name", "--name", "/name"
+  //  oIndex: The index where the option was found. Set to -1 if option if not found.
+  //  oValue: The value of the option name. Set to empty string (or 0) if not found.
+  // Return:
+  //  Returns the true if the option's name is specified followed by a valid value. Returns false otherwise.
+  //
+  bool findNextValue(const char * iValueName, int & oIndex, std::string & oValue) const;
+  bool findNextValue(const char * iValueName, int & oIndex, int & oValue) const;
 
   //
   // Description:
@@ -98,13 +116,37 @@ public:
   //  Extracts a name=value pair from the list of parametes.
   //  Removes the value from the argument list if found.
   // Parameters:
-  //  iValueName: The option's name are looking for.
-  //              Must include any prefix like the following characters: "-name=", "--name="
+  //  iValueName: The option's name we are looking for.
+  //              The prefix is optional. Can be as simple as "name=value"
+  //              Must include any prefix like the following characters: "-name=", "--name=", "/name="
   //              Must include the equal sign.
   // Returns:
   //  Returns the option's value if found. Returns an empty string otherwise
   //
   std::string extractValue(const char * iValueName);
+
+  //
+  // Description:
+  //  Same as: bool findNextValue(char* iValueName, std::string & oValue);
+  //  Removes the option and its value from the argument list if found.
+  //
+  bool extractNextValue(const char * iValueName, std::string & oValue);
+  bool extractNextValue(const char * iValueName, int & oValue);
+
+  //
+  // Description:
+  //  Extracts the value that follows the exact named argument from the list of parametes.
+  //  Named values are specified with the following format: [prefix]name value (where prefix is optional)
+  //  Note that argument names and values are not separated by an equal sign but specified as 2 single parameters.
+  //  Removes the option and its value from the argument list if found.
+  // Parameters:
+  //  iValueName: The option's name we are looking for.
+  //              The prefix is optional. Can be as simple as "name"
+  //              Must include any prefix like the following characters: "-name", "--name", "/name"
+  // Returns:
+  //  Returns the option's value if found. Returns an empty string otherwise
+  //
+  std::string extractNextValue(const char * iValueName);
 
 private:
 

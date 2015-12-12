@@ -16,6 +16,9 @@
     <Filter Include="External Files">
       <UniqueIdentifier>{c5e4da0a-57f4-4f96-8722-500bf25751e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{68b8070a-f087-40ab-9c3d-ed9e7b99aed9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArgumentLister.cpp">
@@ -27,20 +30,20 @@
     <ClCompile Include="gtest_emulator.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestArgumentList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCmdPromptArgumentCodec.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCreateProcessArgumentCodec.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TestUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\libargvcodec\utils.cpp">
       <Filter>External Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestArgumentList.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCmdPromptArgumentCodec.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCreateProcessArgumentCodec.cpp">
+      <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
