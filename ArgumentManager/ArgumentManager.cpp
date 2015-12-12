@@ -114,13 +114,9 @@ std::string ArgumentManager::getCommandLineArgument(int iIndex)
   //http://stackoverflow.com/questions/2393384/escape-string-for-process-start
   //http://stackoverflow.com/questions/5510343/escape-command-line-arguments-in-c-sharp/6040946#6040946
 
-
-  //NOT IMPLEMENTED
-  //TODO: IMPLEMENT ArgumentManager::getCommandLine()
-
   std::string plainArgument = getArgument(iIndex);
 
-  //Rule 10. Deal with empty argument ASAP
+  //Rule 6. Deal with empty argument ASAP
   if (plainArgument == "")
   {
     return std::string("\"\"");
@@ -128,23 +124,27 @@ std::string ArgumentManager::getCommandLineArgument(int iIndex)
 
   //check flags
 
-  //Rule 9.
+  //Rule 1.1.
   bool isStringArgument = false;
   isStringArgument = isStringArgument || (plainArgument.find(" ") != std::string::npos);
   isStringArgument = isStringArgument || (plainArgument.find("\t") != std::string::npos);
 
+  //Rule 5.1.
   bool hasShellCharacters_ = hasShellCharacters(plainArgument.c_str());
-  bool isCaretStringArgument = isStringArgument && hasShellCharacters_;
+  isStringArgument = isStringArgument || hasShellCharacters_;
   
-  //Unknown rule.
-  //force caret-string if a shell character follows a " character.
-  for(size_t i=0; i<plainArgument.size(); i++)
-  {
-    char c = plainArgument[i];
-    bool isLastChar = !((i+1)<plainArgument.size());
-    if (!isLastChar && c == '\"' && isShellCharacter(plainArgument[i+1]))
-      isCaretStringArgument = true;
-  }
+  //Rule 4.
+  bool isCaretStringArgument = false; // isStringArgument && hasShellCharacters_;
+
+  ////Unknown rule.
+  ////force caret-string if a shell character follows a " character.
+  //for(size_t i=0; i<plainArgument.size(); i++)
+  //{
+  //  char c = plainArgument[i];
+  //  bool isLastChar = !((i+1)<plainArgument.size());
+  //  if (!isLastChar && c == '\"' && isShellCharacter(plainArgument[i+1]))
+  //    isCaretStringArgument = true;
+  //}
 
   std::string escapedArg;
   size_t numBackslashes = 0;
@@ -155,22 +155,26 @@ std::string ArgumentManager::getCommandLineArgument(int iIndex)
 
     if (isShellCharacter(c))
     {
+      //Rule 3.
+      //Unescaped \ characters
       //flush backslashes accumulator
-      if (numBackslashes > 0)
-      {
-        escapedArg.append(numBackslashes, '\\');
-      }
+      //if (numBackslashes > 0)
+      //{
+      //  escapedArg.append(numBackslashes, '\\');
+      //}
+      escapedArg.append( numBackslashes, '\\' );
+      numBackslashes = 0;
 
       //escape character
       if (isStringArgument && !isCaretStringArgument)
       {
-        //Rule 5.
+        //Rule 5.1.
         //special shell character inside a string which is safe to *NOT* escape
         escapedArg.append(1, c);
       }
       else
       {
-        //Rule 8.
+        //Rule 5.2.
         //not a string or using a caret-string. Must escape
         escapedArg.append(1, '^');
         escapedArg.append(1, c);
@@ -188,48 +192,65 @@ std::string ArgumentManager::getCommandLineArgument(int iIndex)
 
       if (isCaretStringArgument)
       {
-        //Rule 7.
+        //Rule 2.1.
         escapedArg.append(1, '\\');
         escapedArg.append(1, '^');
+        escapedArg.append(1, c);
+      }
+      else if (isStringArgument)
+      {
+        //Rule 2.
+        //escaped " character (using "" for escaping)
+        escapedArg.append(1, c);
         escapedArg.append(1, c);
       }
       else
       {
         //Rule 2.
+        //escaped " character (using \" for escaping)
         escapedArg.append(1, '\\');
         escapedArg.append(1, c);
       }
     }
     else if(c == '\\')
     {
+      //Rule 3.
       //accumulate
       numBackslashes++;
     }
     else
     {
+      //Rule 3.
+      //Unescaped \ characters
       //flush backslashes accumulator
-      if (numBackslashes > 0)
-      {
-        escapedArg.append(numBackslashes, '\\');
-      }
+      //if (numBackslashes > 0)
+      //{
+      //  escapedArg.append(numBackslashes, '\\');
+      //}
+      escapedArg.append( numBackslashes, '\\' );
+      numBackslashes = 0;
 
-      //Rule 11.
+      //Rule 1.
       //plain character
       escapedArg.append( 1, c );
       numBackslashes = 0;
     }
   }
 
+  //Rule 3.
+  //Unescaped \ characters
   //flush backslashes accumulator
-  if (numBackslashes > 0)
-  {
-    escapedArg.append(numBackslashes, '\\');
-  }
+  //if (numBackslashes > 0)
+  //{
+  //  escapedArg.append(numBackslashes, '\\');
+  //}
+  escapedArg.append( numBackslashes, '\\' );
+  numBackslashes = 0;
 
   //deal with flags
   if (isCaretStringArgument)
   {
-    //Rule 6.
+    //Rule 4.
     //wrap escapedArg with ^" starts/ends caret-string commands
     escapedArg.insert(0, "^\"");
 
