@@ -1,7 +1,32 @@
 #include "gtest_emulator.h"
 #include "ArgumentManager.h"
+#include "utils.h"
 
 #define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
+
+bool fileExists(const char * iPath)
+{
+  FILE * f = fopen(iPath, "rb");
+  if (!f)
+    return false;
+  fclose(f);
+  return true;
+}
+
+std::string getSequencedFile(const char * iPrefix, int iValue, const char * iPostfix, int iValueLength)
+{
+  static const int BUFFER_SIZE = 1024;
+  char buffer[BUFFER_SIZE];
+
+  char valueFormat[BUFFER_SIZE];
+  char value[BUFFER_SIZE];
+  sprintf(valueFormat, "%%0%dd", iValueLength);
+  sprintf(value, valueFormat, iValue);
+
+  sprintf(buffer, "%s%s%s", iPrefix, value, iPostfix);
+
+  return std::string(buffer);
+}
 
 bool isIdentical(ArgumentManager & m, int expectedArgc, char ** expectedArgv)
 {
@@ -32,32 +57,6 @@ bool isIdentical(ArgumentManager & m, int expectedArgc, char ** expectedArgv)
     return false;
 
   return true;
-}
-
-int myReplace(std::string & iString, const char * iOldValue, const char * iNewValue)
-{
-  std::string tmpOldValue = iOldValue;
-  std::string tmpNewValue = iNewValue;
-
-  int numOccurance = 0;
-
-  if (tmpOldValue.size() > 0)
-  {
-    int startPos = 0;    
-    int findPos = -1;
-    do
-    {
-        findPos = iString.find(tmpOldValue, startPos);
-        if (findPos != std::string::npos)
-        {
-          iString.replace(findPos, tmpOldValue.length(), tmpNewValue);
-          startPos = findPos + tmpNewValue.length();
-          numOccurance++;
-        }
-    }
-    while (findPos != -1);
-  }
-  return numOccurance;
 }
 
 bool findExpectedCmdLineArguments(const char * iCmdLine, ArgumentManager::StringList & oArguments)
@@ -93,10 +92,10 @@ bool findExpectedCmdLineArguments(const char * iCmdLine, ArgumentManager::String
     sprintf(buffer, "argv[%d]=", argNumber);
 
     //remove from line;
-    myReplace(line, buffer, "");
+    strReplace(line, buffer, "");
 
     //remove ending CRLF at the end of the line;
-    myReplace(line, "\n", "");
+    strReplace(line, "\n", "");
 
     oArguments.push_back(line);
 
@@ -105,6 +104,17 @@ bool findExpectedCmdLineArguments(const char * iCmdLine, ArgumentManager::String
 
   fclose(f);
   return true;
+}
+
+std::string getSystemArgument( const char * iEscapedArg)
+{
+  ArgumentManager::StringList arguments;
+  bool success = findExpectedCmdLineArguments(iEscapedArg, arguments);
+  if (arguments.size() != 2)
+    return false;
+
+  std::string confirmedArgumentValue = arguments[1];
+  return confirmedArgumentValue;
 }
 
 TEST_F(ArgumentManager, testInitArgcArgv)
@@ -168,25 +178,15 @@ TEST_F(ArgumentManager, testInitVector)
 }
 
 
-TEST_F(ArgumentManager, testInitString)
+TEST_F(ArgumentManager, DISABLED_testInitString)
 {
   const char * inputFile = "testInitString.txt";
-  FILE * f = fopen(inputFile, "r");
-  ASSERT_TRUE( f != NULL );
-
-  static const int BUFFER_SIZE = 10240;
-  char buffer[BUFFER_SIZE];
-
-  printf("\n");
 
   ArgumentManager::StringList cmdLines;
-  while( fgets(buffer, BUFFER_SIZE, f) != NULL )
-  {
-    std::string cmdLine = buffer;
-    myReplace(cmdLine, "\n", "");
+  ASSERT_TRUE( readTextFile(inputFile, cmdLines) );
+  ASSERT_TRUE( cmdLines.size() > 0 );
 
-    cmdLines.push_back(cmdLine);
-  }
+  printf("\n");
 
   for(size_t i=0; i<cmdLines.size(); i++)
   {
@@ -228,7 +228,248 @@ TEST_F(ArgumentManager, testInitString)
     }
     printf("  success\n");
   }
-  fclose(f);
+}
+
+TEST_F(ArgumentManager, DISABLED_testGetCommandLine)
+{
+  const char * inputFilePrefix = "testGetCommandLine";
+  const char * inputFilePostfix = ".txt";
+  
+  //discover test files
+  ArgumentManager::StringList testFiles;
+  static const int MAX_ID_LENGTH = 3;
+  int fileId = 1;
+  std::string inputFile = getSequencedFile(inputFilePrefix, fileId, inputFilePostfix, MAX_ID_LENGTH);
+  bool fileFound = fileExists( inputFile.c_str() );
+  while(fileFound)
+  {
+    testFiles.push_back(inputFile);
+
+    //prepare for next loop
+    fileId++;
+    inputFile = getSequencedFile(inputFilePrefix, fileId, inputFilePostfix, MAX_ID_LENGTH);
+    fileFound = fileExists( inputFile.c_str() );
+  }
+  ASSERT_TRUE( testFiles.size() > 0 );
+
+  printf("\n");
+
+  //for each test files
+  for(size_t i=0; i<testFiles.size(); i++)
+  {
+    const std::string & testFile = testFiles[i];
+
+    //arrange
+    ArgumentManager::StringList expectedArgs;
+    ASSERT_TRUE( readTextFile(testFile.c_str(), expectedArgs) );
+    printf("Testing %d/%d\n", i+1, testFiles.size());
+
+    //insert fake .exe name
+    expectedArgs.insert(expectedArgs.begin(), "foo.exe");
+
+    ArgumentManager mgr;
+    mgr.init(expectedArgs);
+
+    //act
+    std::string cmdLine = mgr.getCommandLine();
+
+    //compute the actual list of arguments
+    ArgumentManager::StringList actualArgs;
+    bool success = findExpectedCmdLineArguments(cmdLine.c_str(), actualArgs);
+    ASSERT_TRUE(success);
+
+    //debug
+    printf("  Expecting\n");
+    for(size_t j=1; j<expectedArgs.size(); j++)
+    {
+      const std::string & arg = expectedArgs[j];
+      printf("    argv[%d]=%s\n", j, arg.c_str() );
+    }
+    printf("  Actuals:\n");
+    for(size_t j=1; j<actualArgs.size(); j++)
+    {
+      const std::string & arg = actualArgs[j];
+      printf("    argv[%d]=%s\n", j, arg.c_str() );
+    }
+
+    //assert
+    ASSERT_EQ( expectedArgs.size(), actualArgs.size() );
+    //compare each argument
+    for(size_t j=1; j<expectedArgs.size(); j++) //skip first argument since executable names may differ
+    {
+      const char * expectedArg = expectedArgs[j].c_str();
+      const char * actualArg = actualArgs[j].c_str();
+      ASSERT_CSTR_EQ(expectedArg, actualArg);
+    }
+    printf("  success\n");
+
+    //next test file
+  }
+}
+
+TEST_F(ArgumentManager, DISABLED_testGetCommandLine2)
+{
+  const char * inputFile = "testInitString.txt";
+
+  ArgumentManager::StringList testCmdLines;
+  ASSERT_TRUE( readTextFile(inputFile, testCmdLines) );
+  ASSERT_TRUE( testCmdLines.size() > 0 );
+
+  printf("\n");
+
+  //for each testCmdLines
+  for(size_t i=0; i<testCmdLines.size(); i++)
+  {
+    //arrange
+    const std::string testCmdLine = testCmdLines[i];
+    printf("Testing %d/%d\n", i+1, testCmdLines.size());
+
+    //compute the expected list of arguments
+    ArgumentManager::StringList expectedArgs;
+    bool success = findExpectedCmdLineArguments(testCmdLine.c_str(), expectedArgs);
+    ASSERT_TRUE(success);
+
+    //init the manager
+    ArgumentManager mgr;
+    mgr.init(expectedArgs);
+
+    //act
+    std::string cmdLine = mgr.getCommandLine();
+
+    //compute the actual list of arguments
+    ArgumentManager::StringList actualArgs;
+    success = findExpectedCmdLineArguments(cmdLine.c_str(), actualArgs);
+    ASSERT_TRUE(success);
+
+    //debug
+    printf("  Expecting\n");
+    for(size_t j=1; j<expectedArgs.size(); j++)
+    {
+      const std::string & arg = expectedArgs[j];
+      printf("    argv[%d]=%s\n", j, arg.c_str() );
+    }
+    printf("  Actuals:\n");
+    printf("    cmdline=%s\n", cmdLine.c_str());
+    for(size_t j=1; j<actualArgs.size(); j++)
+    {
+      const std::string & arg = actualArgs[j];
+      printf("    argv[%d]=%s\n", j, arg.c_str() );
+    }
+
+    //assert
+    ASSERT_EQ( expectedArgs.size(), actualArgs.size() );
+    //compare each argument
+    for(size_t j=1; j<expectedArgs.size(); j++) //skip first argument since executable names may differ
+    {
+      const char * expectedArg = expectedArgs[j].c_str();
+      const char * actualArg = actualArgs[j].c_str();
+      ASSERT_CSTR_EQ(expectedArg, actualArg);
+    }
+    printf("  success\n");
+  }
+}
+
+void prepareTestGetCommandLineArgument(const char * iRawArguementValue, const char * iExpectedArg, std::string & oEscapedArgument, std::string & oSystemArgumentValue)
+{
+  //arrange
+  ArgumentManager::StringList expectedArgs;
+  expectedArgs.push_back("foo.exe");
+  expectedArgs.push_back(iRawArguementValue);
+
+  ArgumentManager mgr;
+  mgr.init(expectedArgs);
+
+  //act
+  oEscapedArgument = mgr.getCommandLineArgument(1);
+  oSystemArgumentValue = getSystemArgument( oEscapedArgument.c_str() );
+
+  //debug
+  printf("Testing argv[1]=%s\n", iRawArguementValue);
+  printf("  Expecting:\n");
+  printf("    foo.exe %s\n", iExpectedArg);
+  printf("  Actual:\n");
+  printf("    foo.exe %s\n", oEscapedArgument.c_str());
+  printf("  validating with system's cmd.exe...\n");
+  printf("    argv[1]=%s\n", oSystemArgumentValue.c_str());
+}
+
+TEST_F(ArgumentManager, testGetCommandLineArgument)
+{
+  printf("\n");
+
+  //-----------------------------------------------------------------------------------
+  {
+    const char * argumentValue      = "malicious argument\"&whoami";
+    const char * expectedEscapedArg = "^\"malicious argument\\^\"^&whoami^\"";
+    std::string    actualEscapedArg;
+    std::string systemArgumentValue;
+
+    prepareTestGetCommandLineArgument(argumentValue, expectedEscapedArg, actualEscapedArg, systemArgumentValue);
+
+    //assert
+    //ASSERT_CSTR_EQ(expectedEscapedArg         , actualEscapedArg.c_str());
+    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    printf("good!\n");
+  }
+  //-----------------------------------------------------------------------------------
+  {
+    const char * argumentValue      = "\\\"hello\\\"";
+    const char * expectedEscapedArg = "\\\\\\\"hello\\\\\\\"";
+    std::string    actualEscapedArg;
+    std::string systemArgumentValue;
+
+    prepareTestGetCommandLineArgument(argumentValue, expectedEscapedArg, actualEscapedArg, systemArgumentValue);
+
+    //assert
+    //ASSERT_CSTR_EQ(expectedEscapedArg         , actualEscapedArg.c_str());
+    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    printf("good!\n");
+  }
+  //-----------------------------------------------------------------------------------
+  {
+    const char * argumentValue      = "\\\"hello\\ world";
+    const char * expectedEscapedArg = "\"\\\\\\\"hello\\ world\"";
+    std::string    actualEscapedArg;
+    std::string systemArgumentValue;
+
+    prepareTestGetCommandLineArgument(argumentValue, expectedEscapedArg, actualEscapedArg, systemArgumentValue);
+
+    //assert
+    //ASSERT_CSTR_EQ(expectedEscapedArg         , actualEscapedArg.c_str());
+    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    printf("good!\n");
+  }
+  //-----------------------------------------------------------------------------------
+  {
+    const char * argumentValue      = "test&whoami";
+    const char * expectedEscapedArg = "test^&whoami";
+    std::string    actualEscapedArg;
+    std::string systemArgumentValue;
+
+    prepareTestGetCommandLineArgument(argumentValue, expectedEscapedArg, actualEscapedArg, systemArgumentValue);
+
+    //assert
+    //ASSERT_CSTR_EQ(expectedEscapedArg         , actualEscapedArg.c_str());
+    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    printf("good!\n");
+  }
+  //-----------------------------------------------------------------------------------
+  {
+    const char * argumentValue      = "test\\\"&whoami";
+    const char * expectedEscapedArg = "test\\\\\\\"^&whoami";
+    std::string    actualEscapedArg;
+    std::string systemArgumentValue;
+
+    prepareTestGetCommandLineArgument(argumentValue, expectedEscapedArg, actualEscapedArg, systemArgumentValue);
+
+    //assert
+    //ASSERT_CSTR_EQ(expectedEscapedArg         , actualEscapedArg.c_str());
+    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    printf("good!\n");
+  }
+  //-----------------------------------------------------------------------------------
+
+
 }
 
 TEST_F(ArgumentManager, testInsertEnd)

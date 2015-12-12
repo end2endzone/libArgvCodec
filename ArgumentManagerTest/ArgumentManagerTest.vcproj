@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\ArgumentManager"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -86,6 +86,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="call PostBuild.bat $(ProjectDir) $(OutDir)"
 			/>
 		</Configuration>
 		<Configuration
@@ -116,7 +117,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\ArgumentManager"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -161,6 +162,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="call PostBuild.bat $(ProjectDir) $(OutDir)"
 			/>
 		</Configuration>
 	</Configurations>
@@ -209,6 +211,18 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
+				RelativePath=".\postbuild.bat"
+				>
+			</File>
+			<File
+				RelativePath=".\testGetCommandLine001.txt"
+				>
+			</File>
+			<File
+				RelativePath=".\testGetCommandLine002.txt"
+				>
+			</File>
+			<File
 				RelativePath=".\testInitString.txt"
 				>
 				<FileConfiguration
@@ -229,6 +243,18 @@
 						Outputs="$(OutDir)\$(InputFileName)"
 					/>
 				</FileConfiguration>
+			</File>
+		</Filter>
+		<Filter
+			Name="External Files"
+			>
+			<File
+				RelativePath="..\ArgumentManager\utils.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\ArgumentManager\utils.h"
+				>
 			</File>
 		</Filter>
 		<File

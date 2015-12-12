@@ -3,107 +3,9 @@
 
 #include "targetver.h"
 
-#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
-// Windows Header Files:
-#include <windows.h>
-
-#include "psapi.h"
-#pragma comment(lib,"psapi.lib")
-
 #include "ArgumentManager.h"
-
-#define SAFE_DELETE(var)        {if (var) delete   var; var = NULL;}
-#define SAFE_DELETE_ARRAY(var)  {if (var) delete[] var; var = NULL;}
-
-void replace(std::string & iValue, const std::string & iOldStr, const std::string & iNewStr)
-{
-  size_t pos = 0;
-  while((pos = iValue.find(iOldStr, pos)) != std::string::npos)
-  {
-    iValue.replace(pos, iOldStr.length(), iNewStr);
-    pos += iNewStr.length();
-  }
-}
-void replace(std::string & iValue, const char * iOldStr, const char * iNewStr)
-{
-  size_t oldLength = std::string(iOldStr).length();
-  size_t newLength = std::string(iNewStr).length();
-  size_t pos = 0;
-  while((pos = iValue.find(iOldStr, pos)) != std::string::npos)
-  {
-    iValue.replace(pos, oldLength, iNewStr);
-    pos += newLength;
-  }
-}
-
-std::string getLastErrorDescription()
-{
-  DWORD dwLastError = ::GetLastError();
-  char lpErrorBuffer[10240] = {0};
-  DWORD dwErrorBufferSize = sizeof(lpErrorBuffer);
-  if(dwLastError != 0)    // Don't want to see a "operation done successfully" error ;-)
-  {
-    ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,                 // It´s a system error
-                     NULL,                                      // No string to be formatted needed
-                     dwLastError,                               // Hey Windows: Please explain this error!
-                     MAKELANGID(LANG_NEUTRAL,SUBLANG_DEFAULT),  // Do it in the standard language
-                     lpErrorBuffer,                             // Put the message here
-                     dwErrorBufferSize-1,                       // Number of bytes to store the message
-                     NULL);
-    char lpDescBuffer[10240] = {0};
-    sprintf(lpDescBuffer, "Error %d, %s", dwLastError, lpErrorBuffer);
-    return std::string(lpDescBuffer);
-  }
-  return std::string();
-}
-
-std::string getLocalDllPath()
-{
-  std::string path;
-  char buffer[MAX_PATH] = {0};
-  HMODULE hModule = NULL;
-  if (!GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
-          GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-          (LPCSTR) /*&getLocalExeName*/ __FUNCTION__,
-          &hModule))
-  {
-    return getLastErrorDescription();
-  }
-  /*get the path of this DLL*/
-  GetModuleFileName(hModule, buffer, sizeof(buffer));
-  if (buffer[0] != '\0')
-  {
-    /*remove .dll from path*/
-    buffer[std::string(buffer).size() - 4] = '\0';
-    path = buffer;
-  }
-  return path;
-}
-
-std::string getLocalExePath()
-{
-  std::string path;
-  //HANDLE hProcess = OpenProcess(
-  //  PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
-  //  FALSE,
-  //  ::GetCurrentProcessId()
-  //);
-  HANDLE hProcess = GetCurrentProcess();
-  if (hProcess) 
-  {
-    char buffer[MAX_PATH] = {0};
-    if (GetModuleFileNameEx(hProcess, 0, buffer, MAX_PATH))
-    {
-      path = buffer;
-    }
-    else
-    {
-      return getLastErrorDescription();
-    }
-    CloseHandle(hProcess);
-  }
-  return path;
-}
+#include "utils.h"
+#include "os.h"
 
 ArgumentManager::ArgumentManager() :
   mArgv(NULL)
@@ -170,10 +72,12 @@ std::string ArgumentManager::getCommandLine()
 {
   std::string cmdLine;
 
-  for(size_t i=0; i<mArguments.size(); i++)
+  for(size_t i=1; i<mArguments.size(); i++) //skip first element since it refers to the actual .exe that was launched
   {
     std::string arg = getCommandLineArgument((int)i);
     cmdLine.append(arg);
+
+    //add a space between arguments (except the last one)
     bool isLastArgument = !(i+1<mArguments.size());
     if (!isLastArgument)
       cmdLine.append(" ");
@@ -192,29 +96,135 @@ std::string ArgumentManager::getCommandLineArgument(int iIndex)
   //NOT IMPLEMENTED
   //TODO: IMPLEMENT ArgumentManager::getCommandLine()
 
-  std::string arg = getArgument(iIndex);
+  char * plainArgument = getArgument(iIndex);
 
-  //replace special shell characters
-  ::replace(arg, "^", "^^");
-  ::replace(arg, "&", "^&");
-  ::replace(arg, "|", "^|");
-  ::replace(arg, "(", "^(");
-  ::replace(arg, ")", "^)");
-  ::replace(arg, "<", "^<");
-  ::replace(arg, ">", "^>");
-  ::replace(arg, "%", "^%");
-  ::replace(arg, "!", "^!");
-  ::replace(arg, "\"", "^\"");
+  //escape special shell characters
+  std::string escapedArg = plainArgument;
+  strReplace(escapedArg, "^", "^^");
+  strReplace(escapedArg, "&", "^&");
+  strReplace(escapedArg, "|", "^|");
+  strReplace(escapedArg, "(", "^(");
+  strReplace(escapedArg, ")", "^)");
+  strReplace(escapedArg, "<", "^<");
+  strReplace(escapedArg, ">", "^>");
+  strReplace(escapedArg, "%", "^%");
+  strReplace(escapedArg, "!", "^!");
+
+  //copy escapedArg into arg dealing with \ and " characters.
+  std::string arg;
+  int numBackslashes = 0;
+  //for each characters
+  for(size_t i=0; i<escapedArg.size(); i++)
+  {
+    char c = escapedArg[i];
+
+    if (c == '^')
+    {
+      //already excaped
+      arg.append( 1, c );
+      arg.append( 1, escapedArg[i+1] );
+
+      i++; //skip next char
+    }
+    else if (c == '\"')
+    {
+      arg.append( (2*numBackslashes) + 1, '\\' );
+      arg.append( 1, '\"' );
+      numBackslashes = 0;
+    }
+    else if(c == '\\')
+    {
+      numBackslashes++;
+    }
+    else
+    {
+      arg.append( numBackslashes, '\\' );
+      arg.append( 1, c );
+      numBackslashes = 0;
+    }
+  }
+  arg.append( numBackslashes, '\\' );
+
+  //deal with "
+  //strReplace(arg, "\"", "^\"");
+
+  //deal with \ 
+  //strReplace(arg, "\\", "^\\");
+
+  ////deal with spaces
+  //if (arg.find(" ") != std::string::npos)
+  //{
+  //  arg.insert(arg.begin(), 1, '\"');
+  //  arg.push_back('\"');
+  //}
+
+        // Enquote, doubling last sequence of backslashes ==> "\\share\\\"some folder\"\\"
+        int numTrailingBackslashes = 0;
+        for (int i = arg.size() - 1; i > 0; --i)
+        {
+            if (arg[i] != '\\')
+            {
+                numTrailingBackslashes = arg.size() - 1 - i;
+                break;
+            }
+        }
+        arg.append(numTrailingBackslashes, '\\');
+
 
   //ici
-  //deal with "
-  //deal with \
+
+  //deal with spaces
+  if (arg.find(" ") != std::string::npos)
+  {
+    arg.insert(arg.begin(), 1, '\"');
+    arg.push_back('\"');
+  }
+
+
+
+  //Samples:
+  //  argument's value        escape version
+  //  \"hello\"               \\\"hello\\\"
 
   //check "My attempt at escaping" from http://stackoverflow.com/questions/2393384/escape-string-for-process-start
 
 
+  //deal with empty argument
+  if (arg == "")
+  {
+    arg = "\"\"";
+  }
+
   return arg;
 }
+
+//std::string ArgumentManager::getCommandLineArgument(int iIndex)
+//{
+//  char * plainArgument = getArgument(iIndex);
+//
+//  std::string arg = plainArgument;
+//
+//  //escape special shell characters
+//  strReplace(arg, "^", "^^");
+//  strReplace(arg, "&", "^&");
+//  strReplace(arg, "|", "^|");
+//  strReplace(arg, "(", "^(");
+//  strReplace(arg, ")", "^)");
+//  strReplace(arg, "<", "^<");
+//  strReplace(arg, ">", "^>");
+//  strReplace(arg, "%", "^%");
+//  strReplace(arg, "!", "^!");
+//
+//  strReplace(arg, "\"", "\\^\"");
+//
+//  //quot the argument
+//  //arg.insert(arg.begin(), 1, '\"');
+//  //arg.push_back('\"');
+//  arg.insert(0, "^\"");
+//  arg.append("^\"");
+//
+//  return arg;
+//}
 
 bool ArgumentManager::insert(int iIndex, const char * iValue)
 {
@@ -322,22 +332,32 @@ bool ArgumentManager::isValid(int iIndex)
   return false;
 }
 
-//char getSafeCharacter(const char * iValue, int iIndex)
-//{
-//  if (iIndex < 0)
-//    return '\0';
-//  int length = (int)std::string(iValue).size();
-//  if (iIndex > length)
-//    return '\0';
-//  return iValue[i];
-//}
-
 char getSafeCharacter(const char * iValue, size_t iIndex)
 {
   if (iIndex > std::string(iValue).size())
     return '\0';
   return iValue[iIndex];
 }
+
+bool matchesSequence(const char * iValue, const char * iSequenceExpr)
+{
+  size_t seqLen   = std::string(iSequenceExpr).size();
+  size_t valueLen = std::string(iValue).size();
+
+  if (valueLen < seqLen)
+  {
+    //value smaller than sequence,
+    //unable to find sequence in value
+    return false;
+  }
+  bool match = (strncmp(iValue, iSequenceExpr, seqLen) == 0);
+  return match;
+}
+bool matchesSequence(const char * iValue, size_t iValueOffset, const char * iSequenceExpr)
+{
+  return matchesSequence( &iValue[iValueOffset], iSequenceExpr );
+}
+
 
 bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArguments)
 {
@@ -352,9 +372,9 @@ bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArgument
   //They are not required once foo.exe has parsed the string
   static const char * caretToken = "{DOUBLECARETTOKEN}";
   std::string cmdLineTmp = iCmdLine;
-  ::replace(cmdLineTmp, "^^", caretToken);
-  ::replace(cmdLineTmp, "^", "");//remove all other single carret
-  ::replace(cmdLineTmp, caretToken, "^^");
+  strReplace(cmdLineTmp, "^^", caretToken);
+  strReplace(cmdLineTmp, "^", "");//remove all other single carret
+  strReplace(cmdLineTmp, caretToken, "^^");
 
   const std::string cmdLineStr = cmdLineTmp;
   const char * cmdLine = cmdLineStr.c_str();
@@ -395,9 +415,7 @@ bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArgument
 
     bool isLastCharacter = !(i+1<cmdLineStr.size());
 
-    if (                              c == '\"' && 
-        getSafeCharacter(cmdLine, i+1)  == '\"' &&
-        getSafeCharacter(cmdLine, i+2)  == '\"' ) // for """ character sequence
+    if ( matchesSequence(cmdLine, i, "\"\"\"") ) // for """ character sequence
     {
       //must be defined as skipped, plain, opening
       codes[i  ] = sequence3;
@@ -407,7 +425,7 @@ bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArgument
 
       i=i+2; //skip next 2 characters
     }
-    else if (c == '^' && getSafeCharacter(cmdLine, i+1) == '^')
+    else if ( matchesSequence(cmdLine, i, "^^") )
     {
       //escaped caret
       codes[i  ] = literalCommand;
@@ -474,7 +492,7 @@ bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArgument
       }
 
     }
-    else if (c == '\\' && getSafeCharacter(cmdLine, i+1) == '\"')
+    else if ( matchesSequence(cmdLine, i, "\\\"") )
     {
       //escaped double-quote
       codes[i  ] = escapeCommand;
@@ -485,10 +503,7 @@ bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArgument
 
       i++; //skip next character
     }
-    else if (                      c == '\\' && 
-      getSafeCharacter(cmdLine, i+1) == '\\' &&
-      getSafeCharacter(cmdLine, i+2) == '\\' &&
-      getSafeCharacter(cmdLine, i+3) == '\\' ) //sequence of \\\\ 
+    else if ( matchesSequence(cmdLine, i, "\\\\\\\\") ) //sequence of \\\\ consecutive
     {
       //escaped backslash
       codes[i  ] = sequence4;
@@ -502,7 +517,7 @@ bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArgument
 
       i=i+3; //skip next characters
     }
-    else if (c == '\\' && getSafeCharacter(cmdLine, i+1) == '\\' && getSafeCharacter(cmdLine, i+2) == '\\' && getSafeCharacter(cmdLine, i+3) == '\"' ) //sequence of \\\"
+    else if ( matchesSequence(cmdLine, i, "\\\\\\\"") ) //sequence of \\\" consecutive
     {
       //escaped backslash
       codes[i  ] = escapeCommand;
@@ -513,7 +528,7 @@ bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArgument
 
       i++; //skip next character
     }
-    else if (c == '\\' && getSafeCharacter(cmdLine, i+1) == '\\' && getSafeCharacter(cmdLine, i+2) == '\"' ) //sequence of \\"
+    else if ( matchesSequence(cmdLine, i, "\\\\\"") ) //sequence of \\" consecutive
     {
       //escaped backslash
       codes[i  ] = escapeCommand;
