@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Rules.txt" />
+    <None Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgMgrExports.h" />

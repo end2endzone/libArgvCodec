@@ -24,3 +24,5 @@ DONE!   - testCopyCtor
 DONE!   - testOperatorEqual
 DONE!   - testAssignmentOperator
 DONE! - Extract samples of ArgumentManager::parseCmdLine() as elements of a test case
+- Rename the tool to libcleanargv or libcleanarg, libarvcodec.
+
