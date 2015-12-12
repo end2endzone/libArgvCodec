@@ -115,6 +115,9 @@ private:
   void rebuildArgv();
   char** mArgv;
   bool isValid(int iIndex);
+  bool isArgumentSeparator(const char c);
+  bool isShellCharacter(const char c);
+  bool hasShellCharacters(const char * iValue);
   bool parseCmdLine(const char * iCmdLine, StringList & oArguments);
 
   StringList mArguments;

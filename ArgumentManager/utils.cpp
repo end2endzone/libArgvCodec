@@ -45,3 +45,21 @@ bool readTextFile(const char * iPath, StringList & oLines)
 
   return true;
 }
+
+size_t findNumTrailingBackslashes(const char * iValue)
+{
+  if (iValue == NULL)
+    return 0;
+
+  size_t numTrailingBackslashes = 0;
+  size_t len = std::string(iValue).size();
+  for(size_t i=0; i<len; i++)
+  {
+    char c = iValue[i];
+    if (c == '\\')
+      numTrailingBackslashes++;
+    else
+      numTrailingBackslashes = 0;
+  }
+  return numTrailingBackslashes;
+}

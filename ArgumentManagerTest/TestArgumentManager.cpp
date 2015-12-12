@@ -117,6 +117,35 @@ std::string getSystemArgument( const char * iEscapedArg)
   return confirmedArgumentValue;
 }
 
+TEST_F(ArgumentManager, boudha)
+{
+  ArgumentManager mgr;
+
+  {
+    ArgumentManager::StringList args;
+    args.push_back("foo.exe");
+    args.push_back("malicious argument\"&whoami");
+
+    ArgumentManager mgr;
+    mgr.init(args);
+
+    //act
+    std::string escapedArgument = mgr.getCommandLineArgument(1);
+    printf("ENCODED:%s\n", escapedArgument.c_str());
+    int a = 0;
+  }
+
+  //    a\\\"b
+  mgr.init("a\\\\\\\"b");
+
+  //    a\\\\"b
+  mgr.init("a\\\\\\\\\"b");
+
+  //    ^"test\\^"^&whoami^"
+  mgr.init("^\"test\\\\^\"^&whoami^\"");
+
+}
+
 TEST_F(ArgumentManager, testInitArgcArgv)
 {
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
@@ -178,7 +207,7 @@ TEST_F(ArgumentManager, testInitVector)
 }
 
 
-TEST_F(ArgumentManager, DISABLED_testInitString)
+TEST_F(ArgumentManager, testInitString)
 {
   const char * inputFile = "testInitString.txt";
 
@@ -230,7 +259,7 @@ TEST_F(ArgumentManager, DISABLED_testInitString)
   }
 }
 
-TEST_F(ArgumentManager, DISABLED_testGetCommandLine)
+TEST_F(ArgumentManager, testGetCommandLine)
 {
   const char * inputFilePrefix = "testGetCommandLine";
   const char * inputFilePostfix = ".txt";
@@ -307,7 +336,7 @@ TEST_F(ArgumentManager, DISABLED_testGetCommandLine)
   }
 }
 
-TEST_F(ArgumentManager, DISABLED_testGetCommandLine2)
+TEST_F(ArgumentManager, testGetCommandLine2)
 {
   const char * inputFile = "testInitString.txt";
 
@@ -369,7 +398,7 @@ TEST_F(ArgumentManager, DISABLED_testGetCommandLine2)
   }
 }
 
-void prepareTestGetCommandLineArgument(const char * iRawArguementValue, const char * iExpectedArg, std::string & oEscapedArgument, std::string & oSystemArgumentValue)
+void prepareTestGetCommandLineArgument(const char * iRawArguementValue, std::string & oEscapedArgument, std::string & oSystemArgumentValue)
 {
   //arrange
   ArgumentManager::StringList expectedArgs;
@@ -384,12 +413,10 @@ void prepareTestGetCommandLineArgument(const char * iRawArguementValue, const ch
   oSystemArgumentValue = getSystemArgument( oEscapedArgument.c_str() );
 
   //debug
-  printf("Testing argv[1]=%s\n", iRawArguementValue);
-  printf("  Expecting:\n");
-  printf("    foo.exe %s\n", iExpectedArg);
+  printf("Testing decoded argument argv[1]=%s\n", iRawArguementValue);
   printf("  Actual:\n");
   printf("    foo.exe %s\n", oEscapedArgument.c_str());
-  printf("  validating with system's cmd.exe...\n");
+  printf("  Validating with system's cmd.exe...\n");
   printf("    argv[1]=%s\n", oSystemArgumentValue.c_str());
 }
 
@@ -400,70 +427,60 @@ TEST_F(ArgumentManager, testGetCommandLineArgument)
   //-----------------------------------------------------------------------------------
   {
     const char * argumentValue      = "malicious argument\"&whoami";
-    const char * expectedEscapedArg = "^\"malicious argument\\^\"^&whoami^\"";
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestGetCommandLineArgument(argumentValue, expectedEscapedArg, actualEscapedArg, systemArgumentValue);
+    prepareTestGetCommandLineArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
-    //ASSERT_CSTR_EQ(expectedEscapedArg         , actualEscapedArg.c_str());
     ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
     const char * argumentValue      = "\\\"hello\\\"";
-    const char * expectedEscapedArg = "\\\\\\\"hello\\\\\\\"";
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestGetCommandLineArgument(argumentValue, expectedEscapedArg, actualEscapedArg, systemArgumentValue);
+    prepareTestGetCommandLineArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
-    //ASSERT_CSTR_EQ(expectedEscapedArg         , actualEscapedArg.c_str());
     ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
     const char * argumentValue      = "\\\"hello\\ world";
-    const char * expectedEscapedArg = "\"\\\\\\\"hello\\ world\"";
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestGetCommandLineArgument(argumentValue, expectedEscapedArg, actualEscapedArg, systemArgumentValue);
+    prepareTestGetCommandLineArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
-    //ASSERT_CSTR_EQ(expectedEscapedArg         , actualEscapedArg.c_str());
     ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
     const char * argumentValue      = "test&whoami";
-    const char * expectedEscapedArg = "test^&whoami";
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestGetCommandLineArgument(argumentValue, expectedEscapedArg, actualEscapedArg, systemArgumentValue);
+    prepareTestGetCommandLineArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
-    //ASSERT_CSTR_EQ(expectedEscapedArg         , actualEscapedArg.c_str());
     ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
     const char * argumentValue      = "test\\\"&whoami";
-    const char * expectedEscapedArg = "test\\\\\\\"^&whoami";
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestGetCommandLineArgument(argumentValue, expectedEscapedArg, actualEscapedArg, systemArgumentValue);
+    prepareTestGetCommandLineArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
-    //ASSERT_CSTR_EQ(expectedEscapedArg         , actualEscapedArg.c_str());
     ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
