@@ -21,12 +21,11 @@ Validator::~Validator()
 {
 }
 
-ValidationResultList Validator::validate(const ArgumentList & iArgumentList, const ValidationRuleList & iRules)
+bool Validator::validate(const ArgumentList & iArgumentList, ValidationRuleList & ioRuleList)
 {
-  ValidationResultList results;
+  bool validationPass = false;
 
   ArgumentList arguments = iArgumentList; //copy arguments since we are going to remove each argument from the list to detect missing or unknown arguments
-  ValidationRuleList rules = iRules; //copy rules since we are going to sort them by priority
 
   //remove the exe name from the argument's list
   if (arguments.getArgc() > 0)
@@ -35,14 +34,15 @@ ValidationResultList Validator::validate(const ArgumentList & iArgumentList, con
   }
 
   //sort
-  sortRules(rules);
+  sortRules(ioRuleList);
 
-  //for each rule
+  ValidationRuleList::ValidationRulePtrList & rules = ioRuleList.getRules();
+
+  //process each rule
   for(size_t i=0; i<rules.size(); i++)
   {
-    const VALIDATION_RULE * rule = rules[i];
-    VALIDATION_RESULT result = processRule(rule, arguments);
-    results.push_back( result );
+    ValidationRule * rule = rules[i];
+    processRule(rule, arguments);
   }
 
   //check for orphan argument
@@ -57,18 +57,21 @@ ValidationResultList Validator::validate(const ArgumentList & iArgumentList, con
       const char * argValue = arguments.getArgument(i);
 
       //define failed rule for argument
-      VALIDATION_RESULT result;
-      result.isValid = false;
-      result.rule = NULL;
+      ValidationRule * rule = new ValidationRule(argValue, "", ValidationRule::FlagFactory::mandatoryFlag());
 
       sprintf(errorMessage, "Unknown argument \"%s\".", argValue);
-      result.description = errorMessage;
-    
-      results.push_back(result);
+
+      ValidationRule::RESULT r;
+      r.validity = false;
+      r.errorDescription = errorMessage;
+
+      rule->setResult(r);
+
+      ioRuleList.addRule(rule);
     }
   }
 
-  return results;
+  return ioRuleList.isAllRulesValid();
 }
 
 void Validator::setOrphanArgumentsAccepted(bool iOrphanArgumentsAccepted)
@@ -76,12 +79,14 @@ void Validator::setOrphanArgumentsAccepted(bool iOrphanArgumentsAccepted)
   this->mOrphanArgumentsAccepted = iOrphanArgumentsAccepted;
 }
 
-void Validator::sortRules(ValidationRuleList & ioRules)
+void Validator::sortRules(ValidationRuleList & ioRuleList)
 {
-  std::sort(ioRules.begin(), ioRules.end(), ValidationRuleSorter());
+  ValidationRuleList::ValidationRulePtrList & rules = ioRuleList.getRules();
+  
+  std::sort(rules.begin(), rules.end(), ValidationRuleSorter());
 }
 
-bool Validator::validateRule(const VALIDATION_RULE * iRule, std::string & oErrorMessage)
+bool Validator::validateRule(const ValidationRule * iRule, std::string & oErrorMessage)
 {
   oErrorMessage = "";
 
@@ -92,9 +97,10 @@ bool Validator::validateRule(const VALIDATION_RULE * iRule, std::string & oError
   }
 
   //validate rule content
-  
+  const ValidationRule::FLAGS & flags = iRule->getFlags();
+
   //mandatory or optionnal but not both
-  bool mandatoryValid = (iRule->flags.isMandatory ^ iRule->flags.isOptional);
+  bool mandatoryValid = (flags.isMandatory ^ flags.isOptional);
   if (!mandatoryValid)
   {
     oErrorMessage = "Argument must be mandatory or optionnal";
@@ -102,7 +108,7 @@ bool Validator::validateRule(const VALIDATION_RULE * iRule, std::string & oError
   }
 
   //value validation
-  bool valueValid = (( iRule->flags.isFlag ^ iRule->flags.hasValue) ^ iRule->flags.hasNextValue);
+  bool valueValid = (( flags.isFlag ^ flags.hasValue) ^ flags.hasNextValue);
   if (!valueValid)
   {
     oErrorMessage = "Argument must be defined as a flag (switch), value or must be preceding a value";
@@ -112,21 +118,25 @@ bool Validator::validateRule(const VALIDATION_RULE * iRule, std::string & oError
   return true;
 }
 
-VALIDATION_RESULT Validator::processRule(const VALIDATION_RULE * iRule, ArgumentList & ioArgumentList)
+void Validator::processRule(ValidationRule * iRule, ArgumentList & ioArgumentList)
 {
-  VALIDATION_RESULT result;
-  result.isValid = false;
-  result.rule = iRule;
+  iRule->setInvalid();
+  ValidationRule::RESULT r;
+  r.validity = false;
 
   //validate rule
-  if (!validateRule(iRule, result.description))
+  if (!validateRule(iRule, r.errorDescription))
   {
-    return result;
+    iRule->setResult(r);
+    return; //failed
   }
-  result.description = "";
+  r.errorDescription = "";
+
+  const ValidationRule::FLAGS & flags = iRule->getFlags();
+  const char * name = iRule->getName().c_str();
 
   //define allowed prefixes when searching into the ArgumentList
-  if (iRule->flags.allowOtherPrefix)
+  if (flags.allowOtherPrefix)
   {
     applyDefaultArgumentPrefixes(ioArgumentList);
   }
@@ -139,72 +149,77 @@ VALIDATION_RESULT Validator::processRule(const VALIDATION_RULE * iRule, Argument
   char errorMessage[BUFFER_SIZE];
 
   //check each flag
-  if (iRule->flags.isMandatory)
+  if (flags.isMandatory)
   {
     //mandatory arguments
-    if (iRule->flags.isFlag)
+    if (flags.isFlag)
     {
-      bool optionFound = ioArgumentList.extractOption(iRule->argumentName.c_str(), iRule->flags.caseSensitive);
+      bool optionFound = ioArgumentList.extractOption(name, flags.caseSensitive);
       if (!optionFound)
       {
-        sprintf(errorMessage, "Mandatory argument \"%s\" is not found.", iRule->argumentName.c_str());
-        result.description = errorMessage;
-        return result;
+        sprintf(errorMessage, "Mandatory argument \"%s\" is not found.", name);
+        r.errorDescription = errorMessage;
+        iRule->setResult(r);
+        return; //failed
       }
-      result.value = iRule->argumentName.c_str(); //set the rule's value to the argument name to prevent null/empty
+      r.value = name; //set the rule's value to the argument name to prevent null/empty
     }
-    else if (iRule->flags.hasValue)
+    else if (flags.hasValue)
     {
-      bool success = ioArgumentList.extractValue(iRule->argumentName.c_str(), iRule->flags.caseSensitive, result.value);
+      bool success = ioArgumentList.extractValue(name, flags.caseSensitive, r.value);
       if (!success)
       {
-        sprintf(errorMessage, "Mandatory argument \"%s\" is not found or does not have a value.", iRule->argumentName.c_str());
-        result.description = errorMessage;
-        return result;
+        sprintf(errorMessage, "Mandatory argument \"%s\" is not found or does not have a value.", name);
+        r.errorDescription = errorMessage;
+        iRule->setResult(r);
+        return; //failed
       }
     }
-    else if (iRule->flags.hasNextValue)
+    else if (flags.hasNextValue)
     {
-      bool success = ioArgumentList.extractNextValue(iRule->argumentName.c_str(), iRule->flags.caseSensitive, result.value);
+      bool success = ioArgumentList.extractNextValue(name, flags.caseSensitive, r.value);
       if (!success)
       {
-        sprintf(errorMessage, "Mandatory argument \"%s\" is not found or is not followed by a value.", iRule->argumentName.c_str());
-        result.description = errorMessage;
-        return result;
+        sprintf(errorMessage, "Mandatory argument \"%s\" is not found or is not followed by a value.", name);
+        r.errorDescription = errorMessage;
+        iRule->setResult(r);
+        return; //failed
       }
     }
   }
   else
   {
     //optional arguments
-    if (iRule->flags.isFlag)
+    if (flags.isFlag)
     {
-      bool optionFound = ioArgumentList.extractOption(iRule->argumentName.c_str(), iRule->flags.caseSensitive);
+      bool optionFound = ioArgumentList.extractOption(name, flags.caseSensitive);
       if (optionFound)
       {
-        result.value = iRule->argumentName.c_str(); //set the rule's value to the argument name to prevent null/empty
+        r.value = name; //set the rule's value to the argument name to prevent null/empty
       }
     }
-    else if (iRule->flags.hasValue)
+    else if (flags.hasValue)
     {
-      bool success = ioArgumentList.extractValue(iRule->argumentName.c_str(), iRule->flags.caseSensitive, result.value);
+      bool success = ioArgumentList.extractValue(name, flags.caseSensitive, r.value);
     }
-    else if (iRule->flags.hasNextValue)
+    else if (flags.hasNextValue)
     {
-      bool success = ioArgumentList.extractNextValue(iRule->argumentName.c_str(), iRule->flags.caseSensitive, result.value);
+      bool success = ioArgumentList.extractNextValue(name, flags.caseSensitive, r.value);
     }
   }
 
-  if (!iRule->flags.isFlag && !iRule->flags.allowNullValues && result.value == "")
+  if (!flags.isFlag && !flags.allowNullValues && r.value == "")
   {
-    sprintf(errorMessage, "Argument \"%s\" is not allowed to be null/empty.", iRule->argumentName.c_str());
-    result.description = errorMessage;
-    return result;
+    sprintf(errorMessage, "Argument \"%s\" is not allowed to be null/empty.", name);
+    r.errorDescription = errorMessage;
+    iRule->setResult(r);
+    return; //failed
   }
 
   //expected successful result at this point
-  result.isValid = true;
-  return result;
+  r.validity = true;
+  iRule->setResult(r);
+  return; //success
 }
 
 void Validator::applyDefaultArgumentPrefixes(ArgumentList & ioArgumentList)
@@ -216,3 +231,16 @@ void Validator::applyDefaultArgumentPrefixes(ArgumentList & ioArgumentList)
     ioArgumentList.addOptionPrefix(prefix.c_str());
   }
 }
+
+//ValidationRuleList Validator::makeCopy(ValidationRuleList & iRuleList)
+//{
+//  ValidationRuleList newList;
+//
+//  ValidationRuleList::ValidationRulePtrList & rules = iRuleList.getRules();
+//  for(size_t i=0; i<rules.size(); i++)
+//  {
+//    newList.addRule( rules[i] );
+//  }
+//
+//  return newList;
+//}

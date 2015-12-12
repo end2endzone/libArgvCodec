@@ -96,7 +96,8 @@
     </ClCompile>
     <ClCompile Include="os.cpp" />
     <ClCompile Include="utils.cpp" />
-    <ClCompile Include="ValidationResultList.cpp" />
+    <ClCompile Include="ValidationRule.cpp" />
+    <ClCompile Include="ValidationRuleList.cpp" />
     <ClCompile Include="ValidationRuleSorter.cpp" />
     <ClCompile Include="Validator.cpp" />
   </ItemGroup>
@@ -115,8 +116,8 @@
     <ClInclude Include="os.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="ValidationRule.h" />
     <ClInclude Include="ValidationRuleList.h" />
-    <ClInclude Include="ValidationResultList.h" />
     <ClInclude Include="ValidationRuleSorter.h" />
     <ClInclude Include="Validator.h" />
   </ItemGroup>

@@ -1,12 +1,13 @@
 #pragma once
 
+#include "libargvcodec.h"
 #include "advancedsort.h"
 #include "ValidationRuleList.h"
 
-class ValidationRuleSorter : public advancedsort::SortFunctionT<VALIDATION_RULE*>
+class LIBARGVCODEC_API ValidationRuleSorter : public advancedsort::SortFunctionT<ValidationRule*>
 {
 public:
-  typedef VALIDATION_RULE * VALIDATION_RULE_PTR;
+  typedef ValidationRule * VALIDATION_RULE_PTR;
   virtual ~ValidationRuleSorter();
   advancedsort::SortAttributeList getSortAttributes(const VALIDATION_RULE_PTR & iObject);
 

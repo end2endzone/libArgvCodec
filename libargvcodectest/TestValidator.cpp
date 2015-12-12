@@ -2,76 +2,105 @@
 #include "Validator.h"
 #include "utils.h"
 
-#define DECLARE_FLAG_RULE(name, arg, mandatory) \
-  VALIDATION_RULE name;                         \
-  name.argumentName = arg;                      \
-  name.flags.isMandatory = mandatory;           \
-  name.flags.isFlag = true;                     \
-  rules.push_back(&name);
+//#define DECLARE_FLAG_RULE(name, arg, mandatory) \
+//  VALIDATION_RULE name;                         \
+//  name.argumentName = arg;                      \
+//  name.flags.isMandatory = mandatory;           \
+//  name.flags.isFlag = true;                     \
+//  rules.add(&name);
+//
+//#define DECLARE_MANDATORY_FLAG_RULE(name, arg)  \
+//  VALIDATION_RULE name;                         \
+//  name.argumentName = arg;                      \
+//  name.flags.isMandatory = true;                \
+//  name.flags.isFlag = true;                     \
+//  rules.add(&name);
+//
+//#define DECLARE_OPTIONAL_FLAG_RULE(name, arg) \
+//  VALIDATION_RULE name;                       \
+//  name.argumentName = arg;                    \
+//  name.flags.isOptional = true;               \
+//  name.flags.isFlag = true;                   \
+//  rules.add(&name);
+//
+//#define DECLARE_NEXTVALUE_RULE(name, arg, nextvalue)  \
+//  VALIDATION_RULE name;                               \
+//  name.argumentName = arg;                            \
+//  name.flags.isMandatory = true;                      \
+//  name.flags.isFlag = !nextvalue;                     \
+//  name.flags.hasNextValue = nextvalue;                \
+//  rules.add(&name);
 
-#define DECLARE_MANDATORY_FLAG_RULE(name, arg)  \
-  VALIDATION_RULE name;                         \
-  name.argumentName = arg;                      \
-  name.flags.isMandatory = true;                \
-  name.flags.isFlag = true;                     \
-  rules.push_back(&name);
+#define DECLARE_FLAG_RULE(name, arg, mandatory)         \
+  ValidationRule * name = NULL;                         \
+  {                                                     \
+    ValidationRule::FLAGS f;                            \
+    if (mandatory)                                      \
+      f = ValidationRule::FlagFactory::mandatoryFlag(); \
+    else                                                \
+      f = ValidationRule::FlagFactory::optionalFlag();  \
+    name = new ValidationRule(arg, f);                  \
+  }                                                     \
+  rules.addRule(name);
 
-#define DECLARE_OPTIONAL_FLAG_RULE(name, arg) \
-  VALIDATION_RULE name;                       \
-  name.argumentName = arg;                    \
-  name.flags.isOptional = true;               \
-  name.flags.isFlag = true;                   \
-  rules.push_back(&name);
+#define DECLARE_MANDATORY_FLAG_RULE(name, arg)  DECLARE_FLAG_RULE(name, arg, true);
+#define DECLARE_OPTIONAL_FLAG_RULE(name, arg)   DECLARE_FLAG_RULE(name, arg, false);
 
-#define DECLARE_NEXTVALUE_RULE(name, arg, nextvalue)  \
-  VALIDATION_RULE name;                               \
-  name.argumentName = arg;                            \
-  name.flags.isMandatory = true;                      \
-  name.flags.isFlag = !nextvalue;                     \
-  name.flags.hasNextValue = nextvalue;                \
-  rules.push_back(&name);
+#define DECLARE_NEXTVALUE_RULE(name, arg, nextvalue)          \
+  ValidationRule * name = NULL;                               \
+  {                                                           \
+    ValidationRule::FLAGS f;                                  \
+    if (nextvalue)                                            \
+      f = ValidationRule::FlagFactory::mandatoryNextValue();  \
+    else                                                      \
+      f = ValidationRule::FlagFactory::mandatoryFlag();       \
+    name = new ValidationRule(arg, f);                        \
+  }                                                           \
+  rules.addRule(name);
 
-//return true when a result list has an invalid result which is about iText
-bool hasFailedResultAbout(const char * iText, const ValidationResultList & iResults)
+////return true when a result list has an invalid result which is about iText
+//bool hasFailedResultAbout(const char * iText, const ValidationRuleList & iRules)
+//{
+//  for(size_t i=0; i<iRules.getRules().size(); i++)
+//  {
+//    const ValidationRule * rule = iRules.getRules()[i];
+//    const ValidationRule::RESULT & result = rule->getResult();
+//    if (!result.validity)
+//    {
+//      size_t pos = rule->getResult().errorDescription.find(iText);
+//      if (pos != std::string::npos)
+//      {
+//        return true;
+//      }
+//    }
+//  }
+//  return false;
+//}
+
+//bool hasValidResultAbout(const char * iText, const ValidationRuleList & iRules)
+//{
+//  for(size_t i=0; i<iRules.getRules().size(); i++)
+//  {
+//    const ValidationRule * rule = iRules.getRules()[i];
+//    const ValidationRule::RESULT & result = rule->getResult();
+//    if (result.validity == true)
+//    {
+//      size_t pos = rule->getName().find(iText);
+//      if (pos != std::string::npos)
+//      {
+//        return true;
+//      }
+//    }
+//  }
+//  return false;
+//}
+
+bool findRule(const ValidationRuleList & iRules, const ValidationRule * iRule)
 {
-  for(size_t i=0; i<iResults.size(); i++)
+  for(size_t i=0; i<iRules.getRules().size(); i++)
   {
-    const VALIDATION_RESULT & result = iResults[i];
-    if (result.isValid == false)
-    {
-      size_t pos = result.description.find(iText);
-      if (pos != std::string::npos)
-      {
-        return true;
-      }
-    }
-  }
-  return false;
-}
-
-bool hasValidResultAbout(const char * iText, const ValidationResultList & iResults)
-{
-  for(size_t i=0; i<iResults.size(); i++)
-  {
-    const VALIDATION_RESULT & result = iResults[i];
-    if (result.isValid == true && result.rule != NULL)
-    {
-      size_t pos = result.rule->argumentName.find(iText);
-      if (pos != std::string::npos)
-      {
-        return true;
-      }
-    }
-  }
-  return false;
-}
-
-bool findRule(const ValidationResultList & iResults, const VALIDATION_RULE * iRule)
-{
-  for(size_t i=0; i<iResults.size(); i++)
-  {
-    const VALIDATION_RESULT & result = iResults[i];
-    if (result.rule == iRule)
+    const ValidationRule * rule = iRules.getRules()[i];
+    if (rule == iRule)
     {
       return true;
     }
@@ -79,7 +108,7 @@ bool findRule(const ValidationResultList & iResults, const VALIDATION_RULE * iRu
   return false;
 }
 
-TEST_F(TestValidator, testValidatorOrphan)
+TEST_F(TestValidator, testValidatorWithOrphan)
 {
   char* argv[] = {"test.exe", "/x", "/y", "/z", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
@@ -88,38 +117,71 @@ TEST_F(TestValidator, testValidatorOrphan)
   m.init(argc, argv);
 
   ValidationRuleList rules;
-  VALIDATION_RULE ruleX;
-  ruleX.argumentName = "/x";
-  ruleX.flags.isMandatory = true;
-  ruleX.flags.isFlag = true;
-  rules.push_back(&ruleX);
-  VALIDATION_RULE ruleY;
-  ruleY.argumentName = "/y";
-  ruleY.flags.isMandatory = true;
-  ruleY.flags.isFlag = true;
-  rules.push_back(&ruleY);
+
+  DECLARE_FLAG_RULE(ruleX, "/x", true);
+  DECLARE_FLAG_RULE(ruleY, "/y", true);
+
+  //VALIDATION_RULE ruleX;
+  //ruleX.argumentName = "/x";
+  //ruleX.flags.isMandatory = true;
+  //ruleX.flags.isFlag = true;
+  //rules.push_back(&ruleX);
+  //VALIDATION_RULE ruleY;
+  //ruleY.argumentName = "/y";
+  //ruleY.flags.isMandatory = true;
+  //ruleY.flags.isFlag = true;
+  //rules.push_back(&ruleY);
   
   Validator v;
   v.setOrphanArgumentsAccepted(true);
-  ValidationResultList orphansAcceptedResults = v.validate(m, rules);
-  v.setOrphanArgumentsAccepted(false);
-  ValidationResultList noOrphansResults = v.validate(m, rules);
+  v.validate(m, rules);
 
   //expecting ruleX and ruleY found in result lists
-  ASSERT_TRUE( findRule(orphansAcceptedResults,   &ruleX) );
-  ASSERT_TRUE( findRule(orphansAcceptedResults,   &ruleY) );
-  ASSERT_TRUE( findRule(noOrphansResults,         &ruleX) );
-  ASSERT_TRUE( findRule(noOrphansResults,         &ruleY) );
+  ASSERT_TRUE( findRule(rules, ruleX) );
+  ASSERT_TRUE( findRule(rules, ruleY) );
 
-  ASSERT_EQ(orphansAcceptedResults.size(), 2); //only the 2 given rules are found as results
-  ASSERT_TRUE( hasValidResultAbout( "/x", orphansAcceptedResults) );
-  ASSERT_TRUE( hasValidResultAbout( "/y", orphansAcceptedResults) );
-  ASSERT_TRUE( isValid(orphansAcceptedResults) ); //assert all rules are valid
+  ASSERT_EQ(rules.getRules().size(), 2); //only the 2 given rules are found as results
+  ASSERT_TRUE( rules.hasValidRuleAbout("/x") );
+  ASSERT_TRUE( rules.hasValidRuleAbout("/y") );
+  ASSERT_TRUE( rules.isAllRulesValid() ); //assert all rules are valid
+}
 
-  ASSERT_EQ(noOrphansResults.size(), 3);
-  ASSERT_TRUE( hasValidResultAbout( "/x", noOrphansResults) );
-  ASSERT_TRUE( hasValidResultAbout( "/y", noOrphansResults) );
-  ASSERT_TRUE( hasFailedResultAbout("/z", noOrphansResults) ); //expect a failed rule about /z argument
+TEST_F(TestValidator, testValidatorWithoutOrphan)
+{
+  char* argv[] = {"test.exe", "/x", "/y", "/z", NULL};
+  int argc = sizeof(argv)/sizeof(argv[0]) - 1;
+
+  ArgumentList m;
+  m.init(argc, argv);
+
+  ValidationRuleList rules;
+
+  DECLARE_FLAG_RULE(ruleX, "/x", true);
+  DECLARE_FLAG_RULE(ruleY, "/y", true);
+
+  //VALIDATION_RULE ruleX;
+  //ruleX.argumentName = "/x";
+  //ruleX.flags.isMandatory = true;
+  //ruleX.flags.isFlag = true;
+  //rules.push_back(&ruleX);
+  //VALIDATION_RULE ruleY;
+  //ruleY.argumentName = "/y";
+  //ruleY.flags.isMandatory = true;
+  //ruleY.flags.isFlag = true;
+  //rules.push_back(&ruleY);
+  
+  Validator v;
+  v.setOrphanArgumentsAccepted(false);
+  v.validate(m, rules);
+
+  //expecting ruleX and ruleY found in result lists
+  ASSERT_TRUE( findRule(rules, ruleX) );
+  ASSERT_TRUE( findRule(rules, ruleY) );
+
+  ASSERT_EQ(rules.getRules().size(), 3);
+  ASSERT_TRUE( rules.hasValidRuleAbout( "/x") );
+  ASSERT_TRUE( rules.hasValidRuleAbout( "/y") );
+  ASSERT_TRUE( rules.hasFailedRuleAbout("/z") ); //expect a failed rule about /z argument
 }
 
 TEST_F(TestValidator, testSortMandatoryFirst)
@@ -134,10 +196,10 @@ TEST_F(TestValidator, testSortMandatoryFirst)
   Validator v;
   v.sortRules(rules);
 
-  ASSERT_EQ(&ruleX, rules[0]);
-  ASSERT_EQ(&ruleY, rules[1]);
-  ASSERT_EQ(&ruleA, rules[2]);
-  ASSERT_EQ(&ruleZ, rules[3]);
+  ASSERT_EQ(ruleX, rules.getRules()[0]);
+  ASSERT_EQ(ruleY, rules.getRules()[1]);
+  ASSERT_EQ(ruleA, rules.getRules()[2]);
+  ASSERT_EQ(ruleZ, rules.getRules()[3]);
 }
 
 TEST_F(TestValidator, testSortNextValueFirst)
@@ -152,10 +214,10 @@ TEST_F(TestValidator, testSortNextValueFirst)
   Validator v;
   v.sortRules(rules);
 
-  ASSERT_EQ(&ruleX, rules[0]);
-  ASSERT_EQ(&ruleY, rules[1]);
-  ASSERT_EQ(&ruleA, rules[2]);
-  ASSERT_EQ(&ruleZ, rules[3]);
+  ASSERT_EQ(ruleX, rules.getRules()[0]);
+  ASSERT_EQ(ruleY, rules.getRules()[1]);
+  ASSERT_EQ(ruleA, rules.getRules()[2]);
+  ASSERT_EQ(ruleZ, rules.getRules()[3]);
 }
 
 TEST_F(TestValidator, testMissingMandatoryArgument)
@@ -175,13 +237,13 @@ TEST_F(TestValidator, testMissingMandatoryArgument)
 
   Validator v;
   v.setOrphanArgumentsAccepted(true);
-  ValidationResultList results = v.validate(m, rules);
+  v.validate(m, rules);
 
-  ASSERT_EQ(results.size(), 4);
-  ASSERT_TRUE( hasValidResultAbout( "/b", results) );
-  ASSERT_TRUE( hasValidResultAbout( "/x", results) );
-  ASSERT_TRUE( hasValidResultAbout( "/z", results) );
-  ASSERT_TRUE( hasFailedResultAbout("/h", results) ); //expect a failed rule about missing /h argument
+  ASSERT_EQ(rules.getRules().size(), 4);
+  ASSERT_TRUE( rules.hasValidRuleAbout( "/b") );
+  ASSERT_TRUE( rules.hasValidRuleAbout( "/x") );
+  ASSERT_TRUE( rules.hasValidRuleAbout( "/z") );
+  ASSERT_TRUE( rules.hasFailedRuleAbout("/h") ); //expect a failed rule about missing /h argument
 }
 
 TEST_F(TestValidator, testMissingOptionalArgument)
@@ -201,11 +263,11 @@ TEST_F(TestValidator, testMissingOptionalArgument)
 
   Validator v;
   v.setOrphanArgumentsAccepted(true);
-  ValidationResultList results = v.validate(m, rules);
+  v.validate(m, rules);
 
-  ASSERT_EQ(results.size(), 4);
-  ASSERT_TRUE( hasValidResultAbout( "/b", results) );
-  ASSERT_TRUE( hasValidResultAbout( "/x", results) );
-  ASSERT_TRUE( hasValidResultAbout( "/z", results) );
-  ASSERT_TRUE( hasValidResultAbout( "/h", results) ); //expect a valid rule even if argument /h is missing
+  ASSERT_EQ(rules.getRules().size(), 4);
+  ASSERT_TRUE( rules.hasValidRuleAbout("/b") );
+  ASSERT_TRUE( rules.hasValidRuleAbout("/x") );
+  ASSERT_TRUE( rules.hasValidRuleAbout("/z") );
+  ASSERT_TRUE( rules.hasValidRuleAbout("/h") ); //expect a valid rule even if argument /h is missing
 }
