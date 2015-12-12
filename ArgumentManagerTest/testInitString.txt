@@ -82,7 +82,7 @@ a "bc\"o" e"
 "a^b" c
 ^"a^b" c
 ^"ab^" c
-^"ab[CHAPEAU]"" c
+^"ab^"" c
 a \bb c
 a \"bb c" d
 a ^"bb^" c" d

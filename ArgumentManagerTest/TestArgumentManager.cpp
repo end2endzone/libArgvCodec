@@ -58,17 +58,75 @@ TEST_F(ArgumentManager, foo)
   //m.init("^\"^\" a b");
   //m.init("a b ^\"^\"");
 
-//Testing 100/105: foo.exe ^"test\"^&whoami^"
-  std::string inputArg = "^\"test\\\"^&whoami^\"";
-  m.init(inputArg.c_str());
-  std::string encodedArg = m.getCommandLineArgument(1);
-  std::string actualArg = m.getArgv()[1];
-  std::string expectedArg = "test\"^&whoami^";
+////Testing 100/105: foo.exe ^"test\"^&whoami^"
+//  std::string inputArg = "^\"test\\\"^&whoami^\"";
+//  m.init(inputArg.c_str());
+//  std::string encodedArg = m.getCommandLineArgument(1);
+//  std::string actualArg = m.getArgv()[1];
+//  std::string expectedArg = "test\"^&whoami^";
 //  Expecting:
 //   argv[1]=test"^&whoami^
 //  Actuals:
 //   argv[1]=test"&whoami
 
+
+
+////Testing 78/110
+//  std::string arg1 = "ab cd\\^&echo";
+//  std::string arg2 = "foo";
+//  char * argv[] = {(char*)"foo.exe", (char*)arg1.c_str(), (char*)arg2.c_str()};
+//  int argc = sizeof(argv)/sizeof(argv[0]);
+//  m.init(argc, argv);
+//  std::string actualCmdLine = m.getCommandLine();
+//  std::string expectedCmdLine = "";  
+////  Expecting
+////    argv[1]=ab cd\^&echo
+////    argv[2]=foo
+////  Actuals:
+////    cmdline=^"ab cd\^^\^&\echo^" foo
+////    argv[1]=ab cd\^\&\echo
+////    argv[2]=foo
+
+
+////Testing 21/110
+//  char * argv[] = { (char*)"foo.exe",
+//                    (char*)"a",
+//                    (char*)"b\\\\",
+//                    (char*)"\"",
+//                    (char*)"c",
+//                    (char*)"d",
+//  };
+//  int argc = sizeof(argv)/sizeof(argv[0]);
+//  m.init(argc, argv);
+//  std::string actualCmdLine = m.getCommandLine();
+////  Expecting
+////    argv[1]=a
+////    argv[2]=b\\
+////    argv[3]="
+////    argv[4]=c
+////    argv[5]=d
+////  Actuals:
+////    cmdline=a b\\\\ \" c d
+////    argv[1]=a
+////    argv[2]=b\\\\
+////    argv[3]="
+////    argv[4]=c
+////    argv[5]=d
+
+
+////Testing 49/110
+////forces\beauchamp.a3
+//  char * argv[] = { (char*)"foo.exe",
+//                    (char*)"test\"&whoami",
+//  };
+//  int argc = sizeof(argv)/sizeof(argv[0]);
+//  m.init(argc, argv);
+//  std::string actualCmdLine = m.getCommandLine();
+////  Expecting
+////    argv[1]=test"&whoami
+////  Actuals:
+////    cmdline="test\"&whoami"
+////    argv[1]=test"
 
   ASSERT_FALSE(false);
 }
@@ -91,7 +149,7 @@ TEST_F(ArgumentManager, testInitArgcArgv)
   ASSERT_EQ(argv[4], argv2[4]);
 }
 
-TEST_F(ArgumentManager, DISABLED_testGetArgument)
+TEST_F(ArgumentManager, testGetArgument)
 {
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
@@ -111,7 +169,7 @@ TEST_F(ArgumentManager, DISABLED_testGetArgument)
   ASSERT_CSTR_EQ("", m.getArgument(6)); //out of bounds
 }
 
-TEST_F(ArgumentManager, DISABLED_testInitVector)
+TEST_F(ArgumentManager, testInitVector)
 {
   std::vector<std::string> args;
   args.push_back("test.exe");
@@ -134,7 +192,7 @@ TEST_F(ArgumentManager, DISABLED_testInitVector)
 }
 
 
-TEST_F(ArgumentManager, testInitString)
+TEST_F(ArgumentManager, DISABLED_testInitString)
 {
   const char * inputFile = "testInitString.txt";
 
@@ -186,7 +244,7 @@ TEST_F(ArgumentManager, testInitString)
   }
 }
 
-TEST_F(ArgumentManager, DISABLED_testGetCommandLine)
+TEST_F(ArgumentManager, testGetCommandLine)
 {
   const char * inputFilePrefix = "testGetCommandLine";
   const char * inputFilePostfix = ".txt";
@@ -263,7 +321,7 @@ TEST_F(ArgumentManager, DISABLED_testGetCommandLine)
   }
 }
 
-TEST_F(ArgumentManager, DISABLED_testGetCommandLine2)
+TEST_F(ArgumentManager, testGetCommandLine2)
 {
   const char * inputFile = "testInitString.txt";
 
@@ -347,7 +405,7 @@ void prepareTestGetCommandLineArgument(const char * iRawArguementValue, std::str
   printf("    argv[1]=%s\n", oSystemArgumentValue.c_str());
 }
 
-TEST_F(ArgumentManager, DISABLED_testGetCommandLineArgument)
+TEST_F(ArgumentManager, testGetCommandLineArgument)
 {
   printf("\n");
 
