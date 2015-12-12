@@ -10,7 +10,7 @@
 #include "ArgumentManager.h"
 
 
-#define SAFE_DELETE(var)        {if (var) delete var;   var = NULL;}
+#define SAFE_DELETE(var)        {if (var) delete   var; var = NULL;}
 #define SAFE_DELETE_ARRAY(var)  {if (var) delete[] var; var = NULL;}
 
 ArgumentManager::ArgumentManager() :
