@@ -6,7 +6,7 @@
 
 #define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
 
-TEST_F(TestCmdPromptArgumentCodec, testDecodeCommandLine)
+TEST_F(TestCmdPromptArgumentCodec, DISABLED_testDecodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
