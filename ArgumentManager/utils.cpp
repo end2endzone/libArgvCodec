@@ -1,5 +1,8 @@
 #include "utils.h"
 
+namespace utils
+{
+
 void strReplace(std::string & iValue, const std::string & iOldStr, const std::string & iNewStr)
 {
   size_t pos = 0;
@@ -46,6 +49,15 @@ bool readTextFile(const char * iPath, StringList & oLines)
   return true;
 }
 
+bool fileExists(const char * iPath)
+{
+  FILE * f = fopen(iPath, "rb");
+  if (f == NULL)
+    return false;
+  fclose(f);
+  return true;
+}
+
 size_t findNumTrailingBackslashes(const char * iValue)
 {
   if (iValue == NULL)
@@ -63,3 +75,5 @@ size_t findNumTrailingBackslashes(const char * iValue)
   }
   return numTrailingBackslashes;
 }
+
+}; //namespace utils

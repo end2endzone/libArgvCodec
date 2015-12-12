@@ -1,17 +1,9 @@
 #include "gtest_emulator.h"
 #include "ArgumentManager.h"
+#include "ArgumentLister.h"
 #include "utils.h"
 
 #define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
-
-bool fileExists(const char * iPath)
-{
-  FILE * f = fopen(iPath, "rb");
-  if (!f)
-    return false;
-  fclose(f);
-  return true;
-}
 
 std::string getSequencedFile(const char * iPrefix, int iValue, const char * iPostfix, int iValueLength)
 {
@@ -59,62 +51,71 @@ bool isIdentical(ArgumentManager & m, int expectedArgc, char ** expectedArgv)
   return true;
 }
 
+//bool findExpectedCmdLineArguments(const char * iCmdLine, ArgumentManager::StringList & oArguments)
+//{
+//  oArguments.clear();
+//
+//  //build a command line to list arguments
+//  std::string argListerPath = "ArgumentLister.exe";
+//  
+//  //build command line
+//  std::string cmdLine;
+//  cmdLine.append(argListerPath);
+//  cmdLine.append(" ");
+//  cmdLine.append(iCmdLine);
+//
+//  //run command line
+//  system(cmdLine.c_str());
+//
+//  FILE * f = fopen("ArgumentLister.log", "r");
+//  if (!f)
+//    return false;
+//
+//  static const int BUFFER_SIZE = 102400;
+//  char buffer[BUFFER_SIZE];
+//
+//  int argNumber = 0;
+//  while( fgets(buffer, BUFFER_SIZE, f) != NULL )
+//  {
+//    //expected to read: arg0=test
+//    std::string line = buffer;
+//
+//    //build arg template
+//    sprintf(buffer, "argv[%d]=", argNumber);
+//
+//    //remove from line;
+//    utils::strReplace(line, buffer, "");
+//
+//    //remove ending CRLF at the end of the line;
+//    utils::strReplace(line, "\n", "");
+//
+//    oArguments.push_back(line);
+//
+//    argNumber++;
+//  }
+//
+//  fclose(f);
+//  return true;
+//}
+//
+//std::string getSystemArgument( const char * iEscapedArg)
+//{
+//  ArgumentManager::StringList arguments;
+//  bool success = findExpectedCmdLineArguments(iEscapedArg, arguments);
+//  if (arguments.size() != 2)
+//    return "";
+//
+//  std::string confirmedArgumentValue = arguments[1];
+//  return confirmedArgumentValue;
+//}
+//
 bool findExpectedCmdLineArguments(const char * iCmdLine, ArgumentManager::StringList & oArguments)
 {
-  oArguments.clear();
-
-  //build a command line to list arguments
-  std::string argListerPath = "ArgumentLister.exe";
-  
-  //build command line
-  std::string cmdLine;
-  cmdLine.append(argListerPath);
-  cmdLine.append(" ");
-  cmdLine.append(iCmdLine);
-
-  //run command line
-  system(cmdLine.c_str());
-
-  FILE * f = fopen("ArgumentLister.log", "r");
-  if (!f)
-    return false;
-
-  static const int BUFFER_SIZE = 102400;
-  char buffer[BUFFER_SIZE];
-
-  int argNumber = 0;
-  while( fgets(buffer, BUFFER_SIZE, f) != NULL )
-  {
-    //expected to read: arg0=test
-    std::string line = buffer;
-
-    //build arg template
-    sprintf(buffer, "argv[%d]=", argNumber);
-
-    //remove from line;
-    strReplace(line, buffer, "");
-
-    //remove ending CRLF at the end of the line;
-    strReplace(line, "\n", "");
-
-    oArguments.push_back(line);
-
-    argNumber++;
-  }
-
-  fclose(f);
-  return true;
+  return decodeCommandLineArguments(iCmdLine, oArguments);
 }
-
 std::string getSystemArgument( const char * iEscapedArg)
 {
-  ArgumentManager::StringList arguments;
-  bool success = findExpectedCmdLineArguments(iEscapedArg, arguments);
-  if (arguments.size() != 2)
-    return false;
-
-  std::string confirmedArgumentValue = arguments[1];
-  return confirmedArgumentValue;
+  return decodeArgument(iEscapedArg);
 }
 
 TEST_F(ArgumentManager, boudha)
@@ -212,7 +213,7 @@ TEST_F(ArgumentManager, testInitString)
   const char * inputFile = "testInitString.txt";
 
   ArgumentManager::StringList cmdLines;
-  ASSERT_TRUE( readTextFile(inputFile, cmdLines) );
+  ASSERT_TRUE( utils::readTextFile(inputFile, cmdLines) );
   ASSERT_TRUE( cmdLines.size() > 0 );
 
   printf("\n");
@@ -269,7 +270,7 @@ TEST_F(ArgumentManager, testGetCommandLine)
   static const int MAX_ID_LENGTH = 3;
   int fileId = 1;
   std::string inputFile = getSequencedFile(inputFilePrefix, fileId, inputFilePostfix, MAX_ID_LENGTH);
-  bool fileFound = fileExists( inputFile.c_str() );
+  bool fileFound = utils::fileExists( inputFile.c_str() );
   while(fileFound)
   {
     testFiles.push_back(inputFile);
@@ -277,7 +278,7 @@ TEST_F(ArgumentManager, testGetCommandLine)
     //prepare for next loop
     fileId++;
     inputFile = getSequencedFile(inputFilePrefix, fileId, inputFilePostfix, MAX_ID_LENGTH);
-    fileFound = fileExists( inputFile.c_str() );
+    fileFound = utils::fileExists( inputFile.c_str() );
   }
   ASSERT_TRUE( testFiles.size() > 0 );
 
@@ -290,7 +291,7 @@ TEST_F(ArgumentManager, testGetCommandLine)
 
     //arrange
     ArgumentManager::StringList expectedArgs;
-    ASSERT_TRUE( readTextFile(testFile.c_str(), expectedArgs) );
+    ASSERT_TRUE( utils::readTextFile(testFile.c_str(), expectedArgs) );
     printf("Testing %d/%d\n", i+1, testFiles.size());
 
     //insert fake .exe name
@@ -341,7 +342,7 @@ TEST_F(ArgumentManager, testGetCommandLine2)
   const char * inputFile = "testInitString.txt";
 
   ArgumentManager::StringList testCmdLines;
-  ASSERT_TRUE( readTextFile(inputFile, testCmdLines) );
+  ASSERT_TRUE( utils::readTextFile(inputFile, testCmdLines) );
   ASSERT_TRUE( testCmdLines.size() > 0 );
 
   printf("\n");

@@ -9,19 +9,25 @@
 #include "ArgumentManager.h"
 #include "gtest_emulator.h"
 
-ArgumentManager gArgumentMgr;
+#include "ArgumentLister.h"
 
-std::string getExePath()
-{
-  ArgumentManager tmp;
-  tmp.init("");
-  const char * arg0 = tmp.getArgument(0);
-  return std::string(arg0);
-}
+ArgumentManager gArgumentMgr;
 
 //int _tmain(int argc, _TCHAR* argv[])
 int main(int argc, char* argv[])
 {
+  //Handle argument stubs
+  if (isPrinterExec())
+  {
+    return printArgs(argc, argv);
+  }
+  if (isLoggerExec())
+  {
+    return logArgs(argc, argv);
+  }
+  initExecStubs();
+
+  //Run tests
   RUN_ALL_TESTS();
 
   system("PAUSE");
