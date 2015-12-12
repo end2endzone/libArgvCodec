@@ -2,7 +2,6 @@
 
 #include "libargvcodec.h"
 #include "ArgumentList.h"
-#include "ValidationResultList.h"
 #include "ValidationRuleList.h"
 #include <string>
 #include <vector>
@@ -13,13 +12,13 @@ public:
   Validator();
   virtual ~Validator();
 
-  ValidationResultList validate(const ArgumentList & iArgumentList, const ValidationRuleList & iRules);
+  bool validate(const ArgumentList & iArgumentList, ValidationRuleList & ioRuleList);
 
   //global options
   void setOrphanArgumentsAccepted(bool iOrphanArgumentsAccepted);
 
   //static 
-  static void sortRules(ValidationRuleList & ioRules);
+  static void sortRules(ValidationRuleList & ioRuleList);
 
 private:
   //private attributes
@@ -27,8 +26,9 @@ private:
   ArgumentList::StringList mDefaultArgumentPrefixes;
 
   //private methods
-  bool validateRule(const VALIDATION_RULE * iRule, std::string & oErrorMessage);
-  VALIDATION_RESULT processRule(const VALIDATION_RULE * iRule, ArgumentList & ioArgumentList);
+  bool validateRule(const ValidationRule * iRule, std::string & oErrorMessage);
+  void processRule(ValidationRule * iRule, ArgumentList & ioArgumentList);
   void applyDefaultArgumentPrefixes(ArgumentList & ioArgumentList);
+  //ValidationRuleList makeCopy(ValidationRuleList & iRuleList);
 
 };

@@ -1,43 +1,49 @@
 #pragma once
 
 #include "libargvcodec.h"
-#include "ArgumentList.h"
-#include <string>
+#include "ValidationRule.h"
 #include <vector>
 
-#pragma pack(push, 1) // exact fit - no padding
-struct ARGUMENT_FLAGS
+class LIBARGVCODEC_API ValidationRuleList
 {
-  bool isOptional         : 1;
-  bool isMandatory        : 1;
+public:
+  ValidationRuleList();
+  ValidationRuleList(const ValidationRuleList & iValidationRuleList);
+  virtual ~ValidationRuleList();
 
-  bool isFlag             : 1;
-  bool hasValue           : 1;
-  bool hasNextValue       : 1;
+  typedef std::vector<ValidationRule*> ValidationRulePtrList;
 
-  bool caseSensitive      : 1;
-  bool allowOtherPrefix   : 1;
-  bool allowNullValues    : 1;
+  const ValidationRulePtrList & getRules() const;
+  ValidationRulePtrList & getRules();
 
-  ARGUMENT_FLAGS()
-  {
-    isOptional         = false;
-    isMandatory        = false;
+  //
+  // Description:
+  //  Adds a new rule to the list. The list takes ownership of the rule.
+  // Parameters:
+  //  iRule: The new rule to add.
+  //
+  void addRule(ValidationRule* iRule);
 
-    isFlag             = false;
-    hasValue           = false;
-    hasNextValue       = false;
+  //
+  // Description:
+  //  Clears the list of rules
+  //
+  void clear();
 
-    caseSensitive      = false;
-    allowOtherPrefix   = false;
-    allowNullValues    = false;
-  }
+  //rule modification methods
+  void setAllRulesInvalid();
+  
+  //rules query methods
+  bool isAllRulesValid();
+  const ValidationRule * getFailedRuleAbout(const char * iArgumentName);
+  const ValidationRule * getValidRuleAbout(const char * iArgumentName);
+  bool hasFailedRuleAbout(const char * iArgumentName);
+  bool hasValidRuleAbout(const char * iArgumentName);
+
+private:
+  //methods
+  void copyFrom(const ValidationRuleList & ioRuleList);
+
+  //attributes
+  ValidationRulePtrList mRules;
 };
-#pragma pack(pop)
-struct VALIDATION_RULE
-{
-  std::string argumentName;
-  ARGUMENT_FLAGS flags;
-};
-
-typedef std::vector<VALIDATION_RULE*> ValidationRuleList;
