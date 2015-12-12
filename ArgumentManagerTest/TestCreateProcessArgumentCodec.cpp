@@ -121,7 +121,7 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeCommandLine)
   }
 }
 
-void prepareTestCreateProcessEncodeArgument(const char * iRawArguementValue, std::string & oEscapedArgument, std::string & oSystemArgumentValue)
+void prepareTestCreateProcessEncodeArgument(const char * iRawArguementValue, std::string & oEscapedArgument, std::string & oCreateProcessArgumentValue)
 {
   //arrange
   ArgumentList::StringList expectedArgs;
@@ -132,16 +132,16 @@ void prepareTestCreateProcessEncodeArgument(const char * iRawArguementValue, std
   arglist.init(expectedArgs);
 
   //act
-  CmdPromptArgumentCodec c;
+  CreateProcessArgumentCodec c;
   oEscapedArgument = c.encodeArgument(iRawArguementValue);
-  oSystemArgumentValue = systemDecodeArgument( oEscapedArgument.c_str() );
+  oCreateProcessArgumentValue = createProcessDecodeArgument( oEscapedArgument.c_str() );
 
   //debug
   printf("Testing decoded argument argv[1]=%s\n", iRawArguementValue);
   printf("  Actual:\n");
   printf("    foo.exe %s\n", oEscapedArgument.c_str());
-  printf("  Validating with system's cmd.exe...\n");
-  printf("    argv[1]=%s\n", oSystemArgumentValue.c_str());
+  printf("  Validating with CreateProcess() api...\n");
+  printf("    argv[1]=%s\n", oCreateProcessArgumentValue.c_str());
 }
 
 TEST_F(TestCreateProcessArgumentCodec, testEncodeArgument)
@@ -152,60 +152,60 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeArgument)
   {
     const char * argumentValue      = "malicious argument\"&whoami";
     std::string    actualEscapedArg;
-    std::string systemArgumentValue;
+    std::string createProcessArgumentValue;
 
-    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_CSTR_EQ(createProcessArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
     const char * argumentValue      = "\\\"hello\\\"";
     std::string    actualEscapedArg;
-    std::string systemArgumentValue;
+    std::string createProcessArgumentValue;
 
-    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_CSTR_EQ(createProcessArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
     const char * argumentValue      = "\\\"hello\\ world";
     std::string    actualEscapedArg;
-    std::string systemArgumentValue;
+    std::string createProcessArgumentValue;
 
-    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_CSTR_EQ(createProcessArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
     const char * argumentValue      = "test&whoami";
     std::string    actualEscapedArg;
-    std::string systemArgumentValue;
+    std::string createProcessArgumentValue;
 
-    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_CSTR_EQ(createProcessArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
     const char * argumentValue      = "test\\\"&whoami";
     std::string    actualEscapedArg;
-    std::string systemArgumentValue;
+    std::string createProcessArgumentValue;
 
-    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_CSTR_EQ(createProcessArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------

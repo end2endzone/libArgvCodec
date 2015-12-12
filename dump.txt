@@ -1,0 +1,5019 @@
+Duplicating to "M:\Training\C++\new\ArgumentManager\Debug\ArgumentManagerTest.printer.exe"... done
+Duplicating to "M:\Training\C++\new\ArgumentManager\Debug\ArgumentManagerTest.logger.exe"... done
+Running test "TestArgumentList.foo"... OK!
+Running test "TestArgumentList.testInitArgcArgv"... OK!
+Running test "TestArgumentList.testGetArgument"... OK!
+Running test "TestArgumentList.testInitVector"... OK!
+Running test "TestArgumentList.testInsertEndAbsolutePos"... OK!
+Running test "TestArgumentList.testInsertOutOfBound"... OK!
+Running test "TestArgumentList.testInsertFirst"... OK!
+Running test "TestArgumentList.testInsertMiddle"... OK!
+Running test "TestArgumentList.testRemoveEnd"... OK!
+Running test "TestArgumentList.testRemoveFirst"... OK!
+Running test "TestArgumentList.testRemoveMiddle"... OK!
+Running test "TestArgumentList.testRemoveOutOfBounds"... OK!
+Running test "TestArgumentList.testRemoveAll"... OK!
+Running test "TestArgumentList.testReplaceEnd"... OK!
+Running test "TestArgumentList.testReplaceFirst"... OK!
+Running test "TestArgumentList.testReplaceMiddle"... OK!
+Running test "TestArgumentList.testReplaceOutOfBounds"... OK!
+Running test "TestArgumentList.testFindIndex"... OK!
+Running test "TestArgumentList.testFindOption"... OK!
+Running test "TestArgumentList.testExtractOption"... OK!
+Running test "TestArgumentList.testExtractValue"... OK!
+Running test "TestArgumentList.testCopyCtor"... OK!
+Running test "TestArgumentList.testOperatorEqual"... OK!
+Running test "TestArgumentList.testAssignmentOperator"... OK!
+Running test "TestCmdPromptArgumentCodec.testDecodeCommandLine"...
+Testing 1/152: foo.exe test.exe /p -logfile=log.txt count=5
+  Expecting:
+   argv[1]=test.exe
+   argv[2]=/p
+   argv[3]=-logfile=log.txt
+   argv[4]=count=5
+  Actuals:
+   argv[1]=test.exe
+   argv[2]=/p
+   argv[3]=-logfile=log.txt
+   argv[4]=count=5
+  success
+Testing 2/152: foo.exe a b c
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  success
+Testing 3/152: foo.exe a    b        c
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  success
+Testing 4/152: foo.exe a                        b                               c
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  success
+Testing 5/152: foo.exe a b c
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  success
+Testing 6/152: foo.exe "a b" c
+  Expecting:
+   argv[1]=a b
+   argv[2]=c
+  Actuals:
+   argv[1]=a b
+   argv[2]=c
+  success
+Testing 7/152: foo.exe "a b c"
+  Expecting:
+   argv[1]=a b c
+  Actuals:
+   argv[1]=a b c
+  success
+Testing 8/152: foo.exe "a b c
+  Expecting:
+   argv[1]=a b c
+  Actuals:
+   argv[1]=a b c
+  success
+Testing 9/152: foo.exe "a b c"
+  Expecting:
+   argv[1]=a b c
+  Actuals:
+   argv[1]=a b c
+  success
+Testing 10/152: foo.exe a" b" c
+  Expecting:
+   argv[1]=a b
+   argv[2]=c
+  Actuals:
+   argv[1]=a b
+   argv[2]=c
+  success
+Testing 11/152: foo.exe "a "b c
+  Expecting:
+   argv[1]=a b
+   argv[2]=c
+  Actuals:
+   argv[1]=a b
+   argv[2]=c
+  success
+Testing 12/152: foo.exe a b c"
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  success
+Testing 13/152: foo.exe "a b" c"
+  Expecting:
+   argv[1]=a b
+   argv[2]=c
+  Actuals:
+   argv[1]=a b
+   argv[2]=c
+  success
+Testing 14/152: foo.exe "a b\" c" d
+  Expecting:
+   argv[1]=a b" c
+   argv[2]=d
+  Actuals:
+   argv[1]=a b" c
+   argv[2]=d
+  success
+Testing 15/152: foo.exe "a b\" c d
+  Expecting:
+   argv[1]=a b" c d
+  Actuals:
+   argv[1]=a b" c d
+  success
+Testing 16/152: foo.exe a\\b
+  Expecting:
+   argv[1]=a\\b
+  Actuals:
+   argv[1]=a\\b
+  success
+Testing 17/152: foo.exe "a\\b"
+  Expecting:
+   argv[1]=a\\b
+  Actuals:
+   argv[1]=a\\b
+  success
+Testing 18/152: foo.exe a\\"b c
+  Expecting:
+   argv[1]=a\b c
+  Actuals:
+   argv[1]=a\b c
+  success
+Testing 19/152: foo.exe a\\"b c"
+  Expecting:
+   argv[1]=a\b c
+  Actuals:
+   argv[1]=a\b c
+  success
+Testing 20/152: foo.exe "a\\\"b c"
+  Expecting:
+   argv[1]=a\"b c
+  Actuals:
+   argv[1]=a\"b c
+  success
+Testing 21/152: foo.exe a\\^"b c
+  Expecting:
+   argv[1]=a\b c
+  Actuals:
+   argv[1]=a\b c
+  success
+Testing 22/152: foo.exe a\\^"b ^<c
+  Expecting:
+   argv[1]=a\b <c
+  Actuals:
+   argv[1]=a\b <c
+  success
+Testing 23/152: foo.exe a\\^"b c"
+  Expecting:
+   argv[1]=a\b c
+  Actuals:
+   argv[1]=a\b c
+  success
+Testing 24/152: foo.exe "a\\\^"b c"
+  Expecting:
+   argv[1]=a\\\^b
+   argv[2]=c
+  Actuals:
+   argv[1]=a\\\^b
+   argv[2]=c
+  success
+Testing 25/152: foo.exe a\"b
+  Expecting:
+   argv[1]=a"b
+  Actuals:
+   argv[1]=a"b
+  success
+Testing 26/152: foo.exe "a\"b"
+  Expecting:
+   argv[1]=a"b
+  Actuals:
+   argv[1]=a"b
+  success
+Testing 27/152: foo.exe a\\"b c d"
+  Expecting:
+   argv[1]=a\b c d
+  Actuals:
+   argv[1]=a\b c d
+  success
+Testing 28/152: foo.exe a\\\"b
+  Expecting:
+   argv[1]=a\"b
+  Actuals:
+   argv[1]=a\"b
+  success
+Testing 29/152: foo.exe "a\\\"b"
+  Expecting:
+   argv[1]=a\"b
+  Actuals:
+   argv[1]=a\"b
+  success
+Testing 30/152: foo.exe a b\\ \" c d
+  Expecting:
+   argv[1]=a
+   argv[2]=b\\
+   argv[3]="
+   argv[4]=c
+   argv[5]=d
+  Actuals:
+   argv[1]=a
+   argv[2]=b\\
+   argv[3]="
+   argv[4]=c
+   argv[5]=d
+  success
+Testing 31/152: foo.exe "a b\\ \" c d
+  Expecting:
+   argv[1]=a b\\ " c d
+  Actuals:
+   argv[1]=a b\\ " c d
+  success
+Testing 32/152: foo.exe "a b\\" c d
+  Expecting:
+   argv[1]=a b\
+   argv[2]=c
+   argv[3]=d
+  Actuals:
+   argv[1]=a b\
+   argv[2]=c
+   argv[3]=d
+  success
+Testing 33/152: foo.exe a b\" c d
+  Expecting:
+   argv[1]=a
+   argv[2]=b"
+   argv[3]=c
+   argv[4]=d
+  Actuals:
+   argv[1]=a
+   argv[2]=b"
+   argv[3]=c
+   argv[4]=d
+  success
+Testing 34/152: foo.exe a \t c
+  Expecting:
+   argv[1]=a
+   argv[2]=\t
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=\t
+   argv[3]=c
+  success
+Testing 35/152: foo.exe a \"b c
+  Expecting:
+   argv[1]=a
+   argv[2]="b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]="b
+   argv[3]=c
+  success
+Testing 36/152: foo.exe a "" b
+  Expecting:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+  Actuals:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+  success
+Testing 37/152: foo.exe "" a b
+  Expecting:
+   argv[1]=
+   argv[2]=a
+   argv[3]=b
+  Actuals:
+   argv[1]=
+   argv[2]=a
+   argv[3]=b
+  success
+Testing 38/152: foo.exe a b ""
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=
+  success
+Testing 39/152: foo.exe a ^"^" b
+  Expecting:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+  Actuals:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+  success
+Testing 40/152: foo.exe ^"^" a b
+  Expecting:
+   argv[1]=
+   argv[2]=a
+   argv[3]=b
+  Actuals:
+   argv[1]=
+   argv[2]=a
+   argv[3]=b
+  success
+Testing 41/152: foo.exe a b ^"^"
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=
+  success
+Testing 42/152: foo.exe a ^"" b
+  Expecting:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+  Actuals:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+  success
+Testing 43/152: foo.exe ^"" a b
+  Expecting:
+   argv[1]=
+   argv[2]=a
+   argv[3]=b
+  Actuals:
+   argv[1]=
+   argv[2]=a
+   argv[3]=b
+  success
+Testing 44/152: foo.exe a b ^""
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=
+  success
+Testing 45/152: foo.exe a "" b c
+  Expecting:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+   argv[4]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+   argv[4]=c
+  success
+Testing 46/152: foo.exe a \"b c
+  Expecting:
+   argv[1]=a
+   argv[2]="b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]="b
+   argv[3]=c
+  success
+Testing 47/152: foo.exe "a \"b" c
+  Expecting:
+   argv[1]=a "b
+   argv[2]=c
+  Actuals:
+   argv[1]=a "b
+   argv[2]=c
+  success
+Testing 48/152: foo.exe "a ""b" c
+  Expecting:
+   argv[1]=a "b
+   argv[2]=c
+  Actuals:
+   argv[1]=a "b
+   argv[2]=c
+  success
+Testing 49/152: foo.exe a ""b c
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  success
+Testing 50/152: foo.exe a b"" c
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  success
+Testing 51/152: foo.exe "" a b c
+  Expecting:
+   argv[1]=
+   argv[2]=a
+   argv[3]=b
+   argv[4]=c
+  Actuals:
+   argv[1]=
+   argv[2]=a
+   argv[3]=b
+   argv[4]=c
+  success
+Testing 52/152: foo.exe a b c ""
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+   argv[4]=
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+   argv[4]=
+  success
+Testing 53/152: foo.exe a \\b c
+  Expecting:
+   argv[1]=a
+   argv[2]=\\b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=\\b
+   argv[3]=c
+  success
+Testing 54/152: foo.exe '"test"'
+  Expecting:
+   argv[1]='test'
+  Actuals:
+   argv[1]='test'
+  success
+Testing 55/152: foo.exe '^"test^"'
+  Expecting:
+   argv[1]='test'
+  Actuals:
+   argv[1]='test'
+  success
+Testing 56/152: foo.exe hello"to the  entire"world
+  Expecting:
+   argv[1]=helloto the  entireworld
+  Actuals:
+   argv[1]=helloto the  entireworld
+  success
+Testing 57/152: foo.exe "hello"to the  entire"world"
+  Expecting:
+   argv[1]=helloto
+   argv[2]=the
+   argv[3]=entireworld
+  Actuals:
+   argv[1]=helloto
+   argv[2]=the
+   argv[3]=entireworld
+  success
+Testing 58/152: foo.exe """a"""
+  Expecting:
+   argv[1]="a"
+  Actuals:
+   argv[1]="a"
+  success
+Testing 59/152: foo.exe """a b"""
+  Expecting:
+   argv[1]="a b"
+  Actuals:
+   argv[1]="a b"
+  success
+Testing 60/152: foo.exe """"Hello,""" Mike said."
+  Expecting:
+   argv[1]="Hello," Mike said.
+  Actuals:
+   argv[1]="Hello," Mike said.
+  success
+Testing 61/152: foo.exe ""a""b""c""d""
+  Expecting:
+   argv[1]=abcd
+  Actuals:
+   argv[1]=abcd
+  success
+Testing 62/152: foo.exe "hello to """quotes""
+  Expecting:
+   argv[1]=hello to "quotes
+  Actuals:
+   argv[1]=hello to "quotes
+  success
+Testing 63/152: foo.exe """"hello world""
+  Expecting:
+   argv[1]="hello
+   argv[2]=world
+  Actuals:
+   argv[1]="hello
+   argv[2]=world
+  success
+Testing 64/152: foo.exe """hello" world""
+  Expecting:
+   argv[1]="hello
+   argv[2]=world
+  Actuals:
+   argv[1]="hello
+   argv[2]=world
+  success
+Testing 65/152: foo.exe """hello "world""
+  Expecting:
+   argv[1]="hello world
+  Actuals:
+   argv[1]="hello world
+  success
+Testing 66/152: foo.exe "hello ""world"""
+  Expecting:
+   argv[1]=hello "world"
+  Actuals:
+   argv[1]=hello "world"
+  success
+Testing 67/152: foo.exe "hello """world""
+  Expecting:
+   argv[1]=hello "world
+  Actuals:
+   argv[1]=hello "world
+  success
+Testing 68/152: foo.exe aaa\\\\\\"b c"
+  Expecting:
+   argv[1]=aaa\\\b c
+  Actuals:
+   argv[1]=aaa\\\b c
+  success
+Testing 69/152: foo.exe aaa\\\\\"b c"
+  Expecting:
+   argv[1]=aaa\\"b
+   argv[2]=c
+  Actuals:
+   argv[1]=aaa\\"b
+   argv[2]=c
+  success
+Testing 70/152: foo.exe ^"test\^"^&whoami^"
+  Expecting:
+   argv[1]=test"&whoami
+  Actuals:
+   argv[1]=test"&whoami
+  success
+Testing 71/152: foo.exe aaa"
+  Expecting:
+   argv[1]=aaa
+  Actuals:
+   argv[1]=aaa
+  success
+Testing 72/152: foo.exe aaa\"
+  Expecting:
+   argv[1]=aaa"
+  Actuals:
+   argv[1]=aaa"
+  success
+Testing 73/152: foo.exe aaa\\"
+  Expecting:
+   argv[1]=aaa\
+  Actuals:
+   argv[1]=aaa\
+  success
+Testing 74/152: foo.exe aaa\\\"
+  Expecting:
+   argv[1]=aaa\"
+  Actuals:
+   argv[1]=aaa\"
+  success
+Testing 75/152: foo.exe "aaa\"
+  Expecting:
+   argv[1]=aaa"
+  Actuals:
+   argv[1]=aaa"
+  success
+Testing 76/152: foo.exe "aaa\\"
+  Expecting:
+   argv[1]=aaa\
+  Actuals:
+   argv[1]=aaa\
+  success
+Testing 77/152: foo.exe "aaa\\\"
+  Expecting:
+   argv[1]=aaa\"
+  Actuals:
+   argv[1]=aaa\"
+  success
+Testing 78/152: foo.exe a"bc
+  Expecting:
+   argv[1]=abc
+  Actuals:
+   argv[1]=abc
+  success
+Testing 79/152: foo.exe a"bc\
+  Expecting:
+   argv[1]=abc\
+  Actuals:
+   argv[1]=abc\
+  success
+Testing 80/152: foo.exe a"bc\\
+  Expecting:
+   argv[1]=abc\\
+  Actuals:
+   argv[1]=abc\\
+  success
+Testing 81/152: foo.exe a"bc\\\
+  Expecting:
+   argv[1]=abc\\\
+  Actuals:
+   argv[1]=abc\\\
+  success
+Testing 82/152: foo.exe a"bc\"d
+  Expecting:
+   argv[1]=abc"d
+  Actuals:
+   argv[1]=abc"d
+  success
+Testing 83/152: foo.exe a"bc\\ ddd" e
+  Expecting:
+   argv[1]=abc\\ ddd
+   argv[2]=e
+  Actuals:
+   argv[1]=abc\\ ddd
+   argv[2]=e
+  success
+Testing 84/152: foo.exe a"bc\"\ ddd" e
+  Expecting:
+   argv[1]=abc"\ ddd
+   argv[2]=e
+  Actuals:
+   argv[1]=abc"\ ddd
+   argv[2]=e
+  success
+Testing 85/152: foo.exe ab\\c d
+  Expecting:
+   argv[1]=ab\\c
+   argv[2]=d
+  Actuals:
+   argv[1]=ab\\c
+   argv[2]=d
+  success
+Testing 86/152: foo.exe ab\\ c
+  Expecting:
+   argv[1]=ab\\
+   argv[2]=c
+  Actuals:
+   argv[1]=ab\\
+   argv[2]=c
+  success
+Testing 87/152: foo.exe \\ab c
+  Expecting:
+   argv[1]=\\ab
+   argv[2]=c
+  Actuals:
+   argv[1]=\\ab
+   argv[2]=c
+  success
+Testing 88/152: foo.exe a ""bc\"o" e"
+  Expecting:
+   argv[1]=a
+   argv[2]=bc"o e
+  Actuals:
+   argv[1]=a
+   argv[2]=bc"o e
+  success
+Testing 89/152: foo.exe a "bc\"o" e"
+  Expecting:
+   argv[1]=a
+   argv[2]=bc"o
+   argv[3]=e
+  Actuals:
+   argv[1]=a
+   argv[2]=bc"o
+   argv[3]=e
+  success
+Testing 90/152: foo.exe "a"""b
+  Expecting:
+   argv[1]=a"b
+  Actuals:
+   argv[1]=a"b
+  success
+Testing 91/152: foo.exe "a"""b"
+  Expecting:
+   argv[1]=a"b
+  Actuals:
+   argv[1]=a"b
+  success
+Testing 92/152: foo.exe "a\"b"
+  Expecting:
+   argv[1]=a"b
+  Actuals:
+   argv[1]=a"b
+  success
+Testing 93/152: foo.exe "a""" b"
+  Expecting:
+   argv[1]=a"
+   argv[2]=b
+  Actuals:
+   argv[1]=a"
+   argv[2]=b
+  success
+Testing 94/152: foo.exe """
+  Expecting:
+   argv[1]="
+  Actuals:
+   argv[1]="
+  success
+Testing 95/152: foo.exe """"
+  Expecting:
+   argv[1]="
+  Actuals:
+   argv[1]="
+  success
+Testing 96/152: foo.exe """""
+  Expecting:
+   argv[1]=""
+  Actuals:
+   argv[1]=""
+  success
+Testing 97/152: foo.exe """"""
+  Expecting:
+   argv[1]=""
+  Actuals:
+   argv[1]=""
+  success
+Testing 98/152: foo.exe ^"ab cd\^"^&echo foo^"
+  Expecting:
+   argv[1]=ab cd"&echo foo
+  Actuals:
+   argv[1]=ab cd"&echo foo
+  success
+Testing 99/152: foo.exe "ab cd\^"^&echo foo^"
+  Expecting:
+   argv[1]=ab cd\^&echo
+   argv[2]=foo
+  Actuals:
+   argv[1]=ab cd\^&echo
+   argv[2]=foo
+  success
+Testing 100/152: foo.exe ^"ab cd\^" ee"
+  Expecting:
+   argv[1]=ab cd" ee
+  Actuals:
+   argv[1]=ab cd" ee
+  success
+Testing 101/152: foo.exe "ab cd\" ee"
+  Expecting:
+   argv[1]=ab cd" ee
+  Actuals:
+   argv[1]=ab cd" ee
+  success
+Testing 102/152: foo.exe "ab cd\^" ee"
+  Expecting:
+   argv[1]=ab cd\^
+   argv[2]=ee
+  Actuals:
+   argv[1]=ab cd\^
+   argv[2]=ee
+  success
+Testing 103/152: foo.exe "a^b" c
+  Expecting:
+   argv[1]=a^b
+   argv[2]=c
+  Actuals:
+   argv[1]=a^b
+   argv[2]=c
+  success
+Testing 104/152: foo.exe ^"a^b" c
+  Expecting:
+   argv[1]=ab
+   argv[2]=c
+  Actuals:
+   argv[1]=ab
+   argv[2]=c
+  success
+Testing 105/152: foo.exe ^"ab^" c
+  Expecting:
+   argv[1]=ab
+   argv[2]=c
+  Actuals:
+   argv[1]=ab
+   argv[2]=c
+  success
+Testing 106/152: foo.exe ^"ab^"" c
+  Expecting:
+   argv[1]=ab" c
+  Actuals:
+   argv[1]=ab" c
+  success
+Testing 107/152: foo.exe ^"a \^" b^" c
+  Expecting:
+   argv[1]=a " b
+   argv[2]=c
+  Actuals:
+   argv[1]=a " b
+   argv[2]=c
+  success
+Testing 108/152: foo.exe ^"a \" b^" c
+  Expecting:
+   argv[1]=a " b^
+   argv[2]=c
+  Actuals:
+   argv[1]=a " b^
+   argv[2]=c
+  success
+Testing 109/152: foo.exe a b\^"c
+  Expecting:
+   argv[1]=a
+   argv[2]=b"c
+  Actuals:
+   argv[1]=a
+   argv[2]=b"c
+  success
+Testing 110/152: foo.exe ^"a b^" c
+  Expecting:
+   argv[1]=a b
+   argv[2]=c
+  Actuals:
+   argv[1]=a b
+   argv[2]=c
+  success
+Testing 111/152: foo.exe ^"a b" c
+  Expecting:
+   argv[1]=a b
+   argv[2]=c
+  Actuals:
+   argv[1]=a b
+   argv[2]=c
+  success
+Testing 112/152: foo.exe ^"a b^"c
+  Expecting:
+   argv[1]=a bc
+  Actuals:
+   argv[1]=a bc
+  success
+Testing 113/152: foo.exe a^"b c^"
+  Expecting:
+   argv[1]=ab c
+  Actuals:
+   argv[1]=ab c
+  success
+Testing 114/152: foo.exe "a < b" c
+  Expecting:
+   argv[1]=a < b
+   argv[2]=c
+  Actuals:
+   argv[1]=a < b
+   argv[2]=c
+  success
+Testing 115/152: foo.exe "a ^< b" c
+  Expecting:
+   argv[1]=a ^< b
+   argv[2]=c
+  Actuals:
+   argv[1]=a ^< b
+   argv[2]=c
+  success
+Testing 116/152: foo.exe a \bb c
+  Expecting:
+   argv[1]=a
+   argv[2]=\bb
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=\bb
+   argv[3]=c
+  success
+Testing 117/152: foo.exe a \"bb c" d
+  Expecting:
+   argv[1]=a
+   argv[2]="bb
+   argv[3]=c d
+  Actuals:
+   argv[1]=a
+   argv[2]="bb
+   argv[3]=c d
+  success
+Testing 118/152: foo.exe a ^"bb^" c" d
+  Expecting:
+   argv[1]=a
+   argv[2]=bb
+   argv[3]=c d
+  Actuals:
+   argv[1]=a
+   argv[2]=bb
+   argv[3]=c d
+  success
+Testing 119/152: foo.exe a \"b c
+  Expecting:
+   argv[1]=a
+   argv[2]="b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]="b
+   argv[3]=c
+  success
+Testing 120/152: foo.exe a""b c
+  Expecting:
+   argv[1]=ab
+   argv[2]=c
+  Actuals:
+   argv[1]=ab
+   argv[2]=c
+  success
+Testing 121/152: foo.exe a\"b c
+  Expecting:
+   argv[1]=a"b
+   argv[2]=c
+  Actuals:
+   argv[1]=a"b
+   argv[2]=c
+  success
+Testing 122/152: foo.exe "a""b" c
+  Expecting:
+   argv[1]=a"b
+   argv[2]=c
+  Actuals:
+   argv[1]=a"b
+   argv[2]=c
+  success
+Testing 123/152: foo.exe "a\"b" c
+  Expecting:
+   argv[1]=a"b
+   argv[2]=c
+  Actuals:
+   argv[1]=a"b
+   argv[2]=c
+  success
+Testing 124/152: foo.exe a ^"" b
+  Expecting:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+  Actuals:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+  success
+Testing 125/152: foo.exe a ^"^" b
+  Expecting:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+  Actuals:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+  success
+Testing 126/152: foo.exe ^"" a
+  Expecting:
+   argv[1]=
+   argv[2]=a
+  Actuals:
+   argv[1]=
+   argv[2]=a
+  success
+Testing 127/152: foo.exe ^"^" a
+  Expecting:
+   argv[1]=
+   argv[2]=a
+  Actuals:
+   argv[1]=
+   argv[2]=a
+  success
+Testing 128/152: foo.exe ^"test\^"^&whoami^"
+  Expecting:
+   argv[1]=test"&whoami
+  Actuals:
+   argv[1]=test"&whoami
+  success
+Testing 129/152: foo.exe ^"test\\^"^&whoami^"
+  Expecting:
+   argv[1]=test\&whoami
+  Actuals:
+   argv[1]=test\&whoami
+  success
+Testing 130/152: foo.exe ^"test\"^&whoami^"
+  Expecting:
+   argv[1]=test"^&whoami^
+  Actuals:
+   argv[1]=test"^&whoami^
+  success
+Testing 131/152: foo.exe a\\\\"b
+  Expecting:
+   argv[1]=a\\b
+  Actuals:
+   argv[1]=a\\b
+  success
+Testing 132/152: foo.exe ^"a\\\\"b"
+  Expecting:
+   argv[1]=a\\b
+  Actuals:
+   argv[1]=a\\b
+  success
+Testing 133/152: foo.exe ^"a\^\^\\"b"
+  Expecting:
+   argv[1]=a\\b
+  Actuals:
+   argv[1]=a\\b
+  success
+Testing 134/152: foo.exe ^"a\^\\^\"b"
+  Expecting:
+   argv[1]=a\\b
+  Actuals:
+   argv[1]=a\\b
+  success
+Testing 135/152: foo.exe ^"a\^\\\^"b"
+  Expecting:
+   argv[1]=a\\b
+  Actuals:
+   argv[1]=a\\b
+  success
+Testing 136/152: foo.exe "a b""c d"
+  Expecting:
+   argv[1]=a b"c d
+  Actuals:
+   argv[1]=a b"c d
+  success
+Testing 137/152: foo.exe ^"a b^"^"c d^"
+  Expecting:
+   argv[1]=a b"c d
+  Actuals:
+   argv[1]=a b"c d
+  success
+Testing 138/152: foo.exe ^"a b^""c d"
+  Expecting:
+   argv[1]=a b"c d
+  Actuals:
+   argv[1]=a b"c d
+  success
+Testing 139/152: foo.exe "a b"^"c d^"
+  Expecting:
+   argv[1]=a b"c d
+  Actuals:
+   argv[1]=a b"c d
+  success
+Testing 140/152: foo.exe "a b^"^"c d"
+  Expecting:
+   argv[1]=a b^"c d
+  Actuals:
+   argv[1]=a b^"c d
+  success
+Testing 141/152: foo.exe a ^< b
+  Expecting:
+   argv[1]=a
+   argv[2]=<
+   argv[3]=b
+  Actuals:
+   argv[1]=a
+   argv[2]=<
+   argv[3]=b
+  success
+Testing 142/152: foo.exe ^"a ^< b^" c
+  Expecting:
+   argv[1]=a < b
+   argv[2]=c
+  Actuals:
+   argv[1]=a < b
+   argv[2]=c
+  success
+Testing 143/152: foo.exe ^a^b ^c
+  Expecting:
+   argv[1]=ab
+   argv[2]=c
+  Actuals:
+   argv[1]=ab
+   argv[2]=c
+  success
+Testing 144/152: foo.exe "^a^b" ^c
+  Expecting:
+   argv[1]=^a^b
+   argv[2]=c
+  Actuals:
+   argv[1]=^a^b
+   argv[2]=c
+  success
+Testing 145/152: foo.exe "a b""c d"
+  Expecting:
+   argv[1]=a b"c d
+  Actuals:
+   argv[1]=a b"c d
+  success
+Testing 146/152: foo.exe ^"a b^"^"c d^"
+  Expecting:
+   argv[1]=a b"c d
+  Actuals:
+   argv[1]=a b"c d
+  success
+Testing 147/152: foo.exe ^"a b^""c d"
+  Expecting:
+   argv[1]=a b"c d
+  Actuals:
+   argv[1]=a b"c d
+  success
+Testing 148/152: foo.exe "a b"^"c d^"
+  Expecting:
+   argv[1]=a b"c d
+  Actuals:
+   argv[1]=a b"c d
+  success
+Testing 149/152: foo.exe "a b^"^"c d"
+  Expecting:
+   argv[1]=a b^"c d
+  Actuals:
+   argv[1]=a b^"c d
+  success
+Testing 150/152: foo.exe ^"a b"" ^<c
+  Expecting:
+   argv[1]=a b" <c
+  Actuals:
+   argv[1]=a b" <c
+  success
+Testing 151/152: foo.exe ^"a b^"" ^<c
+  Expecting:
+   argv[1]=a b" ^<c
+  Actuals:
+   argv[1]=a b" ^<c
+  success
+Testing 152/152: foo.exe a\\^^^"b ^<c
+  Expecting:
+   argv[1]=a\\^b <c
+  Actuals:
+   argv[1]=a\\^b <c
+  success
+OK!
+Running test "TestCmdPromptArgumentCodec.testEncodeCommandLine"...
+Testing 1/2, TestEncodeCommandLine001.txt
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 2/2, TestEncodeCommandLine002.txt
+  Expecting
+    argv[1]=a b
+    argv[2]=c
+  Actuals:
+    argv[1]=a b
+    argv[2]=c
+  success
+OK!
+Running test "TestCmdPromptArgumentCodec.testEncodeCommandLine2"...
+Testing 1/152
+  Expecting
+    argv[1]=test.exe
+    argv[2]=/p
+    argv[3]=-logfile=log.txt
+    argv[4]=count=5
+  Actuals:
+    cmdline=test.exe /p -logfile=log.txt count=5
+    argv[1]=test.exe
+    argv[2]=/p
+    argv[3]=-logfile=log.txt
+    argv[4]=count=5
+  success
+Testing 2/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    cmdline=a b c
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 3/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    cmdline=a b c
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 4/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    cmdline=a b c
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 5/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    cmdline=a b c
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 6/152
+  Expecting
+    argv[1]=a b
+    argv[2]=c
+  Actuals:
+    cmdline="a b" c
+    argv[1]=a b
+    argv[2]=c
+  success
+Testing 7/152
+  Expecting
+    argv[1]=a b c
+  Actuals:
+    cmdline="a b c"
+    argv[1]=a b c
+  success
+Testing 8/152
+  Expecting
+    argv[1]=a b c
+  Actuals:
+    cmdline="a b c"
+    argv[1]=a b c
+  success
+Testing 9/152
+  Expecting
+    argv[1]=a b c
+  Actuals:
+    cmdline="a b c"
+    argv[1]=a b c
+  success
+Testing 10/152
+  Expecting
+    argv[1]=a b
+    argv[2]=c
+  Actuals:
+    cmdline="a b" c
+    argv[1]=a b
+    argv[2]=c
+  success
+Testing 11/152
+  Expecting
+    argv[1]=a b
+    argv[2]=c
+  Actuals:
+    cmdline="a b" c
+    argv[1]=a b
+    argv[2]=c
+  success
+Testing 12/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    cmdline=a b c
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 13/152
+  Expecting
+    argv[1]=a b
+    argv[2]=c
+  Actuals:
+    cmdline="a b" c
+    argv[1]=a b
+    argv[2]=c
+  success
+Testing 14/152
+  Expecting
+    argv[1]=a b" c
+    argv[2]=d
+  Actuals:
+    cmdline="a b"" c" d
+    argv[1]=a b" c
+    argv[2]=d
+  success
+Testing 15/152
+  Expecting
+    argv[1]=a b" c d
+  Actuals:
+    cmdline="a b"" c d"
+    argv[1]=a b" c d
+  success
+Testing 16/152
+  Expecting
+    argv[1]=a\\b
+  Actuals:
+    cmdline=a\\b
+    argv[1]=a\\b
+  success
+Testing 17/152
+  Expecting
+    argv[1]=a\\b
+  Actuals:
+    cmdline=a\\b
+    argv[1]=a\\b
+  success
+Testing 18/152
+  Expecting
+    argv[1]=a\b c
+  Actuals:
+    cmdline="a\b c"
+    argv[1]=a\b c
+  success
+Testing 19/152
+  Expecting
+    argv[1]=a\b c
+  Actuals:
+    cmdline="a\b c"
+    argv[1]=a\b c
+  success
+Testing 20/152
+  Expecting
+    argv[1]=a\"b c
+  Actuals:
+    cmdline="a\\""b c"
+    argv[1]=a\"b c
+  success
+Testing 21/152
+  Expecting
+    argv[1]=a\b c
+  Actuals:
+    cmdline="a\b c"
+    argv[1]=a\b c
+  success
+Testing 22/152
+  Expecting
+    argv[1]=a\b <c
+  Actuals:
+    cmdline="a\b <c"
+    argv[1]=a\b <c
+  success
+Testing 23/152
+  Expecting
+    argv[1]=a\b c
+  Actuals:
+    cmdline="a\b c"
+    argv[1]=a\b c
+  success
+Testing 24/152
+  Expecting
+    argv[1]=a\\\^b
+    argv[2]=c
+  Actuals:
+    cmdline="a\\\^b" c
+    argv[1]=a\\\^b
+    argv[2]=c
+  success
+Testing 25/152
+  Expecting
+    argv[1]=a"b
+  Actuals:
+    cmdline=a\"b
+    argv[1]=a"b
+  success
+Testing 26/152
+  Expecting
+    argv[1]=a"b
+  Actuals:
+    cmdline=a\"b
+    argv[1]=a"b
+  success
+Testing 27/152
+  Expecting
+    argv[1]=a\b c d
+  Actuals:
+    cmdline="a\b c d"
+    argv[1]=a\b c d
+  success
+Testing 28/152
+  Expecting
+    argv[1]=a\"b
+  Actuals:
+    cmdline=a\\\"b
+    argv[1]=a\"b
+  success
+Testing 29/152
+  Expecting
+    argv[1]=a\"b
+  Actuals:
+    cmdline=a\\\"b
+    argv[1]=a\"b
+  success
+Testing 30/152
+  Expecting
+    argv[1]=a
+    argv[2]=b\\
+    argv[3]="
+    argv[4]=c
+    argv[5]=d
+  Actuals:
+    cmdline=a b\\ \" c d
+    argv[1]=a
+    argv[2]=b\\
+    argv[3]="
+    argv[4]=c
+    argv[5]=d
+  success
+Testing 31/152
+  Expecting
+    argv[1]=a b\\ " c d
+  Actuals:
+    cmdline="a b\\ "" c d"
+    argv[1]=a b\\ " c d
+  success
+Testing 32/152
+  Expecting
+    argv[1]=a b\
+    argv[2]=c
+    argv[3]=d
+  Actuals:
+    cmdline="a b\\" c d
+    argv[1]=a b\
+    argv[2]=c
+    argv[3]=d
+  success
+Testing 33/152
+  Expecting
+    argv[1]=a
+    argv[2]=b"
+    argv[3]=c
+    argv[4]=d
+  Actuals:
+    cmdline=a b\" c d
+    argv[1]=a
+    argv[2]=b"
+    argv[3]=c
+    argv[4]=d
+  success
+Testing 34/152
+  Expecting
+    argv[1]=a
+    argv[2]=\t
+    argv[3]=c
+  Actuals:
+    cmdline=a \t c
+    argv[1]=a
+    argv[2]=\t
+    argv[3]=c
+  success
+Testing 35/152
+  Expecting
+    argv[1]=a
+    argv[2]="b
+    argv[3]=c
+  Actuals:
+    cmdline=a \"b c
+    argv[1]=a
+    argv[2]="b
+    argv[3]=c
+  success
+Testing 36/152
+  Expecting
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  Actuals:
+    cmdline=a "" b
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  success
+Testing 37/152
+  Expecting
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+  Actuals:
+    cmdline="" a b
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+  success
+Testing 38/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=
+  Actuals:
+    cmdline=a b ""
+    argv[1]=a
+    argv[2]=b
+    argv[3]=
+  success
+Testing 39/152
+  Expecting
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  Actuals:
+    cmdline=a "" b
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  success
+Testing 40/152
+  Expecting
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+  Actuals:
+    cmdline="" a b
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+  success
+Testing 41/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=
+  Actuals:
+    cmdline=a b ""
+    argv[1]=a
+    argv[2]=b
+    argv[3]=
+  success
+Testing 42/152
+  Expecting
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  Actuals:
+    cmdline=a "" b
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  success
+Testing 43/152
+  Expecting
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+  Actuals:
+    cmdline="" a b
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+  success
+Testing 44/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=
+  Actuals:
+    cmdline=a b ""
+    argv[1]=a
+    argv[2]=b
+    argv[3]=
+  success
+Testing 45/152
+  Expecting
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+    argv[4]=c
+  Actuals:
+    cmdline=a "" b c
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+    argv[4]=c
+  success
+Testing 46/152
+  Expecting
+    argv[1]=a
+    argv[2]="b
+    argv[3]=c
+  Actuals:
+    cmdline=a \"b c
+    argv[1]=a
+    argv[2]="b
+    argv[3]=c
+  success
+Testing 47/152
+  Expecting
+    argv[1]=a "b
+    argv[2]=c
+  Actuals:
+    cmdline="a ""b" c
+    argv[1]=a "b
+    argv[2]=c
+  success
+Testing 48/152
+  Expecting
+    argv[1]=a "b
+    argv[2]=c
+  Actuals:
+    cmdline="a ""b" c
+    argv[1]=a "b
+    argv[2]=c
+  success
+Testing 49/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    cmdline=a b c
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 50/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    cmdline=a b c
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 51/152
+  Expecting
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+    argv[4]=c
+  Actuals:
+    cmdline="" a b c
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+    argv[4]=c
+  success
+Testing 52/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+    argv[4]=
+  Actuals:
+    cmdline=a b c ""
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+    argv[4]=
+  success
+Testing 53/152
+  Expecting
+    argv[1]=a
+    argv[2]=\\b
+    argv[3]=c
+  Actuals:
+    cmdline=a \\b c
+    argv[1]=a
+    argv[2]=\\b
+    argv[3]=c
+  success
+Testing 54/152
+  Expecting
+    argv[1]='test'
+  Actuals:
+    cmdline='test'
+    argv[1]='test'
+  success
+Testing 55/152
+  Expecting
+    argv[1]='test'
+  Actuals:
+    cmdline='test'
+    argv[1]='test'
+  success
+Testing 56/152
+  Expecting
+    argv[1]=helloto the  entireworld
+  Actuals:
+    cmdline="helloto the  entireworld"
+    argv[1]=helloto the  entireworld
+  success
+Testing 57/152
+  Expecting
+    argv[1]=helloto
+    argv[2]=the
+    argv[3]=entireworld
+  Actuals:
+    cmdline=helloto the entireworld
+    argv[1]=helloto
+    argv[2]=the
+    argv[3]=entireworld
+  success
+Testing 58/152
+  Expecting
+    argv[1]="a"
+  Actuals:
+    cmdline=\"a\"
+    argv[1]="a"
+  success
+Testing 59/152
+  Expecting
+    argv[1]="a b"
+  Actuals:
+    cmdline="""a b"""
+    argv[1]="a b"
+  success
+Testing 60/152
+  Expecting
+    argv[1]="Hello," Mike said.
+  Actuals:
+    cmdline="""Hello,"" Mike said."
+    argv[1]="Hello," Mike said.
+  success
+Testing 61/152
+  Expecting
+    argv[1]=abcd
+  Actuals:
+    cmdline=abcd
+    argv[1]=abcd
+  success
+Testing 62/152
+  Expecting
+    argv[1]=hello to "quotes
+  Actuals:
+    cmdline="hello to ""quotes"
+    argv[1]=hello to "quotes
+  success
+Testing 63/152
+  Expecting
+    argv[1]="hello
+    argv[2]=world
+  Actuals:
+    cmdline=\"hello world
+    argv[1]="hello
+    argv[2]=world
+  success
+Testing 64/152
+  Expecting
+    argv[1]="hello
+    argv[2]=world
+  Actuals:
+    cmdline=\"hello world
+    argv[1]="hello
+    argv[2]=world
+  success
+Testing 65/152
+  Expecting
+    argv[1]="hello world
+  Actuals:
+    cmdline="""hello world"
+    argv[1]="hello world
+  success
+Testing 66/152
+  Expecting
+    argv[1]=hello "world"
+  Actuals:
+    cmdline="hello ""world"""
+    argv[1]=hello "world"
+  success
+Testing 67/152
+  Expecting
+    argv[1]=hello "world
+  Actuals:
+    cmdline="hello ""world"
+    argv[1]=hello "world
+  success
+Testing 68/152
+  Expecting
+    argv[1]=aaa\\\b c
+  Actuals:
+    cmdline="aaa\\\b c"
+    argv[1]=aaa\\\b c
+  success
+Testing 69/152
+  Expecting
+    argv[1]=aaa\\"b
+    argv[2]=c
+  Actuals:
+    cmdline=aaa\\\\\"b c
+    argv[1]=aaa\\"b
+    argv[2]=c
+  success
+Testing 70/152
+  Expecting
+    argv[1]=test"&whoami
+  Actuals:
+    cmdline="test""&whoami"
+    argv[1]=test"&whoami
+  success
+Testing 71/152
+  Expecting
+    argv[1]=aaa
+  Actuals:
+    cmdline=aaa
+    argv[1]=aaa
+  success
+Testing 72/152
+  Expecting
+    argv[1]=aaa"
+  Actuals:
+    cmdline=aaa\"
+    argv[1]=aaa"
+  success
+Testing 73/152
+  Expecting
+    argv[1]=aaa\
+  Actuals:
+    cmdline=aaa\
+    argv[1]=aaa\
+  success
+Testing 74/152
+  Expecting
+    argv[1]=aaa\"
+  Actuals:
+    cmdline=aaa\\\"
+    argv[1]=aaa\"
+  success
+Testing 75/152
+  Expecting
+    argv[1]=aaa"
+  Actuals:
+    cmdline=aaa\"
+    argv[1]=aaa"
+  success
+Testing 76/152
+  Expecting
+    argv[1]=aaa\
+  Actuals:
+    cmdline=aaa\
+    argv[1]=aaa\
+  success
+Testing 77/152
+  Expecting
+    argv[1]=aaa\"
+  Actuals:
+    cmdline=aaa\\\"
+    argv[1]=aaa\"
+  success
+Testing 78/152
+  Expecting
+    argv[1]=abc
+  Actuals:
+    cmdline=abc
+    argv[1]=abc
+  success
+Testing 79/152
+  Expecting
+    argv[1]=abc\
+  Actuals:
+    cmdline=abc\
+    argv[1]=abc\
+  success
+Testing 80/152
+  Expecting
+    argv[1]=abc\\
+  Actuals:
+    cmdline=abc\\
+    argv[1]=abc\\
+  success
+Testing 81/152
+  Expecting
+    argv[1]=abc\\\
+  Actuals:
+    cmdline=abc\\\
+    argv[1]=abc\\\
+  success
+Testing 82/152
+  Expecting
+    argv[1]=abc"d
+  Actuals:
+    cmdline=abc\"d
+    argv[1]=abc"d
+  success
+Testing 83/152
+  Expecting
+    argv[1]=abc\\ ddd
+    argv[2]=e
+  Actuals:
+    cmdline="abc\\ ddd" e
+    argv[1]=abc\\ ddd
+    argv[2]=e
+  success
+Testing 84/152
+  Expecting
+    argv[1]=abc"\ ddd
+    argv[2]=e
+  Actuals:
+    cmdline="abc""\ ddd" e
+    argv[1]=abc"\ ddd
+    argv[2]=e
+  success
+Testing 85/152
+  Expecting
+    argv[1]=ab\\c
+    argv[2]=d
+  Actuals:
+    cmdline=ab\\c d
+    argv[1]=ab\\c
+    argv[2]=d
+  success
+Testing 86/152
+  Expecting
+    argv[1]=ab\\
+    argv[2]=c
+  Actuals:
+    cmdline=ab\\ c
+    argv[1]=ab\\
+    argv[2]=c
+  success
+Testing 87/152
+  Expecting
+    argv[1]=\\ab
+    argv[2]=c
+  Actuals:
+    cmdline=\\ab c
+    argv[1]=\\ab
+    argv[2]=c
+  success
+Testing 88/152
+  Expecting
+    argv[1]=a
+    argv[2]=bc"o e
+  Actuals:
+    cmdline=a "bc""o e"
+    argv[1]=a
+    argv[2]=bc"o e
+  success
+Testing 89/152
+  Expecting
+    argv[1]=a
+    argv[2]=bc"o
+    argv[3]=e
+  Actuals:
+    cmdline=a bc\"o e
+    argv[1]=a
+    argv[2]=bc"o
+    argv[3]=e
+  success
+Testing 90/152
+  Expecting
+    argv[1]=a"b
+  Actuals:
+    cmdline=a\"b
+    argv[1]=a"b
+  success
+Testing 91/152
+  Expecting
+    argv[1]=a"b
+  Actuals:
+    cmdline=a\"b
+    argv[1]=a"b
+  success
+Testing 92/152
+  Expecting
+    argv[1]=a"b
+  Actuals:
+    cmdline=a\"b
+    argv[1]=a"b
+  success
+Testing 93/152
+  Expecting
+    argv[1]=a"
+    argv[2]=b
+  Actuals:
+    cmdline=a\" b
+    argv[1]=a"
+    argv[2]=b
+  success
+Testing 94/152
+  Expecting
+    argv[1]="
+  Actuals:
+    cmdline=\"
+    argv[1]="
+  success
+Testing 95/152
+  Expecting
+    argv[1]="
+  Actuals:
+    cmdline=\"
+    argv[1]="
+  success
+Testing 96/152
+  Expecting
+    argv[1]=""
+  Actuals:
+    cmdline=\"\"
+    argv[1]=""
+  success
+Testing 97/152
+  Expecting
+    argv[1]=""
+  Actuals:
+    cmdline=\"\"
+    argv[1]=""
+  success
+Testing 98/152
+  Expecting
+    argv[1]=ab cd"&echo foo
+  Actuals:
+    cmdline="ab cd""&echo foo"
+    argv[1]=ab cd"&echo foo
+  success
+Testing 99/152
+  Expecting
+    argv[1]=ab cd\^&echo
+    argv[2]=foo
+  Actuals:
+    cmdline="ab cd\^&echo" foo
+    argv[1]=ab cd\^&echo
+    argv[2]=foo
+  success
+Testing 100/152
+  Expecting
+    argv[1]=ab cd" ee
+  Actuals:
+    cmdline="ab cd"" ee"
+    argv[1]=ab cd" ee
+  success
+Testing 101/152
+  Expecting
+    argv[1]=ab cd" ee
+  Actuals:
+    cmdline="ab cd"" ee"
+    argv[1]=ab cd" ee
+  success
+Testing 102/152
+  Expecting
+    argv[1]=ab cd\^
+    argv[2]=ee
+  Actuals:
+    cmdline="ab cd\^" ee
+    argv[1]=ab cd\^
+    argv[2]=ee
+  success
+Testing 103/152
+  Expecting
+    argv[1]=a^b
+    argv[2]=c
+  Actuals:
+    cmdline=a^^b c
+    argv[1]=a^b
+    argv[2]=c
+  success
+Testing 104/152
+  Expecting
+    argv[1]=ab
+    argv[2]=c
+  Actuals:
+    cmdline=ab c
+    argv[1]=ab
+    argv[2]=c
+  success
+Testing 105/152
+  Expecting
+    argv[1]=ab
+    argv[2]=c
+  Actuals:
+    cmdline=ab c
+    argv[1]=ab
+    argv[2]=c
+  success
+Testing 106/152
+  Expecting
+    argv[1]=ab" c
+  Actuals:
+    cmdline="ab"" c"
+    argv[1]=ab" c
+  success
+Testing 107/152
+  Expecting
+    argv[1]=a " b
+    argv[2]=c
+  Actuals:
+    cmdline="a "" b" c
+    argv[1]=a " b
+    argv[2]=c
+  success
+Testing 108/152
+  Expecting
+    argv[1]=a " b^
+    argv[2]=c
+  Actuals:
+    cmdline="a "" b^" c
+    argv[1]=a " b^
+    argv[2]=c
+  success
+Testing 109/152
+  Expecting
+    argv[1]=a
+    argv[2]=b"c
+  Actuals:
+    cmdline=a b\"c
+    argv[1]=a
+    argv[2]=b"c
+  success
+Testing 110/152
+  Expecting
+    argv[1]=a b
+    argv[2]=c
+  Actuals:
+    cmdline="a b" c
+    argv[1]=a b
+    argv[2]=c
+  success
+Testing 111/152
+  Expecting
+    argv[1]=a b
+    argv[2]=c
+  Actuals:
+    cmdline="a b" c
+    argv[1]=a b
+    argv[2]=c
+  success
+Testing 112/152
+  Expecting
+    argv[1]=a bc
+  Actuals:
+    cmdline="a bc"
+    argv[1]=a bc
+  success
+Testing 113/152
+  Expecting
+    argv[1]=ab c
+  Actuals:
+    cmdline="ab c"
+    argv[1]=ab c
+  success
+Testing 114/152
+  Expecting
+    argv[1]=a < b
+    argv[2]=c
+  Actuals:
+    cmdline="a < b" c
+    argv[1]=a < b
+    argv[2]=c
+  success
+Testing 115/152
+  Expecting
+    argv[1]=a ^< b
+    argv[2]=c
+  Actuals:
+    cmdline="a ^< b" c
+    argv[1]=a ^< b
+    argv[2]=c
+  success
+Testing 116/152
+  Expecting
+    argv[1]=a
+    argv[2]=\bb
+    argv[3]=c
+  Actuals:
+    cmdline=a \bb c
+    argv[1]=a
+    argv[2]=\bb
+    argv[3]=c
+  success
+Testing 117/152
+  Expecting
+    argv[1]=a
+    argv[2]="bb
+    argv[3]=c d
+  Actuals:
+    cmdline=a \"bb "c d"
+    argv[1]=a
+    argv[2]="bb
+    argv[3]=c d
+  success
+Testing 118/152
+  Expecting
+    argv[1]=a
+    argv[2]=bb
+    argv[3]=c d
+  Actuals:
+    cmdline=a bb "c d"
+    argv[1]=a
+    argv[2]=bb
+    argv[3]=c d
+  success
+Testing 119/152
+  Expecting
+    argv[1]=a
+    argv[2]="b
+    argv[3]=c
+  Actuals:
+    cmdline=a \"b c
+    argv[1]=a
+    argv[2]="b
+    argv[3]=c
+  success
+Testing 120/152
+  Expecting
+    argv[1]=ab
+    argv[2]=c
+  Actuals:
+    cmdline=ab c
+    argv[1]=ab
+    argv[2]=c
+  success
+Testing 121/152
+  Expecting
+    argv[1]=a"b
+    argv[2]=c
+  Actuals:
+    cmdline=a\"b c
+    argv[1]=a"b
+    argv[2]=c
+  success
+Testing 122/152
+  Expecting
+    argv[1]=a"b
+    argv[2]=c
+  Actuals:
+    cmdline=a\"b c
+    argv[1]=a"b
+    argv[2]=c
+  success
+Testing 123/152
+  Expecting
+    argv[1]=a"b
+    argv[2]=c
+  Actuals:
+    cmdline=a\"b c
+    argv[1]=a"b
+    argv[2]=c
+  success
+Testing 124/152
+  Expecting
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  Actuals:
+    cmdline=a "" b
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  success
+Testing 125/152
+  Expecting
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  Actuals:
+    cmdline=a "" b
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  success
+Testing 126/152
+  Expecting
+    argv[1]=
+    argv[2]=a
+  Actuals:
+    cmdline="" a
+    argv[1]=
+    argv[2]=a
+  success
+Testing 127/152
+  Expecting
+    argv[1]=
+    argv[2]=a
+  Actuals:
+    cmdline="" a
+    argv[1]=
+    argv[2]=a
+  success
+Testing 128/152
+  Expecting
+    argv[1]=test"&whoami
+  Actuals:
+    cmdline="test""&whoami"
+    argv[1]=test"&whoami
+  success
+Testing 129/152
+  Expecting
+    argv[1]=test\&whoami
+  Actuals:
+    cmdline="test\&whoami"
+    argv[1]=test\&whoami
+  success
+Testing 130/152
+  Expecting
+    argv[1]=test"^&whoami^
+  Actuals:
+    cmdline="test""^&whoami^"
+    argv[1]=test"^&whoami^
+  success
+Testing 131/152
+  Expecting
+    argv[1]=a\\b
+  Actuals:
+    cmdline=a\\b
+    argv[1]=a\\b
+  success
+Testing 132/152
+  Expecting
+    argv[1]=a\\b
+  Actuals:
+    cmdline=a\\b
+    argv[1]=a\\b
+  success
+Testing 133/152
+  Expecting
+    argv[1]=a\\b
+  Actuals:
+    cmdline=a\\b
+    argv[1]=a\\b
+  success
+Testing 134/152
+  Expecting
+    argv[1]=a\\b
+  Actuals:
+    cmdline=a\\b
+    argv[1]=a\\b
+  success
+Testing 135/152
+  Expecting
+    argv[1]=a\\b
+  Actuals:
+    cmdline=a\\b
+    argv[1]=a\\b
+  success
+Testing 136/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 137/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 138/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 139/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 140/152
+  Expecting
+    argv[1]=a b^"c d
+  Actuals:
+    cmdline="a b^""c d"
+    argv[1]=a b^"c d
+  success
+Testing 141/152
+  Expecting
+    argv[1]=a
+    argv[2]=<
+    argv[3]=b
+  Actuals:
+    cmdline=a ^< b
+    argv[1]=a
+    argv[2]=<
+    argv[3]=b
+  success
+Testing 142/152
+  Expecting
+    argv[1]=a < b
+    argv[2]=c
+  Actuals:
+    cmdline="a < b" c
+    argv[1]=a < b
+    argv[2]=c
+  success
+Testing 143/152
+  Expecting
+    argv[1]=ab
+    argv[2]=c
+  Actuals:
+    cmdline=ab c
+    argv[1]=ab
+    argv[2]=c
+  success
+Testing 144/152
+  Expecting
+    argv[1]=^a^b
+    argv[2]=c
+  Actuals:
+    cmdline=^^a^^b c
+    argv[1]=^a^b
+    argv[2]=c
+  success
+Testing 145/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 146/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 147/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 148/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 149/152
+  Expecting
+    argv[1]=a b^"c d
+  Actuals:
+    cmdline="a b^""c d"
+    argv[1]=a b^"c d
+  success
+Testing 150/152
+  Expecting
+    argv[1]=a b" <c
+  Actuals:
+    cmdline="a b"" <c"
+    argv[1]=a b" <c
+  success
+Testing 151/152
+  Expecting
+    argv[1]=a b" ^<c
+  Actuals:
+    cmdline="a b"" ^<c"
+    argv[1]=a b" ^<c
+  success
+Testing 152/152
+  Expecting
+    argv[1]=a\\^b <c
+  Actuals:
+    cmdline="a\\^b <c"
+    argv[1]=a\\^b <c
+  success
+OK!
+Running test "TestCmdPromptArgumentCodec.testEncodeArgument"...
+Testing decoded argument argv[1]=malicious argument"&whoami
+  Actual:
+    foo.exe "malicious argument""&whoami"
+  Validating with system's cmd.exe...
+    argv[1]=malicious argument"&whoami
+good!
+Testing decoded argument argv[1]=\"hello\"
+  Actual:
+    foo.exe \\\"hello\\\"
+  Validating with system's cmd.exe...
+    argv[1]=\"hello\"
+good!
+Testing decoded argument argv[1]=\"hello\ world
+  Actual:
+    foo.exe "\\""hello\ world"
+  Validating with system's cmd.exe...
+    argv[1]=\"hello\ world
+good!
+Testing decoded argument argv[1]=test&whoami
+  Actual:
+    foo.exe test^&whoami
+  Validating with system's cmd.exe...
+    argv[1]=test&whoami
+good!
+Testing decoded argument argv[1]=test\"&whoami
+  Actual:
+    foo.exe "test\\""&whoami"
+  Validating with system's cmd.exe...
+    argv[1]=test\"&whoami
+good!
+OK!
+Running test "TestCreateProcessArgumentCodec.testDecodeCommandLine"...
+Testing 1/152: foo.exe test.exe /p -logfile=log.txt count=5
+  Expecting:
+   argv[1]=test.exe
+   argv[2]=/p
+   argv[3]=-logfile=log.txt
+   argv[4]=count=5
+  Actuals:
+   argv[1]=test.exe
+   argv[2]=/p
+   argv[3]=-logfile=log.txt
+   argv[4]=count=5
+  success
+Testing 2/152: foo.exe a b c
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  success
+Testing 3/152: foo.exe a    b        c
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  success
+Testing 4/152: foo.exe a                        b                               c
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  success
+Testing 5/152: foo.exe a b c
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  success
+Testing 6/152: foo.exe "a b" c
+  Expecting:
+   argv[1]=a b
+   argv[2]=c
+  Actuals:
+   argv[1]=a b
+   argv[2]=c
+  success
+Testing 7/152: foo.exe "a b c"
+  Expecting:
+   argv[1]=a b c
+  Actuals:
+   argv[1]=a b c
+  success
+Testing 8/152: foo.exe "a b c
+  Expecting:
+   argv[1]=a b c
+  Actuals:
+   argv[1]=a b c
+  success
+Testing 9/152: foo.exe "a b c"
+  Expecting:
+   argv[1]=a b c
+  Actuals:
+   argv[1]=a b c
+  success
+Testing 10/152: foo.exe a" b" c
+  Expecting:
+   argv[1]=a b
+   argv[2]=c
+  Actuals:
+   argv[1]=a b
+   argv[2]=c
+  success
+Testing 11/152: foo.exe "a "b c
+  Expecting:
+   argv[1]=a b
+   argv[2]=c
+  Actuals:
+   argv[1]=a b
+   argv[2]=c
+  success
+Testing 12/152: foo.exe a b c"
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  success
+Testing 13/152: foo.exe "a b" c"
+  Expecting:
+   argv[1]=a b
+   argv[2]=c
+  Actuals:
+   argv[1]=a b
+   argv[2]=c
+  success
+Testing 14/152: foo.exe "a b\" c" d
+  Expecting:
+   argv[1]=a b" c
+   argv[2]=d
+  Actuals:
+   argv[1]=a b" c
+   argv[2]=d
+  success
+Testing 15/152: foo.exe "a b\" c d
+  Expecting:
+   argv[1]=a b" c d
+  Actuals:
+   argv[1]=a b" c d
+  success
+Testing 16/152: foo.exe a\\b
+  Expecting:
+   argv[1]=a\\b
+  Actuals:
+   argv[1]=a\\b
+  success
+Testing 17/152: foo.exe "a\\b"
+  Expecting:
+   argv[1]=a\\b
+  Actuals:
+   argv[1]=a\\b
+  success
+Testing 18/152: foo.exe a\\"b c
+  Expecting:
+   argv[1]=a\b c
+  Actuals:
+   argv[1]=a\b c
+  success
+Testing 19/152: foo.exe a\\"b c"
+  Expecting:
+   argv[1]=a\b c
+  Actuals:
+   argv[1]=a\b c
+  success
+Testing 20/152: foo.exe "a\\\"b c"
+  Expecting:
+   argv[1]=a\"b c
+  Actuals:
+   argv[1]=a\"b c
+  success
+Testing 21/152: foo.exe a\\^"b c
+  Expecting:
+   argv[1]=a\\^b c
+  Actuals:
+   argv[1]=a\\^b c
+  success
+Testing 22/152: foo.exe a\\^"b ^<c
+  Expecting:
+   argv[1]=a\\^b ^<c
+  Actuals:
+   argv[1]=a\\^b ^<c
+  success
+Testing 23/152: foo.exe a\\^"b c"
+  Expecting:
+   argv[1]=a\\^b c
+  Actuals:
+   argv[1]=a\\^b c
+  success
+Testing 24/152: foo.exe "a\\\^"b c"
+  Expecting:
+   argv[1]=a\\\^b
+   argv[2]=c
+  Actuals:
+   argv[1]=a\\\^b
+   argv[2]=c
+  success
+Testing 25/152: foo.exe a\"b
+  Expecting:
+   argv[1]=a"b
+  Actuals:
+   argv[1]=a"b
+  success
+Testing 26/152: foo.exe "a\"b"
+  Expecting:
+   argv[1]=a"b
+  Actuals:
+   argv[1]=a"b
+  success
+Testing 27/152: foo.exe a\\"b c d"
+  Expecting:
+   argv[1]=a\b c d
+  Actuals:
+   argv[1]=a\b c d
+  success
+Testing 28/152: foo.exe a\\\"b
+  Expecting:
+   argv[1]=a\"b
+  Actuals:
+   argv[1]=a\"b
+  success
+Testing 29/152: foo.exe "a\\\"b"
+  Expecting:
+   argv[1]=a\"b
+  Actuals:
+   argv[1]=a\"b
+  success
+Testing 30/152: foo.exe a b\\ \" c d
+  Expecting:
+   argv[1]=a
+   argv[2]=b\\
+   argv[3]="
+   argv[4]=c
+   argv[5]=d
+  Actuals:
+   argv[1]=a
+   argv[2]=b\\
+   argv[3]="
+   argv[4]=c
+   argv[5]=d
+  success
+Testing 31/152: foo.exe "a b\\ \" c d
+  Expecting:
+   argv[1]=a b\\ " c d
+  Actuals:
+   argv[1]=a b\\ " c d
+  success
+Testing 32/152: foo.exe "a b\\" c d
+  Expecting:
+   argv[1]=a b\
+   argv[2]=c
+   argv[3]=d
+  Actuals:
+   argv[1]=a b\
+   argv[2]=c
+   argv[3]=d
+  success
+Testing 33/152: foo.exe a b\" c d
+  Expecting:
+   argv[1]=a
+   argv[2]=b"
+   argv[3]=c
+   argv[4]=d
+  Actuals:
+   argv[1]=a
+   argv[2]=b"
+   argv[3]=c
+   argv[4]=d
+  success
+Testing 34/152: foo.exe a \t c
+  Expecting:
+   argv[1]=a
+   argv[2]=\t
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=\t
+   argv[3]=c
+  success
+Testing 35/152: foo.exe a \"b c
+  Expecting:
+   argv[1]=a
+   argv[2]="b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]="b
+   argv[3]=c
+  success
+Testing 36/152: foo.exe a "" b
+  Expecting:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+  Actuals:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+  success
+Testing 37/152: foo.exe "" a b
+  Expecting:
+   argv[1]=
+   argv[2]=a
+   argv[3]=b
+  Actuals:
+   argv[1]=
+   argv[2]=a
+   argv[3]=b
+  success
+Testing 38/152: foo.exe a b ""
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=
+  success
+Testing 39/152: foo.exe a ^"^" b
+  Expecting:
+   argv[1]=a
+   argv[2]=^^
+   argv[3]=b
+  Actuals:
+   argv[1]=a
+   argv[2]=^^
+   argv[3]=b
+  success
+Testing 40/152: foo.exe ^"^" a b
+  Expecting:
+   argv[1]=^^
+   argv[2]=a
+   argv[3]=b
+  Actuals:
+   argv[1]=^^
+   argv[2]=a
+   argv[3]=b
+  success
+Testing 41/152: foo.exe a b ^"^"
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=^^
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=^^
+  success
+Testing 42/152: foo.exe a ^"" b
+  Expecting:
+   argv[1]=a
+   argv[2]=^
+   argv[3]=b
+  Actuals:
+   argv[1]=a
+   argv[2]=^
+   argv[3]=b
+  success
+Testing 43/152: foo.exe ^"" a b
+  Expecting:
+   argv[1]=^
+   argv[2]=a
+   argv[3]=b
+  Actuals:
+   argv[1]=^
+   argv[2]=a
+   argv[3]=b
+  success
+Testing 44/152: foo.exe a b ^""
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=^
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=^
+  success
+Testing 45/152: foo.exe a "" b c
+  Expecting:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+   argv[4]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=
+   argv[3]=b
+   argv[4]=c
+  success
+Testing 46/152: foo.exe a \"b c
+  Expecting:
+   argv[1]=a
+   argv[2]="b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]="b
+   argv[3]=c
+  success
+Testing 47/152: foo.exe "a \"b" c
+  Expecting:
+   argv[1]=a "b
+   argv[2]=c
+  Actuals:
+   argv[1]=a "b
+   argv[2]=c
+  success
+Testing 48/152: foo.exe "a ""b" c
+  Expecting:
+   argv[1]=a "b
+   argv[2]=c
+  Actuals:
+   argv[1]=a "b
+   argv[2]=c
+  success
+Testing 49/152: foo.exe a ""b c
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  success
+Testing 50/152: foo.exe a b"" c
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+  success
+Testing 51/152: foo.exe "" a b c
+  Expecting:
+   argv[1]=
+   argv[2]=a
+   argv[3]=b
+   argv[4]=c
+  Actuals:
+   argv[1]=
+   argv[2]=a
+   argv[3]=b
+   argv[4]=c
+  success
+Testing 52/152: foo.exe a b c ""
+  Expecting:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+   argv[4]=
+  Actuals:
+   argv[1]=a
+   argv[2]=b
+   argv[3]=c
+   argv[4]=
+  success
+Testing 53/152: foo.exe a \\b c
+  Expecting:
+   argv[1]=a
+   argv[2]=\\b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=\\b
+   argv[3]=c
+  success
+Testing 54/152: foo.exe '"test"'
+  Expecting:
+   argv[1]='test'
+  Actuals:
+   argv[1]='test'
+  success
+Testing 55/152: foo.exe '^"test^"'
+  Expecting:
+   argv[1]='^test^'
+  Actuals:
+   argv[1]='^test^'
+  success
+Testing 56/152: foo.exe hello"to the  entire"world
+  Expecting:
+   argv[1]=helloto the  entireworld
+  Actuals:
+   argv[1]=helloto the  entireworld
+  success
+Testing 57/152: foo.exe "hello"to the  entire"world"
+  Expecting:
+   argv[1]=helloto
+   argv[2]=the
+   argv[3]=entireworld
+  Actuals:
+   argv[1]=helloto
+   argv[2]=the
+   argv[3]=entireworld
+  success
+Testing 58/152: foo.exe """a"""
+  Expecting:
+   argv[1]="a"
+  Actuals:
+   argv[1]="a"
+  success
+Testing 59/152: foo.exe """a b"""
+  Expecting:
+   argv[1]="a b"
+  Actuals:
+   argv[1]="a b"
+  success
+Testing 60/152: foo.exe """"Hello,""" Mike said."
+  Expecting:
+   argv[1]="Hello," Mike said.
+  Actuals:
+   argv[1]="Hello," Mike said.
+  success
+Testing 61/152: foo.exe ""a""b""c""d""
+  Expecting:
+   argv[1]=abcd
+  Actuals:
+   argv[1]=abcd
+  success
+Testing 62/152: foo.exe "hello to """quotes""
+  Expecting:
+   argv[1]=hello to "quotes
+  Actuals:
+   argv[1]=hello to "quotes
+  success
+Testing 63/152: foo.exe """"hello world""
+  Expecting:
+   argv[1]="hello
+   argv[2]=world
+  Actuals:
+   argv[1]="hello
+   argv[2]=world
+  success
+Testing 64/152: foo.exe """hello" world""
+  Expecting:
+   argv[1]="hello
+   argv[2]=world
+  Actuals:
+   argv[1]="hello
+   argv[2]=world
+  success
+Testing 65/152: foo.exe """hello "world""
+  Expecting:
+   argv[1]="hello world
+  Actuals:
+   argv[1]="hello world
+  success
+Testing 66/152: foo.exe "hello ""world"""
+  Expecting:
+   argv[1]=hello "world"
+  Actuals:
+   argv[1]=hello "world"
+  success
+Testing 67/152: foo.exe "hello """world""
+  Expecting:
+   argv[1]=hello "world
+  Actuals:
+   argv[1]=hello "world
+  success
+Testing 68/152: foo.exe aaa\\\\\\"b c"
+  Expecting:
+   argv[1]=aaa\\\b c
+  Actuals:
+   argv[1]=aaa\\\b c
+  success
+Testing 69/152: foo.exe aaa\\\\\"b c"
+  Expecting:
+   argv[1]=aaa\\"b
+   argv[2]=c
+  Actuals:
+   argv[1]=aaa\\"b
+   argv[2]=c
+  success
+Testing 70/152: foo.exe ^"test\^"^&whoami^"
+  Expecting:
+   argv[1]=^test\^^&whoami^
+  Actuals:
+   argv[1]=^test\^^&whoami^
+  success
+Testing 71/152: foo.exe aaa"
+  Expecting:
+   argv[1]=aaa
+  Actuals:
+   argv[1]=aaa
+  success
+Testing 72/152: foo.exe aaa\"
+  Expecting:
+   argv[1]=aaa"
+  Actuals:
+   argv[1]=aaa"
+  success
+Testing 73/152: foo.exe aaa\\"
+  Expecting:
+   argv[1]=aaa\
+  Actuals:
+   argv[1]=aaa\
+  success
+Testing 74/152: foo.exe aaa\\\"
+  Expecting:
+   argv[1]=aaa\"
+  Actuals:
+   argv[1]=aaa\"
+  success
+Testing 75/152: foo.exe "aaa\"
+  Expecting:
+   argv[1]=aaa"
+  Actuals:
+   argv[1]=aaa"
+  success
+Testing 76/152: foo.exe "aaa\\"
+  Expecting:
+   argv[1]=aaa\
+  Actuals:
+   argv[1]=aaa\
+  success
+Testing 77/152: foo.exe "aaa\\\"
+  Expecting:
+   argv[1]=aaa\"
+  Actuals:
+   argv[1]=aaa\"
+  success
+Testing 78/152: foo.exe a"bc
+  Expecting:
+   argv[1]=abc
+  Actuals:
+   argv[1]=abc
+  success
+Testing 79/152: foo.exe a"bc\
+  Expecting:
+   argv[1]=abc\
+  Actuals:
+   argv[1]=abc\
+  success
+Testing 80/152: foo.exe a"bc\\
+  Expecting:
+   argv[1]=abc\\
+  Actuals:
+   argv[1]=abc\\
+  success
+Testing 81/152: foo.exe a"bc\\\
+  Expecting:
+   argv[1]=abc\\\
+  Actuals:
+   argv[1]=abc\\\
+  success
+Testing 82/152: foo.exe a"bc\"d
+  Expecting:
+   argv[1]=abc"d
+  Actuals:
+   argv[1]=abc"d
+  success
+Testing 83/152: foo.exe a"bc\\ ddd" e
+  Expecting:
+   argv[1]=abc\\ ddd
+   argv[2]=e
+  Actuals:
+   argv[1]=abc\\ ddd
+   argv[2]=e
+  success
+Testing 84/152: foo.exe a"bc\"\ ddd" e
+  Expecting:
+   argv[1]=abc"\ ddd
+   argv[2]=e
+  Actuals:
+   argv[1]=abc"\ ddd
+   argv[2]=e
+  success
+Testing 85/152: foo.exe ab\\c d
+  Expecting:
+   argv[1]=ab\\c
+   argv[2]=d
+  Actuals:
+   argv[1]=ab\\c
+   argv[2]=d
+  success
+Testing 86/152: foo.exe ab\\ c
+  Expecting:
+   argv[1]=ab\\
+   argv[2]=c
+  Actuals:
+   argv[1]=ab\\
+   argv[2]=c
+  success
+Testing 87/152: foo.exe \\ab c
+  Expecting:
+   argv[1]=\\ab
+   argv[2]=c
+  Actuals:
+   argv[1]=\\ab
+   argv[2]=c
+  success
+Testing 88/152: foo.exe a ""bc\"o" e"
+  Expecting:
+   argv[1]=a
+   argv[2]=bc"o e
+  Actuals:
+   argv[1]=a
+   argv[2]=bc"o e
+  success
+Testing 89/152: foo.exe a "bc\"o" e"
+  Expecting:
+   argv[1]=a
+   argv[2]=bc"o
+   argv[3]=e
+  Actuals:
+   argv[1]=a
+   argv[2]=bc"o
+   argv[3]=e
+  success
+Testing 90/152: foo.exe "a"""b
+  Expecting:
+   argv[1]=a"b
+  Actuals:
+   argv[1]=a"b
+  success
+Testing 91/152: foo.exe "a"""b"
+  Expecting:
+   argv[1]=a"b
+  Actuals:
+   argv[1]=a"b
+  success
+Testing 92/152: foo.exe "a\"b"
+  Expecting:
+   argv[1]=a"b
+  Actuals:
+   argv[1]=a"b
+  success
+Testing 93/152: foo.exe "a""" b"
+  Expecting:
+   argv[1]=a"
+   argv[2]=b
+  Actuals:
+   argv[1]=a"
+   argv[2]=b
+  success
+Testing 94/152: foo.exe """
+  Expecting:
+   argv[1]="
+  Actuals:
+   argv[1]="
+  success
+Testing 95/152: foo.exe """"
+  Expecting:
+   argv[1]="
+  Actuals:
+   argv[1]="
+  success
+Testing 96/152: foo.exe """""
+  Expecting:
+   argv[1]=""
+  Actuals:
+   argv[1]=""
+  success
+Testing 97/152: foo.exe """"""
+  Expecting:
+   argv[1]=""
+  Actuals:
+   argv[1]=""
+  success
+Testing 98/152: foo.exe ^"ab cd\^"^&echo foo^"
+  Expecting:
+   argv[1]=^ab cd\^^&echo
+   argv[2]=foo^
+  Actuals:
+   argv[1]=^ab cd\^^&echo
+   argv[2]=foo^
+  success
+Testing 99/152: foo.exe "ab cd\^"^&echo foo^"
+  Expecting:
+   argv[1]=ab cd\^^&echo
+   argv[2]=foo^
+  Actuals:
+   argv[1]=ab cd\^^&echo
+   argv[2]=foo^
+  success
+Testing 100/152: foo.exe ^"ab cd\^" ee"
+  Expecting:
+   argv[1]=^ab cd\^
+   argv[2]=ee
+  Actuals:
+   argv[1]=^ab cd\^
+   argv[2]=ee
+  success
+Testing 101/152: foo.exe "ab cd\" ee"
+  Expecting:
+   argv[1]=ab cd" ee
+  Actuals:
+   argv[1]=ab cd" ee
+  success
+Testing 102/152: foo.exe "ab cd\^" ee"
+  Expecting:
+   argv[1]=ab cd\^
+   argv[2]=ee
+  Actuals:
+   argv[1]=ab cd\^
+   argv[2]=ee
+  success
+Testing 103/152: foo.exe "a^b" c
+  Expecting:
+   argv[1]=a^b
+   argv[2]=c
+  Actuals:
+   argv[1]=a^b
+   argv[2]=c
+  success
+Testing 104/152: foo.exe ^"a^b" c
+  Expecting:
+   argv[1]=^a^b
+   argv[2]=c
+  Actuals:
+   argv[1]=^a^b
+   argv[2]=c
+  success
+Testing 105/152: foo.exe ^"ab^" c
+  Expecting:
+   argv[1]=^ab^
+   argv[2]=c
+  Actuals:
+   argv[1]=^ab^
+   argv[2]=c
+  success
+Testing 106/152: foo.exe ^"ab^"" c
+  Expecting:
+   argv[1]=^ab^" c
+  Actuals:
+   argv[1]=^ab^" c
+  success
+Testing 107/152: foo.exe ^"a \^" b^" c
+  Expecting:
+   argv[1]=^a \^
+   argv[2]=b^ c
+  Actuals:
+   argv[1]=^a \^
+   argv[2]=b^ c
+  success
+Testing 108/152: foo.exe ^"a \" b^" c
+  Expecting:
+   argv[1]=^a " b^
+   argv[2]=c
+  Actuals:
+   argv[1]=^a " b^
+   argv[2]=c
+  success
+Testing 109/152: foo.exe a b\^"c
+  Expecting:
+   argv[1]=a
+   argv[2]=b\^c
+  Actuals:
+   argv[1]=a
+   argv[2]=b\^c
+  success
+Testing 110/152: foo.exe ^"a b^" c
+  Expecting:
+   argv[1]=^a b^
+   argv[2]=c
+  Actuals:
+   argv[1]=^a b^
+   argv[2]=c
+  success
+Testing 111/152: foo.exe ^"a b" c
+  Expecting:
+   argv[1]=^a b
+   argv[2]=c
+  Actuals:
+   argv[1]=^a b
+   argv[2]=c
+  success
+Testing 112/152: foo.exe ^"a b^"c
+  Expecting:
+   argv[1]=^a b^c
+  Actuals:
+   argv[1]=^a b^c
+  success
+Testing 113/152: foo.exe a^"b c^"
+  Expecting:
+   argv[1]=a^b c^
+  Actuals:
+   argv[1]=a^b c^
+  success
+Testing 114/152: foo.exe "a < b" c
+  Expecting:
+   argv[1]=a < b
+   argv[2]=c
+  Actuals:
+   argv[1]=a < b
+   argv[2]=c
+  success
+Testing 115/152: foo.exe "a ^< b" c
+  Expecting:
+   argv[1]=a ^< b
+   argv[2]=c
+  Actuals:
+   argv[1]=a ^< b
+   argv[2]=c
+  success
+Testing 116/152: foo.exe a \bb c
+  Expecting:
+   argv[1]=a
+   argv[2]=\bb
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]=\bb
+   argv[3]=c
+  success
+Testing 117/152: foo.exe a \"bb c" d
+  Expecting:
+   argv[1]=a
+   argv[2]="bb
+   argv[3]=c d
+  Actuals:
+   argv[1]=a
+   argv[2]="bb
+   argv[3]=c d
+  success
+Testing 118/152: foo.exe a ^"bb^" c" d
+  Expecting:
+   argv[1]=a
+   argv[2]=^bb^
+   argv[3]=c d
+  Actuals:
+   argv[1]=a
+   argv[2]=^bb^
+   argv[3]=c d
+  success
+Testing 119/152: foo.exe a \"b c
+  Expecting:
+   argv[1]=a
+   argv[2]="b
+   argv[3]=c
+  Actuals:
+   argv[1]=a
+   argv[2]="b
+   argv[3]=c
+  success
+Testing 120/152: foo.exe a""b c
+  Expecting:
+   argv[1]=ab
+   argv[2]=c
+  Actuals:
+   argv[1]=ab
+   argv[2]=c
+  success
+Testing 121/152: foo.exe a\"b c
+  Expecting:
+   argv[1]=a"b
+   argv[2]=c
+  Actuals:
+   argv[1]=a"b
+   argv[2]=c
+  success
+Testing 122/152: foo.exe "a""b" c
+  Expecting:
+   argv[1]=a"b
+   argv[2]=c
+  Actuals:
+   argv[1]=a"b
+   argv[2]=c
+  success
+Testing 123/152: foo.exe "a\"b" c
+  Expecting:
+   argv[1]=a"b
+   argv[2]=c
+  Actuals:
+   argv[1]=a"b
+   argv[2]=c
+  success
+Testing 124/152: foo.exe a ^"" b
+  Expecting:
+   argv[1]=a
+   argv[2]=^
+   argv[3]=b
+  Actuals:
+   argv[1]=a
+   argv[2]=^
+   argv[3]=b
+  success
+Testing 125/152: foo.exe a ^"^" b
+  Expecting:
+   argv[1]=a
+   argv[2]=^^
+   argv[3]=b
+  Actuals:
+   argv[1]=a
+   argv[2]=^^
+   argv[3]=b
+  success
+Testing 126/152: foo.exe ^"" a
+  Expecting:
+   argv[1]=^
+   argv[2]=a
+  Actuals:
+   argv[1]=^
+   argv[2]=a
+  success
+Testing 127/152: foo.exe ^"^" a
+  Expecting:
+   argv[1]=^^
+   argv[2]=a
+  Actuals:
+   argv[1]=^^
+   argv[2]=a
+  success
+Testing 128/152: foo.exe ^"test\^"^&whoami^"
+  Expecting:
+   argv[1]=^test\^^&whoami^
+  Actuals:
+   argv[1]=^test\^^&whoami^
+  success
+Testing 129/152: foo.exe ^"test\\^"^&whoami^"
+  Expecting:
+   argv[1]=^test\\^^&whoami^
+  Actuals:
+   argv[1]=^test\\^^&whoami^
+  success
+Testing 130/152: foo.exe ^"test\"^&whoami^"
+  Expecting:
+   argv[1]=^test"^&whoami^
+  Actuals:
+   argv[1]=^test"^&whoami^
+  success
+Testing 131/152: foo.exe a\\\\"b
+  Expecting:
+   argv[1]=a\\b
+  Actuals:
+   argv[1]=a\\b
+  success
+Testing 132/152: foo.exe ^"a\\\\"b"
+  Expecting:
+   argv[1]=^a\\b
+  Actuals:
+   argv[1]=^a\\b
+  success
+Testing 133/152: foo.exe ^"a\^\^\\"b"
+  Expecting:
+   argv[1]=^a\^\^\b
+  Actuals:
+   argv[1]=^a\^\^\b
+  success
+Testing 134/152: foo.exe ^"a\^\\^\"b"
+  Expecting:
+   argv[1]=^a\^\\^"b
+  Actuals:
+   argv[1]=^a\^\\^"b
+  success
+Testing 135/152: foo.exe ^"a\^\\\^"b"
+  Expecting:
+   argv[1]=^a\^\\\^b
+  Actuals:
+   argv[1]=^a\^\\\^b
+  success
+Testing 136/152: foo.exe "a b""c d"
+  Expecting:
+   argv[1]=a b"c d
+  Actuals:
+   argv[1]=a b"c d
+  success
+Testing 137/152: foo.exe ^"a b^"^"c d^"
+  Expecting:
+   argv[1]=^a b^^c d^
+  Actuals:
+   argv[1]=^a b^^c d^
+  success
+Testing 138/152: foo.exe ^"a b^""c d"
+  Expecting:
+   argv[1]=^a b^"c d
+  Actuals:
+   argv[1]=^a b^"c d
+  success
+Testing 139/152: foo.exe "a b"^"c d^"
+  Expecting:
+   argv[1]=a b^c d^
+  Actuals:
+   argv[1]=a b^c d^
+  success
+Testing 140/152: foo.exe "a b^"^"c d"
+  Expecting:
+   argv[1]=a b^^c d
+  Actuals:
+   argv[1]=a b^^c d
+  success
+Testing 141/152: foo.exe a ^< b
+  Expecting:
+   argv[1]=a
+   argv[2]=^<
+   argv[3]=b
+  Actuals:
+   argv[1]=a
+   argv[2]=^<
+   argv[3]=b
+  success
+Testing 142/152: foo.exe ^"a ^< b^" c
+  Expecting:
+   argv[1]=^a ^< b^
+   argv[2]=c
+  Actuals:
+   argv[1]=^a ^< b^
+   argv[2]=c
+  success
+Testing 143/152: foo.exe ^a^b ^c
+  Expecting:
+   argv[1]=^a^b
+   argv[2]=^c
+  Actuals:
+   argv[1]=^a^b
+   argv[2]=^c
+  success
+Testing 144/152: foo.exe "^a^b" ^c
+  Expecting:
+   argv[1]=^a^b
+   argv[2]=^c
+  Actuals:
+   argv[1]=^a^b
+   argv[2]=^c
+  success
+Testing 145/152: foo.exe "a b""c d"
+  Expecting:
+   argv[1]=a b"c d
+  Actuals:
+   argv[1]=a b"c d
+  success
+Testing 146/152: foo.exe ^"a b^"^"c d^"
+  Expecting:
+   argv[1]=^a b^^c d^
+  Actuals:
+   argv[1]=^a b^^c d^
+  success
+Testing 147/152: foo.exe ^"a b^""c d"
+  Expecting:
+   argv[1]=^a b^"c d
+  Actuals:
+   argv[1]=^a b^"c d
+  success
+Testing 148/152: foo.exe "a b"^"c d^"
+  Expecting:
+   argv[1]=a b^c d^
+  Actuals:
+   argv[1]=a b^c d^
+  success
+Testing 149/152: foo.exe "a b^"^"c d"
+  Expecting:
+   argv[1]=a b^^c d
+  Actuals:
+   argv[1]=a b^^c d
+  success
+Testing 150/152: foo.exe ^"a b"" ^<c
+  Expecting:
+   argv[1]=^a b" ^<c
+  Actuals:
+   argv[1]=^a b" ^<c
+  success
+Testing 151/152: foo.exe ^"a b^"" ^<c
+  Expecting:
+   argv[1]=^a b^" ^<c
+  Actuals:
+   argv[1]=^a b^" ^<c
+  success
+Testing 152/152: foo.exe a\\^^^"b ^<c
+  Expecting:
+   argv[1]=a\\^^^b ^<c
+  Actuals:
+   argv[1]=a\\^^^b ^<c
+  success
+OK!
+Running test "TestCreateProcessArgumentCodec.testEncodeCommandLine"...
+Testing 1/152
+  Expecting
+    argv[1]=test.exe
+    argv[2]=/p
+    argv[3]=-logfile=log.txt
+    argv[4]=count=5
+  Actuals:
+    cmdline=test.exe /p -logfile=log.txt count=5
+    argv[1]=test.exe
+    argv[2]=/p
+    argv[3]=-logfile=log.txt
+    argv[4]=count=5
+  success
+Testing 2/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    cmdline=a b c
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 3/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    cmdline=a b c
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 4/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    cmdline=a b c
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 5/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    cmdline=a b c
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 6/152
+  Expecting
+    argv[1]=a b
+    argv[2]=c
+  Actuals:
+    cmdline="a b" c
+    argv[1]=a b
+    argv[2]=c
+  success
+Testing 7/152
+  Expecting
+    argv[1]=a b c
+  Actuals:
+    cmdline="a b c"
+    argv[1]=a b c
+  success
+Testing 8/152
+  Expecting
+    argv[1]=a b c
+  Actuals:
+    cmdline="a b c"
+    argv[1]=a b c
+  success
+Testing 9/152
+  Expecting
+    argv[1]=a b c
+  Actuals:
+    cmdline="a b c"
+    argv[1]=a b c
+  success
+Testing 10/152
+  Expecting
+    argv[1]=a b
+    argv[2]=c
+  Actuals:
+    cmdline="a b" c
+    argv[1]=a b
+    argv[2]=c
+  success
+Testing 11/152
+  Expecting
+    argv[1]=a b
+    argv[2]=c
+  Actuals:
+    cmdline="a b" c
+    argv[1]=a b
+    argv[2]=c
+  success
+Testing 12/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    cmdline=a b c
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 13/152
+  Expecting
+    argv[1]=a b
+    argv[2]=c
+  Actuals:
+    cmdline="a b" c
+    argv[1]=a b
+    argv[2]=c
+  success
+Testing 14/152
+  Expecting
+    argv[1]=a b" c
+    argv[2]=d
+  Actuals:
+    cmdline="a b"" c" d
+    argv[1]=a b" c
+    argv[2]=d
+  success
+Testing 15/152
+  Expecting
+    argv[1]=a b" c d
+  Actuals:
+    cmdline="a b"" c d"
+    argv[1]=a b" c d
+  success
+Testing 16/152
+  Expecting
+    argv[1]=a\\b
+  Actuals:
+    cmdline=a\\b
+    argv[1]=a\\b
+  success
+Testing 17/152
+  Expecting
+    argv[1]=a\\b
+  Actuals:
+    cmdline=a\\b
+    argv[1]=a\\b
+  success
+Testing 18/152
+  Expecting
+    argv[1]=a\b c
+  Actuals:
+    cmdline="a\b c"
+    argv[1]=a\b c
+  success
+Testing 19/152
+  Expecting
+    argv[1]=a\b c
+  Actuals:
+    cmdline="a\b c"
+    argv[1]=a\b c
+  success
+Testing 20/152
+  Expecting
+    argv[1]=a\"b c
+  Actuals:
+    cmdline="a\\""b c"
+    argv[1]=a\"b c
+  success
+Testing 21/152
+  Expecting
+    argv[1]=a\b c
+  Actuals:
+    cmdline="a\b c"
+    argv[1]=a\b c
+  success
+Testing 22/152
+  Expecting
+    argv[1]=a\b <c
+  Actuals:
+    cmdline="a\b <c"
+    argv[1]=a\b <c
+  success
+Testing 23/152
+  Expecting
+    argv[1]=a\b c
+  Actuals:
+    cmdline="a\b c"
+    argv[1]=a\b c
+  success
+Testing 24/152
+  Expecting
+    argv[1]=a\\\^b
+    argv[2]=c
+  Actuals:
+    cmdline=a\\\^b c
+    argv[1]=a\\\^b
+    argv[2]=c
+  success
+Testing 25/152
+  Expecting
+    argv[1]=a"b
+  Actuals:
+    cmdline=a\"b
+    argv[1]=a"b
+  success
+Testing 26/152
+  Expecting
+    argv[1]=a"b
+  Actuals:
+    cmdline=a\"b
+    argv[1]=a"b
+  success
+Testing 27/152
+  Expecting
+    argv[1]=a\b c d
+  Actuals:
+    cmdline="a\b c d"
+    argv[1]=a\b c d
+  success
+Testing 28/152
+  Expecting
+    argv[1]=a\"b
+  Actuals:
+    cmdline=a\\\"b
+    argv[1]=a\"b
+  success
+Testing 29/152
+  Expecting
+    argv[1]=a\"b
+  Actuals:
+    cmdline=a\\\"b
+    argv[1]=a\"b
+  success
+Testing 30/152
+  Expecting
+    argv[1]=a
+    argv[2]=b\\
+    argv[3]="
+    argv[4]=c
+    argv[5]=d
+  Actuals:
+    cmdline=a b\\ \" c d
+    argv[1]=a
+    argv[2]=b\\
+    argv[3]="
+    argv[4]=c
+    argv[5]=d
+  success
+Testing 31/152
+  Expecting
+    argv[1]=a b\\ " c d
+  Actuals:
+    cmdline="a b\\ "" c d"
+    argv[1]=a b\\ " c d
+  success
+Testing 32/152
+  Expecting
+    argv[1]=a b\
+    argv[2]=c
+    argv[3]=d
+  Actuals:
+    cmdline="a b\\" c d
+    argv[1]=a b\
+    argv[2]=c
+    argv[3]=d
+  success
+Testing 33/152
+  Expecting
+    argv[1]=a
+    argv[2]=b"
+    argv[3]=c
+    argv[4]=d
+  Actuals:
+    cmdline=a b\" c d
+    argv[1]=a
+    argv[2]=b"
+    argv[3]=c
+    argv[4]=d
+  success
+Testing 34/152
+  Expecting
+    argv[1]=a
+    argv[2]=\t
+    argv[3]=c
+  Actuals:
+    cmdline=a \t c
+    argv[1]=a
+    argv[2]=\t
+    argv[3]=c
+  success
+Testing 35/152
+  Expecting
+    argv[1]=a
+    argv[2]="b
+    argv[3]=c
+  Actuals:
+    cmdline=a \"b c
+    argv[1]=a
+    argv[2]="b
+    argv[3]=c
+  success
+Testing 36/152
+  Expecting
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  Actuals:
+    cmdline=a "" b
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  success
+Testing 37/152
+  Expecting
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+  Actuals:
+    cmdline="" a b
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+  success
+Testing 38/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=
+  Actuals:
+    cmdline=a b ""
+    argv[1]=a
+    argv[2]=b
+    argv[3]=
+  success
+Testing 39/152
+  Expecting
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  Actuals:
+    cmdline=a "" b
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  success
+Testing 40/152
+  Expecting
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+  Actuals:
+    cmdline="" a b
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+  success
+Testing 41/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=
+  Actuals:
+    cmdline=a b ""
+    argv[1]=a
+    argv[2]=b
+    argv[3]=
+  success
+Testing 42/152
+  Expecting
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  Actuals:
+    cmdline=a "" b
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  success
+Testing 43/152
+  Expecting
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+  Actuals:
+    cmdline="" a b
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+  success
+Testing 44/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=
+  Actuals:
+    cmdline=a b ""
+    argv[1]=a
+    argv[2]=b
+    argv[3]=
+  success
+Testing 45/152
+  Expecting
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+    argv[4]=c
+  Actuals:
+    cmdline=a "" b c
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+    argv[4]=c
+  success
+Testing 46/152
+  Expecting
+    argv[1]=a
+    argv[2]="b
+    argv[3]=c
+  Actuals:
+    cmdline=a \"b c
+    argv[1]=a
+    argv[2]="b
+    argv[3]=c
+  success
+Testing 47/152
+  Expecting
+    argv[1]=a "b
+    argv[2]=c
+  Actuals:
+    cmdline="a ""b" c
+    argv[1]=a "b
+    argv[2]=c
+  success
+Testing 48/152
+  Expecting
+    argv[1]=a "b
+    argv[2]=c
+  Actuals:
+    cmdline="a ""b" c
+    argv[1]=a "b
+    argv[2]=c
+  success
+Testing 49/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    cmdline=a b c
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 50/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  Actuals:
+    cmdline=a b c
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+  success
+Testing 51/152
+  Expecting
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+    argv[4]=c
+  Actuals:
+    cmdline="" a b c
+    argv[1]=
+    argv[2]=a
+    argv[3]=b
+    argv[4]=c
+  success
+Testing 52/152
+  Expecting
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+    argv[4]=
+  Actuals:
+    cmdline=a b c ""
+    argv[1]=a
+    argv[2]=b
+    argv[3]=c
+    argv[4]=
+  success
+Testing 53/152
+  Expecting
+    argv[1]=a
+    argv[2]=\\b
+    argv[3]=c
+  Actuals:
+    cmdline=a \\b c
+    argv[1]=a
+    argv[2]=\\b
+    argv[3]=c
+  success
+Testing 54/152
+  Expecting
+    argv[1]='test'
+  Actuals:
+    cmdline='test'
+    argv[1]='test'
+  success
+Testing 55/152
+  Expecting
+    argv[1]='test'
+  Actuals:
+    cmdline='test'
+    argv[1]='test'
+  success
+Testing 56/152
+  Expecting
+    argv[1]=helloto the  entireworld
+  Actuals:
+    cmdline="helloto the  entireworld"
+    argv[1]=helloto the  entireworld
+  success
+Testing 57/152
+  Expecting
+    argv[1]=helloto
+    argv[2]=the
+    argv[3]=entireworld
+  Actuals:
+    cmdline=helloto the entireworld
+    argv[1]=helloto
+    argv[2]=the
+    argv[3]=entireworld
+  success
+Testing 58/152
+  Expecting
+    argv[1]="a"
+  Actuals:
+    cmdline=\"a\"
+    argv[1]="a"
+  success
+Testing 59/152
+  Expecting
+    argv[1]="a b"
+  Actuals:
+    cmdline="""a b"""
+    argv[1]="a b"
+  success
+Testing 60/152
+  Expecting
+    argv[1]="Hello," Mike said.
+  Actuals:
+    cmdline="""Hello,"" Mike said."
+    argv[1]="Hello," Mike said.
+  success
+Testing 61/152
+  Expecting
+    argv[1]=abcd
+  Actuals:
+    cmdline=abcd
+    argv[1]=abcd
+  success
+Testing 62/152
+  Expecting
+    argv[1]=hello to "quotes
+  Actuals:
+    cmdline="hello to ""quotes"
+    argv[1]=hello to "quotes
+  success
+Testing 63/152
+  Expecting
+    argv[1]="hello
+    argv[2]=world
+  Actuals:
+    cmdline=\"hello world
+    argv[1]="hello
+    argv[2]=world
+  success
+Testing 64/152
+  Expecting
+    argv[1]="hello
+    argv[2]=world
+  Actuals:
+    cmdline=\"hello world
+    argv[1]="hello
+    argv[2]=world
+  success
+Testing 65/152
+  Expecting
+    argv[1]="hello world
+  Actuals:
+    cmdline="""hello world"
+    argv[1]="hello world
+  success
+Testing 66/152
+  Expecting
+    argv[1]=hello "world"
+  Actuals:
+    cmdline="hello ""world"""
+    argv[1]=hello "world"
+  success
+Testing 67/152
+  Expecting
+    argv[1]=hello "world
+  Actuals:
+    cmdline="hello ""world"
+    argv[1]=hello "world
+  success
+Testing 68/152
+  Expecting
+    argv[1]=aaa\\\b c
+  Actuals:
+    cmdline="aaa\\\b c"
+    argv[1]=aaa\\\b c
+  success
+Testing 69/152
+  Expecting
+    argv[1]=aaa\\"b
+    argv[2]=c
+  Actuals:
+    cmdline=aaa\\\\\"b c
+    argv[1]=aaa\\"b
+    argv[2]=c
+  success
+Testing 70/152
+  Expecting
+    argv[1]=test"&whoami
+  Actuals:
+    cmdline=test\"&whoami
+    argv[1]=test"&whoami
+  success
+Testing 71/152
+  Expecting
+    argv[1]=aaa
+  Actuals:
+    cmdline=aaa
+    argv[1]=aaa
+  success
+Testing 72/152
+  Expecting
+    argv[1]=aaa"
+  Actuals:
+    cmdline=aaa\"
+    argv[1]=aaa"
+  success
+Testing 73/152
+  Expecting
+    argv[1]=aaa\
+  Actuals:
+    cmdline=aaa\
+    argv[1]=aaa\
+  success
+Testing 74/152
+  Expecting
+    argv[1]=aaa\"
+  Actuals:
+    cmdline=aaa\\\"
+    argv[1]=aaa\"
+  success
+Testing 75/152
+  Expecting
+    argv[1]=aaa"
+  Actuals:
+    cmdline=aaa\"
+    argv[1]=aaa"
+  success
+Testing 76/152
+  Expecting
+    argv[1]=aaa\
+  Actuals:
+    cmdline=aaa\
+    argv[1]=aaa\
+  success
+Testing 77/152
+  Expecting
+    argv[1]=aaa\"
+  Actuals:
+    cmdline=aaa\\\"
+    argv[1]=aaa\"
+  success
+Testing 78/152
+  Expecting
+    argv[1]=abc
+  Actuals:
+    cmdline=abc
+    argv[1]=abc
+  success
+Testing 79/152
+  Expecting
+    argv[1]=abc\
+  Actuals:
+    cmdline=abc\
+    argv[1]=abc\
+  success
+Testing 80/152
+  Expecting
+    argv[1]=abc\\
+  Actuals:
+    cmdline=abc\\
+    argv[1]=abc\\
+  success
+Testing 81/152
+  Expecting
+    argv[1]=abc\\\
+  Actuals:
+    cmdline=abc\\\
+    argv[1]=abc\\\
+  success
+Testing 82/152
+  Expecting
+    argv[1]=abc"d
+  Actuals:
+    cmdline=abc\"d
+    argv[1]=abc"d
+  success
+Testing 83/152
+  Expecting
+    argv[1]=abc\\ ddd
+    argv[2]=e
+  Actuals:
+    cmdline="abc\\ ddd" e
+    argv[1]=abc\\ ddd
+    argv[2]=e
+  success
+Testing 84/152
+  Expecting
+    argv[1]=abc"\ ddd
+    argv[2]=e
+  Actuals:
+    cmdline="abc""\ ddd" e
+    argv[1]=abc"\ ddd
+    argv[2]=e
+  success
+Testing 85/152
+  Expecting
+    argv[1]=ab\\c
+    argv[2]=d
+  Actuals:
+    cmdline=ab\\c d
+    argv[1]=ab\\c
+    argv[2]=d
+  success
+Testing 86/152
+  Expecting
+    argv[1]=ab\\
+    argv[2]=c
+  Actuals:
+    cmdline=ab\\ c
+    argv[1]=ab\\
+    argv[2]=c
+  success
+Testing 87/152
+  Expecting
+    argv[1]=\\ab
+    argv[2]=c
+  Actuals:
+    cmdline=\\ab c
+    argv[1]=\\ab
+    argv[2]=c
+  success
+Testing 88/152
+  Expecting
+    argv[1]=a
+    argv[2]=bc"o e
+  Actuals:
+    cmdline=a "bc""o e"
+    argv[1]=a
+    argv[2]=bc"o e
+  success
+Testing 89/152
+  Expecting
+    argv[1]=a
+    argv[2]=bc"o
+    argv[3]=e
+  Actuals:
+    cmdline=a bc\"o e
+    argv[1]=a
+    argv[2]=bc"o
+    argv[3]=e
+  success
+Testing 90/152
+  Expecting
+    argv[1]=a"b
+  Actuals:
+    cmdline=a\"b
+    argv[1]=a"b
+  success
+Testing 91/152
+  Expecting
+    argv[1]=a"b
+  Actuals:
+    cmdline=a\"b
+    argv[1]=a"b
+  success
+Testing 92/152
+  Expecting
+    argv[1]=a"b
+  Actuals:
+    cmdline=a\"b
+    argv[1]=a"b
+  success
+Testing 93/152
+  Expecting
+    argv[1]=a"
+    argv[2]=b
+  Actuals:
+    cmdline=a\" b
+    argv[1]=a"
+    argv[2]=b
+  success
+Testing 94/152
+  Expecting
+    argv[1]="
+  Actuals:
+    cmdline=\"
+    argv[1]="
+  success
+Testing 95/152
+  Expecting
+    argv[1]="
+  Actuals:
+    cmdline=\"
+    argv[1]="
+  success
+Testing 96/152
+  Expecting
+    argv[1]=""
+  Actuals:
+    cmdline=\"\"
+    argv[1]=""
+  success
+Testing 97/152
+  Expecting
+    argv[1]=""
+  Actuals:
+    cmdline=\"\"
+    argv[1]=""
+  success
+Testing 98/152
+  Expecting
+    argv[1]=ab cd"&echo foo
+  Actuals:
+    cmdline="ab cd""&echo foo"
+    argv[1]=ab cd"&echo foo
+  success
+Testing 99/152
+  Expecting
+    argv[1]=ab cd\^&echo
+    argv[2]=foo
+  Actuals:
+    cmdline="ab cd\^&echo" foo
+    argv[1]=ab cd\^&echo
+    argv[2]=foo
+  success
+Testing 100/152
+  Expecting
+    argv[1]=ab cd" ee
+  Actuals:
+    cmdline="ab cd"" ee"
+    argv[1]=ab cd" ee
+  success
+Testing 101/152
+  Expecting
+    argv[1]=ab cd" ee
+  Actuals:
+    cmdline="ab cd"" ee"
+    argv[1]=ab cd" ee
+  success
+Testing 102/152
+  Expecting
+    argv[1]=ab cd\^
+    argv[2]=ee
+  Actuals:
+    cmdline="ab cd\^" ee
+    argv[1]=ab cd\^
+    argv[2]=ee
+  success
+Testing 103/152
+  Expecting
+    argv[1]=a^b
+    argv[2]=c
+  Actuals:
+    cmdline=a^b c
+    argv[1]=a^b
+    argv[2]=c
+  success
+Testing 104/152
+  Expecting
+    argv[1]=ab
+    argv[2]=c
+  Actuals:
+    cmdline=ab c
+    argv[1]=ab
+    argv[2]=c
+  success
+Testing 105/152
+  Expecting
+    argv[1]=ab
+    argv[2]=c
+  Actuals:
+    cmdline=ab c
+    argv[1]=ab
+    argv[2]=c
+  success
+Testing 106/152
+  Expecting
+    argv[1]=ab" c
+  Actuals:
+    cmdline="ab"" c"
+    argv[1]=ab" c
+  success
+Testing 107/152
+  Expecting
+    argv[1]=a " b
+    argv[2]=c
+  Actuals:
+    cmdline="a "" b" c
+    argv[1]=a " b
+    argv[2]=c
+  success
+Testing 108/152
+  Expecting
+    argv[1]=a " b^
+    argv[2]=c
+  Actuals:
+    cmdline="a "" b^" c
+    argv[1]=a " b^
+    argv[2]=c
+  success
+Testing 109/152
+  Expecting
+    argv[1]=a
+    argv[2]=b"c
+  Actuals:
+    cmdline=a b\"c
+    argv[1]=a
+    argv[2]=b"c
+  success
+Testing 110/152
+  Expecting
+    argv[1]=a b
+    argv[2]=c
+  Actuals:
+    cmdline="a b" c
+    argv[1]=a b
+    argv[2]=c
+  success
+Testing 111/152
+  Expecting
+    argv[1]=a b
+    argv[2]=c
+  Actuals:
+    cmdline="a b" c
+    argv[1]=a b
+    argv[2]=c
+  success
+Testing 112/152
+  Expecting
+    argv[1]=a bc
+  Actuals:
+    cmdline="a bc"
+    argv[1]=a bc
+  success
+Testing 113/152
+  Expecting
+    argv[1]=ab c
+  Actuals:
+    cmdline="ab c"
+    argv[1]=ab c
+  success
+Testing 114/152
+  Expecting
+    argv[1]=a < b
+    argv[2]=c
+  Actuals:
+    cmdline="a < b" c
+    argv[1]=a < b
+    argv[2]=c
+  success
+Testing 115/152
+  Expecting
+    argv[1]=a ^< b
+    argv[2]=c
+  Actuals:
+    cmdline="a ^< b" c
+    argv[1]=a ^< b
+    argv[2]=c
+  success
+Testing 116/152
+  Expecting
+    argv[1]=a
+    argv[2]=\bb
+    argv[3]=c
+  Actuals:
+    cmdline=a \bb c
+    argv[1]=a
+    argv[2]=\bb
+    argv[3]=c
+  success
+Testing 117/152
+  Expecting
+    argv[1]=a
+    argv[2]="bb
+    argv[3]=c d
+  Actuals:
+    cmdline=a \"bb "c d"
+    argv[1]=a
+    argv[2]="bb
+    argv[3]=c d
+  success
+Testing 118/152
+  Expecting
+    argv[1]=a
+    argv[2]=bb
+    argv[3]=c d
+  Actuals:
+    cmdline=a bb "c d"
+    argv[1]=a
+    argv[2]=bb
+    argv[3]=c d
+  success
+Testing 119/152
+  Expecting
+    argv[1]=a
+    argv[2]="b
+    argv[3]=c
+  Actuals:
+    cmdline=a \"b c
+    argv[1]=a
+    argv[2]="b
+    argv[3]=c
+  success
+Testing 120/152
+  Expecting
+    argv[1]=ab
+    argv[2]=c
+  Actuals:
+    cmdline=ab c
+    argv[1]=ab
+    argv[2]=c
+  success
+Testing 121/152
+  Expecting
+    argv[1]=a"b
+    argv[2]=c
+  Actuals:
+    cmdline=a\"b c
+    argv[1]=a"b
+    argv[2]=c
+  success
+Testing 122/152
+  Expecting
+    argv[1]=a"b
+    argv[2]=c
+  Actuals:
+    cmdline=a\"b c
+    argv[1]=a"b
+    argv[2]=c
+  success
+Testing 123/152
+  Expecting
+    argv[1]=a"b
+    argv[2]=c
+  Actuals:
+    cmdline=a\"b c
+    argv[1]=a"b
+    argv[2]=c
+  success
+Testing 124/152
+  Expecting
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  Actuals:
+    cmdline=a "" b
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  success
+Testing 125/152
+  Expecting
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  Actuals:
+    cmdline=a "" b
+    argv[1]=a
+    argv[2]=
+    argv[3]=b
+  success
+Testing 126/152
+  Expecting
+    argv[1]=
+    argv[2]=a
+  Actuals:
+    cmdline="" a
+    argv[1]=
+    argv[2]=a
+  success
+Testing 127/152
+  Expecting
+    argv[1]=
+    argv[2]=a
+  Actuals:
+    cmdline="" a
+    argv[1]=
+    argv[2]=a
+  success
+Testing 128/152
+  Expecting
+    argv[1]=test"&whoami
+  Actuals:
+    cmdline=test\"&whoami
+    argv[1]=test"&whoami
+  success
+Testing 129/152
+  Expecting
+    argv[1]=test\&whoami
+  Actuals:
+    cmdline=test\&whoami
+    argv[1]=test\&whoami
+  success
+Testing 130/152
+  Expecting
+    argv[1]=test"^&whoami^
+  Actuals:
+    cmdline=test\"^&whoami^
+    argv[1]=test"^&whoami^
+  success
+Testing 131/152
+  Expecting
+    argv[1]=a\\b
+  Actuals:
+    cmdline=a\\b
+    argv[1]=a\\b
+  success
+Testing 132/152
+  Expecting
+    argv[1]=a\\b
+  Actuals:
+    cmdline=a\\b
+    argv[1]=a\\b
+  success
+Testing 133/152
+  Expecting
+    argv[1]=a\\b
+  Actuals:
+    cmdline=a\\b
+    argv[1]=a\\b
+  success
+Testing 134/152
+  Expecting
+    argv[1]=a\\b
+  Actuals:
+    cmdline=a\\b
+    argv[1]=a\\b
+  success
+Testing 135/152
+  Expecting
+    argv[1]=a\\b
+  Actuals:
+    cmdline=a\\b
+    argv[1]=a\\b
+  success
+Testing 136/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 137/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 138/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 139/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 140/152
+  Expecting
+    argv[1]=a b^"c d
+  Actuals:
+    cmdline="a b^""c d"
+    argv[1]=a b^"c d
+  success
+Testing 141/152
+  Expecting
+    argv[1]=a
+    argv[2]=<
+    argv[3]=b
+  Actuals:
+    cmdline=a < b
+    argv[1]=a
+    argv[2]=<
+    argv[3]=b
+  success
+Testing 142/152
+  Expecting
+    argv[1]=a < b
+    argv[2]=c
+  Actuals:
+    cmdline="a < b" c
+    argv[1]=a < b
+    argv[2]=c
+  success
+Testing 143/152
+  Expecting
+    argv[1]=ab
+    argv[2]=c
+  Actuals:
+    cmdline=ab c
+    argv[1]=ab
+    argv[2]=c
+  success
+Testing 144/152
+  Expecting
+    argv[1]=^a^b
+    argv[2]=c
+  Actuals:
+    cmdline=^a^b c
+    argv[1]=^a^b
+    argv[2]=c
+  success
+Testing 145/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 146/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 147/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 148/152
+  Expecting
+    argv[1]=a b"c d
+  Actuals:
+    cmdline="a b""c d"
+    argv[1]=a b"c d
+  success
+Testing 149/152
+  Expecting
+    argv[1]=a b^"c d
+  Actuals:
+    cmdline="a b^""c d"
+    argv[1]=a b^"c d
+  success
+Testing 150/152
+  Expecting
+    argv[1]=a b" <c
+  Actuals:
+    cmdline="a b"" <c"
+    argv[1]=a b" <c
+  success
+Testing 151/152
+  Expecting
+    argv[1]=a b" ^<c
+  Actuals:
+    cmdline="a b"" ^<c"
+    argv[1]=a b" ^<c
+  success
+Testing 152/152
+  Expecting
+    argv[1]=a\\^b <c
+  Actuals:
+    cmdline="a\\^b <c"
+    argv[1]=a\\^b <c
+  success
+OK!
+Running test "TestCreateProcessArgumentCodec.testEncodeArgument"...
+Testing decoded argument argv[1]=malicious argument"&whoami
+  Actual:
+    foo.exe "malicious argument""&whoami"
+  Validating with CreateProcess() api...
+    argv[1]=malicious argument"&whoami
+good!
+Testing decoded argument argv[1]=\"hello\"
+  Actual:
+    foo.exe \\\"hello\\\"
+  Validating with CreateProcess() api...
+    argv[1]=\"hello\"
+good!
+Testing decoded argument argv[1]=\"hello\ world
+  Actual:
+    foo.exe "\\""hello\ world"
+  Validating with CreateProcess() api...
+    argv[1]=\"hello\ world
+good!
+Testing decoded argument argv[1]=test&whoami
+  Actual:
+    foo.exe test&whoami
+  Validating with CreateProcess() api...
+    argv[1]=test&whoami
+good!
+Testing decoded argument argv[1]=test\"&whoami
+  Actual:
+    foo.exe test\\\"&whoami
+  Validating with CreateProcess() api...
+    argv[1]=test\"&whoami
+good!
+OK!
+Press any key to continue . . .
