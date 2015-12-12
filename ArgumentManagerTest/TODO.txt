@@ -1,3 +1,4 @@
 - Rename project to (CommandLineEncoder & ArgumentDecoder) or (ArgumentEncoder, ArgumentDecoder, CommandLineEncoder, CommandLineDecoder)
 - Add support for validating arguments againts an argument list specification
 - Move global functions of ArgumentManager.cpp out to an utility class (or util.h/cpp files)
+- Change calls like c == '\\' && getSafeCharacter(cmdLine, i+1) == '\\' && getSafeCharacter(cmdLine, i+2) == '\\' && getSafeCharacter(cmdLine, i+3) == '\"'    by isSequence(cmdLine, i, "abcd")
