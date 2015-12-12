@@ -4,7 +4,7 @@
 #include "IArgumentDecoder.h"
 #include "CmdPromptArgumentCodec.h"
 
-class ARGMGR_API CreateProcessArgumentCodec : public CmdPromptArgumentCodec
+class LIBARGVCODEC_API CreateProcessArgumentCodec : public CmdPromptArgumentCodec
 {
 public:
   CreateProcessArgumentCodec();

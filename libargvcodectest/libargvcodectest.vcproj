@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="ArgumentManager"
-	ProjectGUID="{8B120F17-D63D-4783-A96A-08D495065758}"
-	RootNamespace="ArgMgr"
+	Name="libargvcodectest"
+	ProjectGUID="{12E9683C-378D-4F85-AB1C-1250119047CD}"
+	RootNamespace="ArgMgrTest"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="2"
 			>
 			<Tool
@@ -41,7 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;ARGMGR_EXPORTS;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="..\libargvcodec"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,7 +63,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -85,13 +86,14 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="call PostBuild.bat $(ProjectDir) $(OutDir)"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -114,7 +116,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;ARGMGR_EXPORTS;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="..\libargvcodec"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -134,7 +137,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -159,10 +162,15 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="call PostBuild.bat $(ProjectDir) $(OutDir)"
 			/>
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{8B120F17-D63D-4783-A96A-08D495065758}"
+			RelativePathToProject=".\libargvcodec\libargvcodec.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter
@@ -171,49 +179,27 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\ArgumentList.cpp"
+				RelativePath=".\ArgumentLister.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CmdPromptArgumentCodec.cpp"
+				RelativePath=".\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CreateProcessArgumentCodec.cpp"
+				RelativePath=".\TestArgumentList.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\dllmain.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						CompileAsManaged="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						CompileAsManaged="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\os.cpp"
+				RelativePath=".\TestCmdPromptArgumentCodec.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Rules.txt"
+				RelativePath=".\TestCreateProcessArgumentCodec.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\utils.cpp"
+				RelativePath=".\TestUtils.cpp"
 				>
 			</File>
 		</Filter>
@@ -223,31 +209,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\ArgMgrExports.h"
+				RelativePath=".\ArgumentLister.h"
 				>
 			</File>
 			<File
-				RelativePath=".\ArgumentList.h"
+				RelativePath=".\gtest_emulator.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CmdPromptArgumentCodec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CreateProcessArgumentCodec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\IArgumentDecoder.h"
-				>
-			</File>
-			<File
-				RelativePath=".\IArgumentEncoder.h"
-				>
-			</File>
-			<File
-				RelativePath=".\os.h"
+				RelativePath=".\gtest_emulator.h"
 				>
 			</File>
 			<File
@@ -255,7 +225,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\utils.h"
+				RelativePath=".\TestUtils.h"
 				>
 			</File>
 		</Filter>
@@ -264,11 +234,53 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\postbuild.bat"
+				>
+			</File>
+			<File
+				RelativePath=".\shellCommandLines.txt"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="copy /v &quot;$(InputPath)&quot; &quot;$(OutDir)\&quot;&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="copy /v &quot;$(InputPath)&quot; &quot;$(OutDir)\&quot;&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\TestEncodeCommandLine001.txt"
+				>
+			</File>
+			<File
+				RelativePath=".\TestEncodeCommandLine002.txt"
+				>
+			</File>
 		</Filter>
-		<File
-			RelativePath=".\TODO.txt"
+		<Filter
+			Name="External Files"
 			>
-		</File>
+			<File
+				RelativePath="..\libargvcodec\utils.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\libargvcodec\utils.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

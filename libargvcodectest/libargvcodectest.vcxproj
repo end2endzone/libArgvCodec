@@ -11,18 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8B120F17-D63D-4783-A96A-08D495065758}</ProjectGuid>
-    <RootNamespace>ArgMgr</RootNamespace>
+    <ProjectGuid>{12E9683C-378D-4F85-AB1C-1250119047CD}</ProjectGuid>
+    <RootNamespace>ArgMgrTest</RootNamespace>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -47,7 +47,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;ARGMGR_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\libargvcodec;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -58,15 +59,19 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <PostBuildEvent>
+      <Command>call PostBuild.bat $(ProjectDir) $(OutDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ARGMGR_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\libargvcodec;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>
@@ -76,41 +81,49 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <PostBuildEvent>
+      <Command>call PostBuild.bat $(ProjectDir) $(OutDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ArgumentList.cpp" />
-    <ClCompile Include="CmdPromptArgumentCodec.cpp" />
-    <ClCompile Include="CreateProcessArgumentCodec.cpp" />
-    <ClCompile Include="dllmain.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="os.cpp" />
-    <ClCompile Include="utils.cpp" />
+    <ClCompile Include="..\libargvcodec\utils.cpp" />
+    <ClCompile Include="ArgumentLister.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="TestArgumentList.cpp" />
+    <ClCompile Include="gtest_emulator.cpp" />
+    <ClCompile Include="TestCmdPromptArgumentCodec.cpp" />
+    <ClCompile Include="TestCreateProcessArgumentCodec.cpp" />
+    <ClCompile Include="TestUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Rules.txt" />
-    <None Include="TODO.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ArgMgrExports.h" />
-    <ClInclude Include="ArgumentList.h" />
-    <ClInclude Include="CmdPromptArgumentCodec.h" />
-    <ClInclude Include="CreateProcessArgumentCodec.h" />
-    <ClInclude Include="IArgumentDecoder.h" />
-    <ClInclude Include="IArgumentEncoder.h" />
-    <ClInclude Include="os.h" />
+    <ClInclude Include="..\libargvcodec\utils.h" />
+    <ClInclude Include="ArgumentLister.h" />
+    <ClInclude Include="gtest_emulator.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="utils.h" />
+    <ClInclude Include="TestUtils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="postbuild.bat" />
+    <None Include="TestEncodeCommandLine001.txt" />
+    <None Include="TestEncodeCommandLine002.txt" />
+    <CustomBuild Include="shellCommandLines.txt">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /v "%(FullPath)" "$(OutDir)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension);%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /v "%(FullPath)" "$(OutDir)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension);%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libargvcodec\libargvcodec.vcxproj">
+      <Project>{8b120f17-d63d-4783-a96a-08d495065758}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

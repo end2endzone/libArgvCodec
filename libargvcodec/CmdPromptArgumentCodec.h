@@ -3,7 +3,7 @@
 #include "IArgumentEncoder.h"
 #include "IArgumentDecoder.h"
 
-class ARGMGR_API CmdPromptArgumentCodec : public virtual IArgumentEncoder,
+class LIBARGVCODEC_API CmdPromptArgumentCodec : public virtual IArgumentEncoder,
                                           public virtual IArgumentDecoder
 {
 public:
