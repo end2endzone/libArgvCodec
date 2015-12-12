@@ -59,9 +59,9 @@ public:
   //  Tells if the exact option iValue is specified as a parameter.
   // Parameters:
   //  iValue: The option we are looking for including any option prefix like the following characters: /, - or --
-  //  oIndex: The index where the option was found. Set to -1 if option if not found.
+  //  oIndex: The index where the option was found. Set to -1 if option iValue if not found.
   // Return:
-  //  Returns the true if iValue is specified. Returns false otherwise.
+  //  Returns the true if iValue is found. Returns false otherwise.
   //
   bool findOption(const char * iValue) const;
   bool findOption(const char * iValue, int & oIndex) const;

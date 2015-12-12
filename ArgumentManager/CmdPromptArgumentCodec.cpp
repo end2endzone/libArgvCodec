@@ -37,6 +37,17 @@ std::string CmdPromptArgumentCodec::encodeArgument(const char * iValue)
   //http://stackoverflow.com/questions/2393384/escape-string-for-process-start
   //http://stackoverflow.com/questions/5510343/escape-command-line-arguments-in-c-sharp/6040946#6040946
 
+  //ici
+  //  check pour encoder au minimum.
+  //  si pas string et pas de charactère ", on devrait utiliser ^ pour escaper les shell characters...
+  //  ie:
+  //    Testing decoded argument argv[1]=test&whoami
+  //      Actual:
+  //        foo.exe "test&whoami"
+  //      Validating with system's cmd.exe...
+  //        argv[1]=test&whoami
+  //      std::string plainArgument = iValue;
+
   std::string plainArgument = iValue;
 
   //Rule 6. Deal with empty argument ASAP
@@ -54,7 +65,14 @@ std::string CmdPromptArgumentCodec::encodeArgument(const char * iValue)
 
   //Rule 5.1.
   bool hasShellCharacters_ = hasShellCharacters(plainArgument.c_str());
-  isStringArgument = isStringArgument || hasShellCharacters_;
+
+  //Optimization...
+  //Encode shell characters with a caret characters if argument is not a string and does not contains " or \ characters
+  //otherwise, encode using a string
+  //ie: test&whoami should be encoded as test^&whoami instead of "test&whoami"
+  bool hasDoubleQuotes = (plainArgument.find("\"") != std::string::npos);
+  bool hasBackslash    = (plainArgument.find("\\") != std::string::npos);
+  isStringArgument = isStringArgument || ( hasShellCharacters_ && (hasDoubleQuotes || hasBackslash) ); 
   
   //Rule 4.
   bool isCaretStringArgument = false; // isStringArgument && hasShellCharacters_;
