@@ -6,7 +6,7 @@
 
 #define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
 
-TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
+TEST_F(TestCreateProcessArgumentCodec, DISABLED_testDecodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
@@ -58,7 +58,7 @@ TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
   }
 }
 
-TEST_F(TestCreateProcessArgumentCodec, testEncodeCommandLine)
+TEST_F(TestCreateProcessArgumentCodec, DISABLED_testEncodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
@@ -144,7 +144,7 @@ void prepareTestCreateProcessEncodeArgument(const char * iRawArguementValue, std
   printf("    argv[1]=%s\n", oCreateProcessArgumentValue.c_str());
 }
 
-TEST_F(TestCreateProcessArgumentCodec, testEncodeArgument)
+TEST_F(TestCreateProcessArgumentCodec, DISABLED_testEncodeArgument)
 {
   printf("\n");
 
