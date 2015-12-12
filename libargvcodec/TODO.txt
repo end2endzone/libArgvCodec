@@ -27,4 +27,4 @@ DONE! - Extract samples of ArgumentManager::parseCmdLine() as elements of a test
 DONE! - Rename the tool to libcleanargv or libcleanarg, libargvcodec. libargvcodec WINS
 DONE! - Implement case insensitive ArgumentList APIs.
 - Implement automatic insertion of the = sign for "-name=value" in the following APIs: extractValue() and findValue()
-- Implement automatic search for expected prefix if "name=value" not found. Search for "/", "-", and "--" expected prefixes.
+DONE! - Implement automatic search for expected prefix if "name=value" not found. Search for "/", "-", and "--" expected prefixes.

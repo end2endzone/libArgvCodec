@@ -5,6 +5,7 @@
 #include "os.h"
 #include <assert.h>
 #include <vector>
+#include <algorithm>
 
 static const bool gDefaultCaseSensitive = true;
 
@@ -186,7 +187,7 @@ bool ArgumentList::contains(const char * iValue) const
   return contains(iValue, gDefaultCaseSensitive);
 }
 
-bool ArgumentList::findOption(const char * iValue, bool iCaseSensitive, int & oIndex) const
+bool ArgumentList::findOption2(const char * iValue, bool iCaseSensitive, int & oIndex) const
 {
   oIndex = -1;
   if (iValue == NULL)
@@ -206,7 +207,7 @@ bool ArgumentList::findOption(const char * iValue) const
   return findOption(iValue, gDefaultCaseSensitive, tmp);
 }
 
-bool ArgumentList::findValue(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const
+bool ArgumentList::findValue2(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const
 {
   oIndex = -1;
   oValue= "";
@@ -256,7 +257,7 @@ bool ArgumentList::findValue(const char * iValueName, int & oIndex, int & oValue
   return findValue(iValueName, gDefaultCaseSensitive, oIndex, oValue);
 }
 
-bool ArgumentList::findNextValue(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const
+bool ArgumentList::findNextValue2(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const
 {
   oIndex = -1;
   oValue= "";
@@ -444,4 +445,168 @@ bool ArgumentList::extractNextValue(const char * iValueName, int & oValue)
 std::string ArgumentList::extractNextValue(const char * iValueName)
 {
   return extractNextValue(iValueName, gDefaultCaseSensitive);
+}
+
+std::string ArgumentList::equalize(const std::string & iValue)
+{
+  std::string tmp = iValue;
+  equalize(tmp);
+  return tmp;
+}
+
+std::string ArgumentList::equalize(const char * iValue)
+{
+  std::string tmp = iValue;
+  equalize(tmp);
+  return tmp;
+}
+
+void ArgumentList::equalize(std::string & iValue)
+{
+  if (!iValue.empty() && iValue[iValue.size()-1] != '=')
+  {
+    iValue.append(1, '=');
+  }
+}
+
+const ArgumentList::StringList & ArgumentList::getOptionPrefixes()
+{
+  return mPrefixes;
+}
+
+bool ArgumentList::addOptionPrefix(const char * iValue)
+{
+  if (iValue != NULL)
+  {
+    mPrefixes.push_back(std::string(iValue));
+    return true;
+  }
+  return false;
+}
+
+bool ArgumentList::removeOptionPrefix(const char * iValue)
+{
+  StringList::iterator pos = std::find(mPrefixes.begin(), mPrefixes.end(), std::string(iValue));
+  if (pos != mPrefixes.end())
+  {
+    mPrefixes.erase(pos);
+    return true;
+  }
+  return false;
+}
+
+void ArgumentList::clearOptionPrefixes()
+{
+  mPrefixes.clear();
+}
+
+//
+// Description:
+//    Concatenate iNewPrefix with iValueName removing any know prefix from iValueName before concatenation.
+//    ie: if newValue is -name=bar and iNewPrefix=='/' then
+//    newValue should become /name=bar
+//
+std::string ArgumentList::rebuildArgumentPrefix(const char * iValueName, const std::string & iNewPrefix) const
+{
+  std::string newValue = iValueName;
+
+  //remove any known prefix
+  for(size_t i=0; i<mPrefixes.size(); i++)
+  {
+    const std::string & oldPrefix = mPrefixes[i];
+    
+    //skip empty prefix
+    if (oldPrefix.empty())
+      continue; 
+
+    //if newValue is -name=bar and iNewPrefix=='/'
+    if (newValue.substr(0, oldPrefix.size()) == oldPrefix)
+    {
+      //remove old prefix from newValue
+      newValue.erase(newValue.begin(), newValue.begin()+oldPrefix.size());
+    }
+  }
+
+  //insert new prefix
+  newValue.insert(0, iNewPrefix.c_str());
+
+  return newValue;
+}
+
+bool ArgumentList::findOption(const char * iValue, bool iCaseSensitive, int & oIndex) const
+{
+  bool found = findOption2(iValue, iCaseSensitive, oIndex);
+  if (found)
+    return true;
+
+  //not found.
+  //search with the list of known prefixes...
+  for(size_t i=0; i<mPrefixes.size(); i++)
+  {
+    const std::string & prefix = mPrefixes[i];
+      
+    std::string newValue = rebuildArgumentPrefix(iValue, prefix);
+
+    //search again
+    found = findOption2(newValue.c_str(), iCaseSensitive, oIndex);
+    if (found)
+      return true;
+
+    //next prefix
+  }
+
+  return false; //failed
+}
+
+bool ArgumentList::findValue(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const
+{
+  bool found = findValue2(iValueName, iCaseSensitive, oIndex, oValue);
+  if (found)
+    return true;
+
+  //not found.
+  //search with the list of known prefixes...
+  for(size_t i=0; i<mPrefixes.size(); i++)
+  {
+    const std::string & prefix = mPrefixes[i];
+      
+    std::string newValue = rebuildArgumentPrefix(iValueName, prefix);
+
+    //search again
+    found = findValue2(newValue.c_str(), iCaseSensitive, oIndex, oValue);
+    if (found)
+      return true;
+
+    //next prefix
+  }
+
+  return false; //failed
+}
+
+bool ArgumentList::findNextValue(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const
+{
+  //une fois que c'est confirmer que ca fonctionne bien, deleter ArgumentList.cpp.old
+
+  bool found = findNextValue2(iValueName, iCaseSensitive, oIndex, oValue);
+  if (found)
+    return true;
+
+  //not found.
+  //search with the list of known prefixes...
+  for(size_t i=0; i<mPrefixes.size(); i++)
+  {
+    const std::string & prefix = mPrefixes[i];
+      
+    std::string newValue = rebuildArgumentPrefix(iValueName, prefix);
+
+    //search again
+    found = findNextValue2(newValue.c_str(), iCaseSensitive, oIndex, oValue);
+    if (found)
+      return true;
+
+    //next prefix
+  }
+
+  return false; //failed
+
 }

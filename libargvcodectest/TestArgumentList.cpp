@@ -5,6 +5,15 @@
 
 #define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
 
+void setDefaultOptionPrefix(ArgumentList & m)
+{
+  m.clearOptionPrefixes();
+  m.addOptionPrefix(""); //no prefix
+  m.addOptionPrefix("-");
+  m.addOptionPrefix("/");
+  m.addOptionPrefix("--");
+}
+
 bool isIdentical(ArgumentList & m, int expectedArgc, char ** expectedArgv)
 {
   int mArgc = m.getArgc();
@@ -276,7 +285,7 @@ TEST_F(TestArgumentList, testInsertMiddle)
 
 TEST_F(TestArgumentList, testRemoveEnd)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
@@ -295,7 +304,7 @@ TEST_F(TestArgumentList, testRemoveEnd)
 
 TEST_F(TestArgumentList, testRemoveFirst)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
@@ -314,7 +323,7 @@ TEST_F(TestArgumentList, testRemoveFirst)
 
 TEST_F(TestArgumentList, testRemoveMiddle)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
@@ -333,7 +342,7 @@ TEST_F(TestArgumentList, testRemoveMiddle)
 
 TEST_F(TestArgumentList, testRemoveOutOfBounds)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
@@ -346,7 +355,7 @@ TEST_F(TestArgumentList, testRemoveOutOfBounds)
 
 TEST_F(TestArgumentList, testRemoveAll)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
@@ -369,7 +378,7 @@ TEST_F(TestArgumentList, testRemoveAll)
 
 TEST_F(TestArgumentList, testReplaceEnd)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
@@ -388,7 +397,7 @@ TEST_F(TestArgumentList, testReplaceEnd)
 
 TEST_F(TestArgumentList, testReplaceFirst)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
@@ -407,7 +416,7 @@ TEST_F(TestArgumentList, testReplaceFirst)
 
 TEST_F(TestArgumentList, testReplaceMiddle)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
@@ -426,7 +435,7 @@ TEST_F(TestArgumentList, testReplaceMiddle)
 
 TEST_F(TestArgumentList, testReplaceOutOfBounds)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
@@ -439,7 +448,7 @@ TEST_F(TestArgumentList, testReplaceOutOfBounds)
 
 TEST_F(TestArgumentList, testFindIndex)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
@@ -463,7 +472,7 @@ TEST_F(TestArgumentList, testFindIndex)
 
 TEST_F(TestArgumentList, testFindOption)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
@@ -493,7 +502,7 @@ TEST_F(TestArgumentList, testFindOption)
 
 TEST_F(TestArgumentList, testExtractOption)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/p=7", "/p", "-logfile=log.txt", "--help", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
@@ -514,7 +523,7 @@ TEST_F(TestArgumentList, testExtractOption)
   ASSERT_FALSE( m.extractOption("--help") );
   ASSERT_TRUE ( m.getArgc() == argc - 2 );
 
-  //prepare (again)
+  //arrange (again)
   m.init(argc, argv);
 
   //assert (again)
@@ -531,14 +540,14 @@ TEST_F(TestArgumentList, testExtractOption)
 
 TEST_F(TestArgumentList, testExtractValue)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/p=7", "/p", "-logfile=log.txt", "--help", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
   m.init(argc, argv);
 
-  //assert
+  //assert (default case sensitive)
   std::string value;
 #define ASSERT_EXTRACT( text, result, expectedValue) ASSERT_TRUE( m.extractValue(text, value) == result ); ASSERT_EQ( value, expectedValue );
   ASSERT_EXTRACT( "/noexist", false, "" );
@@ -553,10 +562,10 @@ TEST_F(TestArgumentList, testExtractValue)
   ASSERT_TRUE   ( m.getArgc() == argc - 3 );
 #undef ASSERT_EXTRACT
 
-  //prepare (again)
+  //arrange (again)
   m.init(argc, argv);
 
-  //assert (again)
+  //assert (again, not case sensitive)
   bool caseSensitive = false;
 #define ASSERT_EXTRACT( text, result, expectedValue) ASSERT_TRUE( m.extractValue(text, caseSensitive, value) == result ); ASSERT_EQ( value, expectedValue );
   ASSERT_EXTRACT( "/noEXIST", false, "" );
@@ -570,11 +579,29 @@ TEST_F(TestArgumentList, testExtractValue)
   ASSERT_EXTRACT( "-Name=", false, "" );
   ASSERT_TRUE   ( m.getArgc() == argc - 3 );
 #undef ASSERT_EXTRACT
+
+  //arrange (again)
+  m.init(argc, argv);
+  setDefaultOptionPrefix(m);
+
+  //assert (again, not case sensitive, with wrong prefixes)
+#define ASSERT_EXTRACT( text, result, expectedValue) ASSERT_TRUE( m.extractValue(text, false /*not case sensitive*/, value) == result ); ASSERT_EQ( value, expectedValue );
+  ASSERT_EXTRACT( "/noEXIST", false, "" );
+  ASSERT_TRUE   ( m.getArgc() == argc );
+  ASSERT_EXTRACT( "logFILE=", true, "log.txt" ); //use "" instead of -
+  ASSERT_TRUE   ( m.getArgc() == argc - 1 );
+  ASSERT_EXTRACT( "-P=", true, "7" ); //use - instead of /
+  ASSERT_TRUE   ( m.getArgc() == argc - 2 );
+  ASSERT_EXTRACT( "-COunt=", true, "5" ); //use - instead of ""
+  ASSERT_TRUE   ( m.getArgc() == argc - 3 );
+  ASSERT_EXTRACT( "-Name=", false, "" );
+  ASSERT_TRUE   ( m.getArgc() == argc - 3 );
+#undef ASSERT_EXTRACT
 }
 
 TEST_F(TestArgumentList, testExtractNextValue)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/name", "foo", "/repeat", "5", "/inputfile", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
@@ -589,7 +616,7 @@ TEST_F(TestArgumentList, testExtractNextValue)
   ASSERT_EXTRACTNEXT( "/name",       true, "foo", argc-4 );
 #undef ASSERT_EXTRACTNEXT
 
-  //prepare (again)
+  //arrange (again)
   m.init(argc, argv);
 
   //assert (again)
@@ -677,7 +704,7 @@ TEST_F(TestArgumentList, testAssignmentOperator) //operator =
 
 TEST_F(TestArgumentList, testFindNextValue)
 {
-  //prepare
+  //arrange
   char* argv[] = {"test.exe", "/name", "foo", "/repeat", "5", "/inputfile", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
@@ -695,7 +722,7 @@ TEST_F(TestArgumentList, testFindNextValue)
   ASSERT_FINDNEXTVALUE("/inputfile", stringValue, false, -1, "");
 #undef ASSERT_FINDNEXTVALUE
 
-  //prepare (again)
+  //arrange (again)
   m.init(argc, argv);
 
   //assert (again)
@@ -707,4 +734,41 @@ TEST_F(TestArgumentList, testFindNextValue)
   ASSERT_FINDNEXTVALUE("/inputFILE", stringValue, false, -1, "");
 #undef ASSERT_FINDNEXTVALUE
 
+}
+
+TEST_F(TestArgumentList, testWrongPrefixes)
+{
+  //prepare
+  char* argv[] = {"test.exe", "/p=7", "/p", "-logfile=log.txt", "--help", "count=5", NULL};
+  int argc = sizeof(argv)/sizeof(argv[0]) - 1;
+
+  ArgumentList m;
+  m.init(argc, argv);
+  setDefaultOptionPrefix(m);
+
+  int index = 0;
+  std::string value;
+#define ASSERT_FINDVALUE( text, expectedResult, expectedIndex, expectedValue) index = -1; value="foobar"; ASSERT_TRUE( m.findValue(text, false /*not case sensitive*/, index, value) == expectedResult ); ASSERT_EQ( index, expectedIndex ); ASSERT_EQ( value, expectedValue );
+  ASSERT_FINDVALUE(   "/noEXIST",  false, -1,        "" );
+  ASSERT_FINDVALUE(  "-logFILE=",   true,  3, "log.txt" ); //use actual prefix
+  ASSERT_FINDVALUE(   "logFILE=",   true,  3, "log.txt" ); //use "" instead of -
+  ASSERT_FINDVALUE(  "/logFILE=",   true,  3, "log.txt" ); //use / instead of -
+  ASSERT_FINDVALUE( "--logFILE=",   true,  3, "log.txt" ); //use -- instead of -
+#undef ASSERT_FINDVALUE
+
+#define ASSERT_FINDOPTION( text, expectedResult, expectedIndex) index = -1; ASSERT_TRUE( m.findOption(text, false /*not case sensitive*/, index) == expectedResult ); ASSERT_EQ( index, expectedIndex );
+  ASSERT_FINDOPTION( "/noEXIST",  false, -1);
+  ASSERT_FINDOPTION(  "--help",    true,  4); //use actual prefix
+  ASSERT_FINDOPTION(    "help",    true,  4); //use "" instead of --
+  ASSERT_FINDOPTION(   "/help",    true,  4); //use / instead of --
+  ASSERT_FINDOPTION(   "-help",    true,  4); //use - instead of --
+#undef ASSERT_FINDOPTION
+
+#define ASSERT_FINDNEXTVALUE( text, expectedResult, expectedIndex, expectedValue) index = -1; value="foobar"; ASSERT_TRUE( m.findNextValue(text, false /*not case sensitive*/, index, value) == expectedResult ); ASSERT_EQ( index, expectedIndex ); ASSERT_EQ( value, expectedValue );
+  ASSERT_FINDNEXTVALUE("/noEXIST",  false, -1,        "" );
+  ASSERT_FINDNEXTVALUE(  "--help",   true,  4, "count=5" ); //use actual prefix
+  ASSERT_FINDNEXTVALUE(    "help",   true,  4, "count=5" ); //use "" instead of --
+  ASSERT_FINDNEXTVALUE(   "/help",   true,  4, "count=5" ); //use / instead of --
+  ASSERT_FINDNEXTVALUE(   "-help",   true,  4, "count=5" ); //use - instead of --
+#undef ASSERT_FINDNEXTVALUE
 }
