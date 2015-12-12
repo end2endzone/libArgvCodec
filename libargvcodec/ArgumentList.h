@@ -37,30 +37,38 @@ public:
   //
   // Description:
   //  Finds the exact iValue within all parameters.
+  // Parameters:
+  //  iCaseSensitive: Defines if the search is case sensitive or not. If not specified, the search is case sensitive.
   // Return:
   //  Returns the index of the parameter if found. Returns -1 otherwise.
   //
   int findIndex(const char * iValue) const;
+  int findIndex(const char * iValue, bool iCaseSensitive) const;
 
   //
   // Description:
   //  Tells if the exact iValue can be found within all parameters.
+  // Parameters:
+  //  iCaseSensitive: Defines if the search is case sensitive or not. If not specified, the search is case sensitive.
   // Return:
   //  Returns the true if iValue can be found. Returns false otherwise.
   //
   bool contains(const char * iValue) const;
+  bool contains(const char * iValue, bool iCaseSensitive) const;
 
   //
   // Description:
   //  Tells if the exact option iValue is specified as a parameter.
   // Parameters:
   //  iValue: The option we are looking for including any option prefix like the following characters: /, - or --
+  //  iCaseSensitive: Defines if the search is case sensitive or not. If not specified, the search is case sensitive.
   //  oIndex: The index where the option was found. Set to -1 if option iValue if not found.
   // Return:
   //  Returns the true if iValue is found. Returns false otherwise.
   //
   bool findOption(const char * iValue) const;
   bool findOption(const char * iValue, int & oIndex) const;
+  bool findOption(const char * iValue, bool iCaseSensitive, int & oIndex) const;
   
   //
   // Description:
@@ -71,6 +79,7 @@ public:
   //              The prefix is optional. Can be as simple as "name=value"
   //              Must include any prefix like the following characters: "-name=", "--name=", "/name="
   //              Must include the equal sign.
+  //  iCaseSensitive: Defines if the search is case sensitive or not. If not specified, the search is case sensitive.
   //  oIndex: The index where the option was found. Set to -1 if option if not found.
   //  oValue: The value of the option name. Set to empty string (or 0) if not found.
   // Return:
@@ -78,6 +87,8 @@ public:
   //
   bool findValue(const char * iValueName, int & oIndex, std::string & oValue) const;
   bool findValue(const char * iValueName, int & oIndex, int & oValue) const;
+  bool findValue(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const;
+  bool findValue(const char * iValueName, bool iCaseSensitive, int & oIndex, int & oValue) const;
 
   //
   // Description:
@@ -88,6 +99,7 @@ public:
   //  iValueName: The option's name are looking for.
   //              The prefix is optional. Can be as simple as "name"
   //              Must include any prefix like the following characters: "-name", "--name", "/name"
+  //  iCaseSensitive: Defines if the search is case sensitive or not. If not specified, the search is case sensitive.
   //  oIndex: The index where the option was found. Set to -1 if option if not found.
   //  oValue: The value of the option name. Set to empty string (or 0) if not found.
   // Return:
@@ -95,6 +107,8 @@ public:
   //
   bool findNextValue(const char * iValueName, int & oIndex, std::string & oValue) const;
   bool findNextValue(const char * iValueName, int & oIndex, int & oValue) const;
+  bool findNextValue(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const;
+  bool findNextValue(const char * iValueName, bool iCaseSensitive, int & oIndex, int & oValue) const;
 
   //
   // Description:
@@ -102,6 +116,7 @@ public:
   //  Removes the option from the argument list if found.
   //
   bool extractOption(const char * iValue);
+  bool extractOption(const char * iValue, bool iCaseSensitive);
 
   //
   // Description:
@@ -110,6 +125,8 @@ public:
   //
   bool extractValue(const char * iValueName, std::string & oValue);
   bool extractValue(const char * iValueName, int & oValue);
+  bool extractValue(const char * iValueName, bool iCaseSensitive, std::string & oValue);
+  bool extractValue(const char * iValueName, bool iCaseSensitive, int & oValue);
 
   //
   // Description:
@@ -120,10 +137,12 @@ public:
   //              The prefix is optional. Can be as simple as "name=value"
   //              Must include any prefix like the following characters: "-name=", "--name=", "/name="
   //              Must include the equal sign.
+  //  iCaseSensitive: Defines if the search is case sensitive or not. If not specified, the search is case sensitive.
   // Returns:
   //  Returns the option's value if found. Returns an empty string otherwise
   //
   std::string extractValue(const char * iValueName);
+  std::string extractValue(const char * iValueName, bool iCaseSensitive);
 
   //
   // Description:
@@ -132,6 +151,8 @@ public:
   //
   bool extractNextValue(const char * iValueName, std::string & oValue);
   bool extractNextValue(const char * iValueName, int & oValue);
+  bool extractNextValue(const char * iValueName, bool iCaseSensitive, std::string & oValue);
+  bool extractNextValue(const char * iValueName, bool iCaseSensitive, int & oValue);
 
   //
   // Description:
@@ -143,10 +164,12 @@ public:
   //  iValueName: The option's name we are looking for.
   //              The prefix is optional. Can be as simple as "name"
   //              Must include any prefix like the following characters: "-name", "--name", "/name"
+  //  iCaseSensitive: Defines if the search is case sensitive or not. If not specified, the search is case sensitive.
   // Returns:
   //  Returns the option's value if found. Returns an empty string otherwise
   //
   std::string extractNextValue(const char * iValueName);
+  std::string extractNextValue(const char * iValueName, bool iCaseSensitive);
 
 private:
 

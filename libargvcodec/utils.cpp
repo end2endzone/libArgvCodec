@@ -76,4 +76,22 @@ size_t findNumTrailingBackslashes(const char * iValue)
   return numTrailingBackslashes;
 }
 
+std::string uppercase(const std::string & iValue)
+{
+  std::string out;
+  for(size_t i=0; i<iValue.size(); i++)
+  {
+    char c = (char)toupper(iValue[i]);
+    out.append(1, c);
+  }
+  return out;
+}
+
+std::string uppercase(const char * iValue)
+{
+  if (iValue == NULL)
+    return "";
+  return uppercase(std::string(iValue));
+}
+
 }; //namespace utils
