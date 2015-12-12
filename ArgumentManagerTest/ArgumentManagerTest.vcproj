@@ -209,6 +209,10 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
+				RelativePath=".\testInitString.all.txt"
+				>
+			</File>
+			<File
 				RelativePath=".\testInitString.txt"
 				>
 				<FileConfiguration
@@ -216,7 +220,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="copy /v &quot;$(InputPath)&quot; &quot;$(OutDir)\&quot;"
+						CommandLine="copy /v &quot;$(InputPath)&quot; &quot;$(OutDir)\&quot;&#x0D;&#x0A;"
 						Outputs="$(OutDir)\$(InputFileName)"
 					/>
 				</FileConfiguration>
@@ -225,12 +229,16 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="copy /v &quot;$(InputPath)&quot; &quot;$(OutDir)\&quot;"
+						CommandLine="copy /v &quot;$(InputPath)&quot; &quot;$(OutDir)\&quot;&#x0D;&#x0A;"
 						Outputs="$(OutDir)\$(InputFileName)"
 					/>
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\TODO.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

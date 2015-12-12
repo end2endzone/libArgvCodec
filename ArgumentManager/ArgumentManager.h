@@ -19,6 +19,8 @@ public:
   void init(const StringList & iArguments);
 
   char * getArgument(int iIndex);
+  std::string getCommandLine();
+  std::string getCommandLineArgument(int iIndex);
 
   int getArgc();
   char** getArgv();
