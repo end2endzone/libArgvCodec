@@ -1,6 +1,3 @@
-// ArgMgr.cpp : Defines the exported functions for the DLL application.
-//
-
 #include "targetver.h"
 
 #include "ArgumentList.h"
@@ -34,28 +31,6 @@ void ArgumentList::init(int argc, char** argv)
   }
   init(tmp);
 }
-
-//void ArgumentList::init(const char * iCmdLine)
-//{
-//  init(iCmdLine, true);
-//}
-//
-//void ArgumentList::init(const char * iCmdLine, bool iIncludeExec)
-//{
-//  StringList args;
-//
-//  bool parseSuccess = parseCmdLine(iCmdLine, args);
-//  if (!parseSuccess)
-//    args.clear();
-//
-//  //insert .exe path
-//  if (iIncludeExec)
-//  {
-//    args.insert( args.begin(), getLocalExePath() );
-//  }
-//
-//  init(args);
-//}
 
 void ArgumentList::init(const StringList & iArguments)
 {

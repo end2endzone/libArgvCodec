@@ -14,13 +14,9 @@ public:
   virtual ~ArgumentList();
 
   void init(int argc, char** argv);
-  //void init(const char * iCmdLine);
-  //void init(const char * iCmdLine, bool iIncludeExec);
   void init(const StringList & iArguments);
 
   char * getArgument(int iIndex) const;
-  //std::string getCommandLine();
-  //std::string getCommandLineArgument(int iIndex);
 
   int getArgc() const;
   char** getArgv() const;
@@ -115,12 +111,6 @@ private:
   void rebuildArgv();
   char** mArgv;
   bool isValid(int iIndex) const;
-  //bool parseCmdLine(const char * iCmdLine, StringList & oArguments);
-
-//public:
-//  static bool isArgumentSeparator(const char c);
-//  static bool isShellCharacter(const char c);
-//  static bool hasShellCharacters(const char * iValue);
 
   StringList mArguments;
 };

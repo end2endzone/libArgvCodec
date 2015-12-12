@@ -37,17 +37,6 @@ std::string CmdPromptArgumentCodec::encodeArgument(const char * iValue)
   //http://stackoverflow.com/questions/2393384/escape-string-for-process-start
   //http://stackoverflow.com/questions/5510343/escape-command-line-arguments-in-c-sharp/6040946#6040946
 
-  //ici
-  //  check pour encoder au minimum.
-  //  si pas string et pas de charactère ", on devrait utiliser ^ pour escaper les shell characters...
-  //  ie:
-  //    Testing decoded argument argv[1]=test&whoami
-  //      Actual:
-  //        foo.exe "test&whoami"
-  //      Validating with system's cmd.exe...
-  //        argv[1]=test&whoami
-  //      std::string plainArgument = iValue;
-
   std::string plainArgument = iValue;
 
   //Rule 6. Deal with empty argument ASAP
@@ -329,56 +318,17 @@ bool CmdPromptArgumentCodec::matchesSequence(const char * iValue, size_t iValueO
 bool CmdPromptArgumentCodec::matchesBackSlashDblQuoteSequence(const char * iValue, size_t iValueOffset, size_t & oNumBlackSlash, size_t & oSequenceLength, bool iInString, bool iInCaretString)
 {
   oNumBlackSlash = 0;
-  //size_t quoteOffset = 0;
   size_t lastBackSlashOffset = 0;
   //size_t sequenceLength = 0;
 
   //count the maximum sequence of \ characters
   //the sequence ends with a " character.
   //the sequence can also ends with ^" characters but only if !iInString || iInCaretString and encoder has support for shell characters
-  //char c = iValue[iValueOffset+quoteOffset];
-  //while( c == '\\' || (supportsShellCharacters() && (iInCaretString || !iInString) && c == '^') )
-  //{
-  //  if (c == '\\')
-  //  {
-  //    oNumBlackSlash++;
-  //    lastBackSlashOffset = quoteOffset;
-  //  }
-
-  //  quoteOffset++; //next character
-  //  c = iValue[iValueOffset+quoteOffset];
-  //}
-
-  //bool valid = (oNumBlackSlash > 0 && iValue[iValueOffset+quoteOffset] == '\"');
-
-  ////Compute skip offset
-  //if (valid)
-  //{
-  //  if (oNumBlackSlash%2 == 0)
-  //  {
-  //    //the " character is a starts/ends string character and must not part of the \ sequence.
-  //    //ie: a\\\\"b   =>    a\\[openstring]b
-  //    oSkipLength = quoteOffset;
-  //  }
-  //  else
-  //  {
-  //    //the last " character is an escaped " character and must not be included in the sequence.
-  //    //ie: a\\\"b   =>    a\"b
-  //    oSkipLength = lastBackSlashOffset;
-  //  }
-  //}
-  //else
-  //{
-  //  oSkipLength = 0;
-  //}
-
   bool acceptCaretCharacters = (supportsShellCharacters() && (iInCaretString || !iInString) );
   char c = iValue[iValueOffset+oSequenceLength];
 
   while( c == '\\' || (acceptCaretCharacters && /*c == '^'*/matchesSequence(iValue, iValueOffset+oSequenceLength, "^\\")) ) //allow accepting sequences in the following format:    ^"a\^\^\\"b"
   {
-    //oNumBlackSlash++;
-    //c = iValue[iValueOffset+oNumBlackSlash];
     if (c != '\\')
     {
       //assume its a ^\ character sequence
@@ -651,17 +601,6 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
       {
         codes.push_back(Skipped);
       }
-
-      //for(size_t j=0; j<numEscapedBackSlashes; j++)
-      //{
-      //  //can never be sure because of ^\^\ sequence
-      //  //codes.push_back(EscapingBackslash);
-      //  //codes.push_back(Plain);
-      //}
-      //for(size_t j=2*numEscapedBackSlashes; j<backSlashSequenceLength; j++)
-      //{
-      //  codes.push_back(Skipped);
-      //}
 
       i=i+backslashSequenceLength-1; //skip escaped \ characters (but not the last \ if odd backslashes are found) but not the " character
     }
