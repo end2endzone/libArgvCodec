@@ -16,5 +16,7 @@ void strReplace(std::string & iValue, const char * iOldStr, const char * iNewStr
 bool readTextFile(const char * iPath, StringList & oLines);
 bool fileExists(const char * iPath);
 size_t findNumTrailingBackslashes(const char * iValue);
+std::string uppercase(const std::string & iValue);
+std::string uppercase(const char * iValue);
 
 }; //namespace utils

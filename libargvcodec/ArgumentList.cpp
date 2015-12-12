@@ -6,6 +6,8 @@
 #include <assert.h>
 #include <vector>
 
+static const bool gDefaultCaseSensitive = true;
+
 ArgumentList::ArgumentList() :
   mArgv(NULL)
 {
@@ -151,55 +153,72 @@ bool ArgumentList::isValid(int iIndex) const
   return false;
 }
 
-int ArgumentList::findIndex(const char * iValue) const
+int ArgumentList::findIndex(const char * iValue, bool iCaseSensitive) const
 {
   if (iValue == NULL)
     return -1;
+  std::string uppercaseValue = utils::uppercase(iValue);
   for(size_t i=0; i<mArguments.size(); i++)
   {
     const std::string & arg = mArguments[i];
-    if (arg == iValue)
+    if (    ( iCaseSensitive && arg == iValue) ||
+            (!iCaseSensitive && utils::uppercase(arg) == uppercaseValue)    )
       return (int)i;
   }
   return -1;
 }
 
-bool ArgumentList::contains(const char * iValue) const
+int ArgumentList::findIndex(const char * iValue) const
+{
+  return findIndex(iValue, gDefaultCaseSensitive);
+}
+
+bool ArgumentList::contains(const char * iValue, bool iCaseSensitive) const
 {
   if (iValue == NULL)
     return false;
-  int pos = findIndex(iValue);
+  int pos = findIndex(iValue, iCaseSensitive);
   return pos != -1;
 }
 
-bool ArgumentList::findOption(const char * iValue) const
+bool ArgumentList::contains(const char * iValue) const
 {
-  if (iValue == NULL)
-    return false;
-  int tmp = 0;
-  return findOption(iValue, tmp);
+  return contains(iValue, gDefaultCaseSensitive);
 }
 
-bool ArgumentList::findOption(const char * iValue, int & oIndex) const
+bool ArgumentList::findOption(const char * iValue, bool iCaseSensitive, int & oIndex) const
 {
   oIndex = -1;
   if (iValue == NULL)
     return false;
-  oIndex = findIndex(iValue);
+  oIndex = findIndex(iValue, iCaseSensitive);
   return oIndex != -1;
 }
 
-bool ArgumentList::findValue(const char * iValueName, int & oIndex, std::string & oValue) const
+bool ArgumentList::findOption(const char * iValue, int & oIndex) const
+{
+  return findOption(iValue, gDefaultCaseSensitive, oIndex);
+}
+
+bool ArgumentList::findOption(const char * iValue) const
+{
+  int tmp = 0;
+  return findOption(iValue, gDefaultCaseSensitive, tmp);
+}
+
+bool ArgumentList::findValue(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const
 {
   oIndex = -1;
   oValue= "";
   if (iValueName == NULL)
     return false;
+  std::string uppercaseValueName = utils::uppercase(iValueName);
   for(size_t i=0; i<mArguments.size(); i++)
   {
     const std::string & arg = mArguments[i];
     std::string argPrefix = arg.substr(0, std::string(iValueName).size());
-    if (argPrefix == iValueName)
+    if (    ( iCaseSensitive && argPrefix == iValueName) ||
+            (!iCaseSensitive && utils::uppercase(argPrefix) == uppercaseValueName)    )
     {
       oIndex = (int)i;
       oValue = arg.substr(argPrefix.size(), 999999);
@@ -209,14 +228,14 @@ bool ArgumentList::findValue(const char * iValueName, int & oIndex, std::string 
   return false;
 }
 
-bool ArgumentList::findValue(const char * iValueName, int & oIndex, int & oValue) const
+bool ArgumentList::findValue(const char * iValueName, bool iCaseSensitive, int & oIndex, int & oValue) const
 {
   oIndex = -1;
   oValue = 0;
 
   int index = 0;
   std::string sValue;
-  bool found = findValue(iValueName, index, sValue);
+  bool found = findValue(iValueName, iCaseSensitive, index, sValue);
   if (!found)
     return false;
   if (sValue != "")
@@ -227,16 +246,28 @@ bool ArgumentList::findValue(const char * iValueName, int & oIndex, int & oValue
   return true;
 }
 
-bool ArgumentList::findNextValue(const char * iValueName, int & oIndex, std::string & oValue) const
+bool ArgumentList::findValue(const char * iValueName, int & oIndex, std::string & oValue) const
+{
+  return findValue(iValueName, gDefaultCaseSensitive, oIndex, oValue);
+}
+
+bool ArgumentList::findValue(const char * iValueName, int & oIndex, int & oValue) const
+{
+  return findValue(iValueName, gDefaultCaseSensitive, oIndex, oValue);
+}
+
+bool ArgumentList::findNextValue(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const
 {
   oIndex = -1;
   oValue= "";
   if (iValueName == NULL)
     return false;
+  std::string uppercaseValueName = utils::uppercase(iValueName);
   for(size_t i=0; i<mArguments.size(); i++)
   {
     const std::string & arg = mArguments[i];
-    if (arg == iValueName)
+    if (    ( iCaseSensitive && arg == iValueName) ||
+            (!iCaseSensitive && utils::uppercase(arg) == uppercaseValueName)    )
     {
       //find option.
       //look for the next argument as the value
@@ -252,14 +283,14 @@ bool ArgumentList::findNextValue(const char * iValueName, int & oIndex, std::str
   return false;
 }
 
-bool ArgumentList::findNextValue(const char * iValueName, int & oIndex, int & oValue) const
+bool ArgumentList::findNextValue(const char * iValueName, bool iCaseSensitive, int & oIndex, int & oValue) const
 {
   oIndex = -1;
   oValue = 0;
 
   int index = 0;
   std::string sValue;
-  bool found = findNextValue(iValueName, index, sValue);
+  bool found = findNextValue(iValueName, iCaseSensitive, index, sValue);
   if (!found)
     return false;
   if (sValue != "")
@@ -270,12 +301,22 @@ bool ArgumentList::findNextValue(const char * iValueName, int & oIndex, int & oV
   return true;
 }
 
-bool ArgumentList::extractOption(const char * iValue)
+bool ArgumentList::findNextValue(const char * iValueName, int & oIndex, std::string & oValue) const
+{
+  return findNextValue(iValueName, gDefaultCaseSensitive, oIndex, oValue);
+}
+
+bool ArgumentList::findNextValue(const char * iValueName, int & oIndex, int & oValue) const
+{
+  return findNextValue(iValueName, gDefaultCaseSensitive, oIndex, oValue);
+}
+
+bool ArgumentList::extractOption(const char * iValue, bool iCaseSensitive)
 {
   if (iValue == NULL)
     return false;
   int index = 0;
-  bool found = findOption(iValue, index);
+  bool found = findOption(iValue, iCaseSensitive, index);
   if (found)
   {
     return this->remove(index);
@@ -283,13 +324,18 @@ bool ArgumentList::extractOption(const char * iValue)
   return false;
 }
 
-bool ArgumentList::extractValue(const char * iValueName, std::string & oValue)
+bool ArgumentList::extractOption(const char * iValue)
+{
+  return extractOption(iValue, gDefaultCaseSensitive);
+}
+
+bool ArgumentList::extractValue(const char * iValueName, bool iCaseSensitive, std::string & oValue)
 {
   oValue = "";
   if (iValueName == NULL)
     return false;
   int index = 0;
-  bool found = findValue(iValueName, index, oValue);
+  bool found = findValue(iValueName, iCaseSensitive, index, oValue);
   if (found)
   {
     return this->remove(index);
@@ -297,12 +343,12 @@ bool ArgumentList::extractValue(const char * iValueName, std::string & oValue)
   return false;
 }
 
-bool ArgumentList::extractValue(const char * iValueName, int & oValue)
+bool ArgumentList::extractValue(const char * iValueName, bool iCaseSensitive, int & oValue)
 {
   oValue = 0;
 
   std::string sValue;
-  bool found = extractValue(iValueName, sValue);
+  bool found = extractValue(iValueName, iCaseSensitive, sValue);
   if (!found)
     return false;
   if (sValue != "")
@@ -312,12 +358,12 @@ bool ArgumentList::extractValue(const char * iValueName, int & oValue)
   return true;
 }
 
-std::string ArgumentList::extractValue(const char * iValueName)
+std::string ArgumentList::extractValue(const char * iValueName, bool iCaseSensitive)
 {
   if (iValueName == NULL)
     return "";
   std::string value;
-  bool found = extractValue(iValueName, value);
+  bool found = extractValue(iValueName, iCaseSensitive, value);
   if (found)
   {
     return value;
@@ -325,13 +371,28 @@ std::string ArgumentList::extractValue(const char * iValueName)
   return "";
 }
 
-bool ArgumentList::extractNextValue(const char * iValueName, std::string & oValue)
+bool ArgumentList::extractValue(const char * iValueName, std::string & oValue)
+{
+  return extractValue(iValueName, gDefaultCaseSensitive, oValue);
+}
+
+bool ArgumentList::extractValue(const char * iValueName, int & oValue)
+{
+  return extractValue(iValueName, gDefaultCaseSensitive, oValue);
+}
+
+std::string ArgumentList::extractValue(const char * iValueName)
+{
+  return extractValue(iValueName, gDefaultCaseSensitive);
+}
+
+bool ArgumentList::extractNextValue(const char * iValueName, bool iCaseSensitive, std::string & oValue)
 {
   oValue = "";
   if (iValueName == NULL)
     return false;
   int index = 0;
-  bool found = findNextValue(iValueName, index, oValue);
+  bool found = findNextValue(iValueName, iCaseSensitive, index, oValue);
   if (found)
   {
     bool success = true;
@@ -342,12 +403,12 @@ bool ArgumentList::extractNextValue(const char * iValueName, std::string & oValu
   return false;
 }
 
-bool ArgumentList::extractNextValue(const char * iValueName, int & oValue)
+bool ArgumentList::extractNextValue(const char * iValueName, bool iCaseSensitive, int & oValue)
 {
   oValue = 0;
 
   std::string sValue;
-  bool found = extractNextValue(iValueName, sValue);
+  bool found = extractNextValue(iValueName, iCaseSensitive, sValue);
   if (!found)
     return false;
   if (sValue != "")
@@ -357,15 +418,30 @@ bool ArgumentList::extractNextValue(const char * iValueName, int & oValue)
   return true;
 }
 
-std::string ArgumentList::extractNextValue(const char * iValueName)
+std::string ArgumentList::extractNextValue(const char * iValueName, bool iCaseSensitive)
 {
   if (iValueName == NULL)
     return "";
   std::string value;
-  bool found = extractNextValue(iValueName, value);
+  bool found = extractNextValue(iValueName, iCaseSensitive, value);
   if (found)
   {
     return value;
   }
   return "";
+}
+
+bool ArgumentList::extractNextValue(const char * iValueName, std::string & oValue)
+{
+  return extractNextValue(iValueName, gDefaultCaseSensitive, oValue);
+}
+
+bool ArgumentList::extractNextValue(const char * iValueName, int & oValue)
+{
+  return extractNextValue(iValueName, gDefaultCaseSensitive, oValue);
+}
+
+std::string ArgumentList::extractNextValue(const char * iValueName)
+{
+  return extractNextValue(iValueName, gDefaultCaseSensitive);
 }

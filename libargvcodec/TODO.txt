@@ -1,5 +1,5 @@
 DONE! - Rename project to (CommandLineEncoder & ArgumentDecoder) or (ArgumentEncoder, ArgumentDecoder, CommandLineEncoder, CommandLineDecoder)
-- Add support for validating arguments againts an argument list specification. This will allow users to specify the argument format/names/meaning and ask the manager to validate the given arguments against this specification. If will also provide a custom error message for invalid arguments.
+- Add support for validating arguments againts an argument list specification. This will allow users to specify the argument format/names/meaning and ask the manager to validate the given arguments against this specification. If will also provide a custom error message for invalid/missing arguments.
 DONE! - Move global functions of ArgumentManager.cpp out to an utility class (or util.h/cpp files)
 DONE! - Change calls like c == '\\' && getSafeCharacter(cmdLine, i+1) == '\\' && getSafeCharacter(cmdLine, i+2) == '\\' && getSafeCharacter(cmdLine, i+3) == '\"'    by isSequence(cmdLine, i, "abcd")
 DONE! - Rename getCommandLineArgument() to getEscapedArgument() and make it static like: static std::string getEscapedArgument(const char * iValue)
@@ -25,5 +25,6 @@ DONE!   - testOperatorEqual
 DONE!   - testAssignmentOperator
 DONE! - Extract samples of ArgumentManager::parseCmdLine() as elements of a test case
 DONE! - Rename the tool to libcleanargv or libcleanarg, libargvcodec. libargvcodec WINS
-- Implement case insensitive ArgumentList APIs.
+DONE! - Implement case insensitive ArgumentList APIs.
 - Implement automatic insertion of the = sign for "-name=value" in the following APIs: extractValue() and findValue()
+- Implement automatic search for expected prefix if "name=value" not found. Search for "/", "-", and "--" expected prefixes.
