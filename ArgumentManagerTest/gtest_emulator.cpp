@@ -23,8 +23,26 @@ void RUN_ALL_TESTS()
   for(size_t i=0; i<gTests->size(); i++)
   {
     Test & t = (*gTests)[i];
-    printf("Running test \"%s\"... ", t.name);
-    t.f();
-    printf("OK!\n");
+
+    //detect if test is disabled
+    bool testDisabled = false;
+    static const std::string disabledToken = "DISABLED_";
+    std::string testName = t.name;
+    if (testName.find(disabledToken) != std::string::npos)
+    {
+      testDisabled = true;
+    }
+
+    //run test
+    if (testDisabled)
+    {
+      printf("*** Warning: test \"%s\" is disabled.\n", t.name);
+    }
+    else
+    {
+      printf("Running test \"%s\"... ", t.name);
+      t.f();
+      printf("OK!\n");
+    }
   }
 }
