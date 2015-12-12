@@ -18,10 +18,21 @@ static TestList * gTests = NULL;
 bool registerTest(const char * iName, FunctionPointer f);
 void RUN_ALL_TESTS();
 
+//#define TEST_F(fixturename, testname) \
+//namespace fixturename \
+//{ \
+//  void testname(); \
+//  static bool testname##Registered = registerTest(#fixturename##testname, &::testname); \
+//} \
+//void fixturename::testname()
+
 #define TEST_F(fixturename, testname) \
-void testname(); \
-static bool testname##Registered = registerTest(#testname, &::testname); \
-void testname()
+namespace fixturename \
+{ \
+  void testname(); \
+  static bool testname##_register = registerTest(#fixturename##"."###testname, &fixturename::testname); \
+}; \
+void fixturename::testname()
 
 #define ASSERT_EQ(val1, val2) assert(val1 == val2)
 #define ASSERT_TRUE(expr) assert(expr)

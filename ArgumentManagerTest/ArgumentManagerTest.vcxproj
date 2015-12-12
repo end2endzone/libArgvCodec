@@ -104,12 +104,15 @@
     <ClCompile Include="gtest_emulator.cpp" />
     <ClCompile Include="..\ArgumentManager\utils.cpp" />
     <ClCompile Include="TestCmdPromptArgumentCodec.cpp" />
+    <ClCompile Include="TestCreateProcessArgumentCodec.cpp" />
+    <ClCompile Include="TestUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentLister.h" />
     <ClInclude Include="gtest_emulator.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="..\ArgumentManager\utils.h" />
+    <ClInclude Include="TestUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="postbuild.bat" />

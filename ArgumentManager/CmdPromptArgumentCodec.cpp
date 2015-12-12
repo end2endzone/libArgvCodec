@@ -276,14 +276,19 @@ bool CmdPromptArgumentCodec::hasShellCharacters(const char * iValue)
   return false;
 }
 
-char getSafeCharacter(const char * iValue, size_t iIndex)
+bool CmdPromptArgumentCodec::supportsShellCharacters()
+{
+  return true;
+}
+
+char CmdPromptArgumentCodec::getSafeCharacter(const char * iValue, size_t iIndex)
 {
   if (iIndex > std::string(iValue).size())
     return '\0';
   return iValue[iIndex];
 }
 
-bool matchesSequence(const char * iValue, const char * iSequenceExpr)
+bool CmdPromptArgumentCodec::matchesSequence(const char * iValue, const char * iSequenceExpr)
 {
   size_t seqLen   = std::string(iSequenceExpr).size();
   size_t valueLen = std::string(iValue).size();
@@ -297,11 +302,13 @@ bool matchesSequence(const char * iValue, const char * iSequenceExpr)
   bool match = (strncmp(iValue, iSequenceExpr, seqLen) == 0);
   return match;
 }
-bool matchesSequence(const char * iValue, size_t iValueOffset, const char * iSequenceExpr)
+
+bool CmdPromptArgumentCodec::matchesSequence(const char * iValue, size_t iValueOffset, const char * iSequenceExpr)
 {
   return matchesSequence( &iValue[iValueOffset], iSequenceExpr );
 }
-bool matchesBackSlashDblQuoteSequence(const char * iValue, size_t iValueOffset, size_t & oNumBlackSlash, size_t & oSkipLength, bool iInString, bool iInCaretString)
+
+bool CmdPromptArgumentCodec::matchesBackSlashDblQuoteSequence(const char * iValue, size_t iValueOffset, size_t & oNumBlackSlash, size_t & oSkipLength, bool iInString, bool iInCaretString)
 {
   oNumBlackSlash = 0;
   size_t quoteOffset = 0;
@@ -309,7 +316,7 @@ bool matchesBackSlashDblQuoteSequence(const char * iValue, size_t iValueOffset, 
 
   //count the maximum sequence of \ characters
   char c = iValue[iValueOffset+quoteOffset];
-  while( c == '\\' || (iInCaretString && c == '^') )
+  while( c == '\\' || (supportsShellCharacters() && iInCaretString && c == '^') )
   {
     if (c == '\\')
     {
@@ -346,7 +353,8 @@ bool matchesBackSlashDblQuoteSequence(const char * iValue, size_t iValueOffset, 
 
   return valid;
 }
-bool isStringStart(const char * iCmdLine, size_t iOffset, const CodeList & iCodes)
+
+bool CmdPromptArgumentCodec::isStringStart(const char * iCmdLine, size_t iOffset)
 {
   //Validate Rule 6.
   if (iOffset == 0)
@@ -360,9 +368,10 @@ bool isStringStart(const char * iCmdLine, size_t iOffset, const CodeList & iCode
     offset--;
     previous = getSafeCharacter(iCmdLine, offset);
   }
-  return CmdPromptArgumentCodec::isArgumentSeparator(previous);
+  return isArgumentSeparator(previous);
 }
-bool isStringEnd(const char * iCmdLine, size_t iOffset, size_t iSequenceLength, const CodeList & iCodes)
+
+bool CmdPromptArgumentCodec::isStringEnd(const char * iCmdLine, size_t iOffset, size_t iSequenceLength)
 {
   //Validate Rule 6.
   if (iCmdLine[iOffset+iSequenceLength] == '\0')
@@ -376,7 +385,7 @@ bool isStringEnd(const char * iCmdLine, size_t iOffset, size_t iSequenceLength, 
     offset--;
     previous = getSafeCharacter(iCmdLine, offset);
   }
-  return CmdPromptArgumentCodec::isArgumentSeparator(previous);
+  return isArgumentSeparator(previous);
 }
 
 bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::StringList & oArguments)
@@ -402,7 +411,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
     size_t numBackSlashes = 0;
     size_t backSlashSequenceLength = 0;
 
-    if ( !inString && !inCaretString && matchesSequence(iCmdLine, i, "^\""))
+    if ( supportsShellCharacters() && !inString && !inCaretString && matchesSequence(iCmdLine, i, "^\""))
     {
       //Rule 4.
       //new caret-string
@@ -410,7 +419,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
       inCaretString = true;
 
       //Rule 6. Validate isEmptyArgumentString
-      isValidEmptyArgument = isStringStart(iCmdLine, i, codes);
+      isValidEmptyArgument = isStringStart(iCmdLine, i);
       
       //Rule 7.
       bool isJuxtaposedString = 
@@ -437,7 +446,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
 
       i=i+1; //skip next character
     }
-    else if ( !inString && inCaretString && matchesSequence(iCmdLine, i, "^\""))
+    else if ( supportsShellCharacters() && !inString && inCaretString && matchesSequence(iCmdLine, i, "^\""))
     {
       //Rule 4.
       //end caret-string
@@ -445,7 +454,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
       inCaretString = false;
 
       //Rule 6. Validate isEmptyArgumentString
-      isValidEmptyArgument = isValidEmptyArgument && accumulator.size() == 0 && isStringEnd(iCmdLine, i, 2, codes);
+      isValidEmptyArgument = isValidEmptyArgument && accumulator.size() == 0 && isStringEnd(iCmdLine, i, 2);
       if (isValidEmptyArgument)
       {
         //insert an empty argument
@@ -466,7 +475,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
       //Remember what was found
       codes.push_back(Plain);
     }
-    else if (c == '^' && (!inString || !inCaretString) )
+    else if (supportsShellCharacters() && c == '^' && (!inString || !inCaretString) )
     {
       //Rule 5.2 & 5.3.
       //skip this character
@@ -482,7 +491,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
       inCaretString = false;
 
       //Rule 6. Validate isEmptyArgumentString
-      isValidEmptyArgument = isStringStart(iCmdLine, i, codes);
+      isValidEmptyArgument = isStringStart(iCmdLine, i);
       
       //Rule 7.
       bool isJuxtaposedString = 
@@ -524,7 +533,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
       //Remember what was found
       codes.push_back(CaretStringEnd);
     }
-    else if ( (inCaretString || !inString) && matchesSequence(iCmdLine, i, "\\^\"") )
+    else if ( supportsShellCharacters() && (inCaretString || !inString) && matchesSequence(iCmdLine, i, "\\^\"") )
     {
       //Rule 2.1.
       // for \^" character sequence inside a caret-string or outside a string
@@ -588,7 +597,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
       inCaretString = false;
 
       //Rule 6. Validate isEmptyArgumentString
-      isValidEmptyArgument = isValidEmptyArgument && accumulator.size() == 0 && isStringEnd(iCmdLine, i, 1, codes);
+      isValidEmptyArgument = isValidEmptyArgument && accumulator.size() == 0 && isStringEnd(iCmdLine, i, 1);
       if (isValidEmptyArgument)
       {
         //insert an empty argument

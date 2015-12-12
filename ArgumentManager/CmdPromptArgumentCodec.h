@@ -3,7 +3,8 @@
 #include "IArgumentEncoder.h"
 #include "IArgumentDecoder.h"
 
-class ARGMGR_API CmdPromptArgumentCodec : public virtual IArgumentEncoder, public virtual IArgumentDecoder
+class ARGMGR_API CmdPromptArgumentCodec : public virtual IArgumentEncoder,
+                                          public virtual IArgumentDecoder
 {
 public:
   CmdPromptArgumentCodec();
@@ -18,11 +19,18 @@ public:
   virtual ArgumentList decodeCommandLine(const char * iValue);
 
 public:
-  static bool isArgumentSeparator(const char c);
-  static bool isShellCharacter(const char c);
-  static bool hasShellCharacters(const char * iValue);
+  virtual bool isArgumentSeparator(const char c);
+  virtual bool isShellCharacter(const char c);
+  virtual bool hasShellCharacters(const char * iValue);
+  virtual bool supportsShellCharacters();
 
 protected:
   bool parseCmdLine(const char * iCmdLine, ArgumentList::StringList & oArguments);
+  char getSafeCharacter(const char * iValue, size_t iIndex);
+  bool matchesSequence(const char * iValue, const char * iSequenceExpr);
+  bool matchesSequence(const char * iValue, size_t iValueOffset, const char * iSequenceExpr);
+  bool matchesBackSlashDblQuoteSequence(const char * iValue, size_t iValueOffset, size_t & oNumBlackSlash, size_t & oSkipLength, bool iInString, bool iInCaretString);
+  bool isStringStart(const char * iCmdLine, size_t iOffset);
+  bool isStringEnd(const char * iCmdLine, size_t iOffset, size_t iSequenceLength);
 
 };

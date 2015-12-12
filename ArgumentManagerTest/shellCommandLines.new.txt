@@ -1,0 +1,151 @@
+test.exe /p -logfile=log.txt count=5
+a b c
+a    b        c
+a			b				c
+a b c          
+"a b" c
+"a b c"
+"a b c
+"a b c"
+a" b" c
+"a "b c
+a b c"
+"a b" c"
+"a b\" c" d
+"a b\" c d
+a\\b
+"a\\b"
+a\\"b c
+a\\"b c"
+"a\\\"b c"
+a\\^"b c
+a\\^"b c"
+"a\\\^"b c"
+a\"b
+"a\"b"
+a\\"b c d"
+a\\\"b
+"a\\\"b"
+a b\\ \" c d
+"a b\\ \" c d
+"a b\\" c d
+a b\" c d
+a \t c
+a \"b c
+a "" b
+"" a b
+a b ""
+a ^"^" b
+^"^" a b
+a b ^"^"
+a ^"" b
+^"" a b
+a b ^""
+a "" b c
+a \"b c
+"a \"b" c
+"a ""b" c
+a ""b c
+a b"" c
+"" a b c
+a b c ""
+a \\b c
+'"test"'
+'^"test^"'
+hello"to the  entire"world
+"hello"to the  entire"world"
+"""a"""
+"""a b"""
+""""Hello,""" Mike said."
+""a""b""c""d""
+"hello to """quotes""
+""""hello world""
+"""hello" world""
+"""hello "world""
+"hello ""world"""
+"hello """world""
+aaa\\\\\\"b c"
+aaa\\\\\"b c"
+^"test\^"^&whoami^"
+aaa"
+aaa\"
+aaa\\"
+aaa\\\"
+"aaa\"
+"aaa\\"
+"aaa\\\"
+a"bc
+a"bc\
+a"bc\\
+a"bc\\\
+a"bc\"d
+a"bc\\ ddd" e
+a"bc\"\ ddd" e
+ab\\c d
+ab\\ c
+\\ab c
+a ""bc\"o" e"
+a "bc\"o" e"
+"a"""b
+"a"""b"
+"a\"b"
+"a""" b"
+"""
+""""
+"""""
+""""""
+^"ab cd\^"^&echo foo^"
+"ab cd\^"^&echo foo^"
+^"ab cd\^" ee"
+"ab cd\" ee"
+"ab cd\^" ee"
+"a^b" c
+^"a^b" c
+^"ab^" c
+^"ab^"" c
+^"a \^" b^" c
+^"a \" b^" c
+a b\^"c
+^"a b^" c
+^"a b" c
+^"a b^"c
+a^"b c^"
+"a < b" c 
+"a ^< b" c
+a \bb c
+a \"bb c" d
+a ^"bb^" c" d
+a \"b c
+a""b c
+a\"b c
+"a""b" c
+"a\"b" c
+a ^"" b
+a ^"^" b
+^"" a
+^"^" a
+^"test\^"^&whoami^"
+^"test\\^"^&whoami^"
+^"test\"^&whoami^"
+a\\\\"b
+^"a\\\\"b"
+^"a\^\^\\"b"
+^"a\^\\^\"b"
+^"a\^\\\^"b"
+"a b""c d"
+^"a b^"^"c d^"
+^"a b^""c d"
+"a b"^"c d^"
+"a b^"^"c d"
+a ^< b
+^"a ^< b^" c
+^"a < b^" c
+^"a & b^" c
+^"a &whoami^"
+^a^b ^c
+"^a^b" ^c
+"a b""c d"
+^"a b^"^"c d^"
+^"a b^""c d"
+"a b"^"c d^"
+"a b^"^"c d"

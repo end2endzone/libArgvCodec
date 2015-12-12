@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClCompile Include="ArgumentList.cpp" />
     <ClCompile Include="CmdPromptArgumentCodec.cpp" />
+    <ClCompile Include="CreateProcessArgumentCodec.cpp" />
     <ClCompile Include="dllmain.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -103,6 +104,7 @@
     <ClInclude Include="ArgMgrExports.h" />
     <ClInclude Include="ArgumentList.h" />
     <ClInclude Include="CmdPromptArgumentCodec.h" />
+    <ClInclude Include="CreateProcessArgumentCodec.h" />
     <ClInclude Include="IArgumentDecoder.h" />
     <ClInclude Include="IArgumentEncoder.h" />
     <ClInclude Include="os.h" />

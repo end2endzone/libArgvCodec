@@ -27,10 +27,14 @@ int main(int argc, char* argv[])
   }
   initExecStubs();
 
+  ArgumentList::StringList args;
+  bool a = createProcessDecodeCommandLineArguments("test \"allo toi\" \"\" ^\"test^\" coucou", args);
+  std::string b = createProcessDecodeArgument("ab");
+  int c = 0;
+
   //Run tests
   RUN_ALL_TESTS();
 
   system("PAUSE");
 	return 0;
 }
-
