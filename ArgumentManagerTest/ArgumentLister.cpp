@@ -1,11 +1,12 @@
 #include "ArgumentLister.h"
-//#include "ArgumentManager.h"
+#include "CmdPromptArgumentCodec.h"
 #include "utils.h"
 
 std::string getExePath()
 {
-  ArgumentManager tmp;
-  tmp.init("");
+  CmdPromptArgumentCodec c;
+
+  ArgumentList tmp = c.decodeCommandLine("");
   const char * arg0 = tmp.getArgument(0);
   return std::string(arg0);
 }
@@ -131,10 +132,10 @@ int logArgs(int argc, char* argv[])
   return 0;
 }
 
-std::string decodeArgument(const char * iValue)
+std::string systemDecodeArgument(const char * iValue)
 {
-  ArgumentManager::StringList arguments;
-  bool success = decodeCommandLineArguments(iValue, arguments);
+  ArgumentList::StringList arguments;
+  bool success = systemDecodeCommandLineArguments(iValue, arguments);
   if (arguments.size() != 2)
     return "";
 
@@ -142,7 +143,7 @@ std::string decodeArgument(const char * iValue)
   return confirmedArgumentValue;
 }
 
-bool decodeCommandLineArguments(const char * iCmdLine, ArgumentManager::StringList & oArguments)
+bool systemDecodeCommandLineArguments(const char * iCmdLine, ArgumentList::StringList & oArguments)
 {
   oArguments.clear();
 

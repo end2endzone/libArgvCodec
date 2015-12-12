@@ -4,31 +4,31 @@
 #include <string>
 #include <vector>
 
-class ARGMGR_API ArgumentManager
+class ARGMGR_API ArgumentList
 {
 public:
   typedef std::vector<std::string> StringList;
 
-  ArgumentManager();
-  ArgumentManager(const ArgumentManager & iArgumentManager);
-  virtual ~ArgumentManager();
+  ArgumentList();
+  ArgumentList(const ArgumentList & iArgumentManager);
+  virtual ~ArgumentList();
 
   void init(int argc, char** argv);
-  void init(const char * iCmdLine);
-  void init(const char * iCmdLine, bool iIncludeExec);
+  //void init(const char * iCmdLine);
+  //void init(const char * iCmdLine, bool iIncludeExec);
   void init(const StringList & iArguments);
 
-  char * getArgument(int iIndex);
-  std::string getCommandLine();
-  std::string getCommandLineArgument(int iIndex);
+  char * getArgument(int iIndex) const;
+  //std::string getCommandLine();
+  //std::string getCommandLineArgument(int iIndex);
 
-  int getArgc();
-  char** getArgv();
+  int getArgc() const;
+  char** getArgv() const;
 
   //logical methods
-  const ArgumentManager & operator = (const ArgumentManager & iArgumentManager);
-  bool operator == (const ArgumentManager & iArgumentManager) const;
-  bool operator != (const ArgumentManager & iArgumentManager) const;
+  const ArgumentList & operator = (const ArgumentList & iArgumentManager);
+  bool operator == (const ArgumentList & iArgumentManager) const;
+  bool operator != (const ArgumentList & iArgumentManager) const;
 
   //manipulation methods
   bool insert(int iIndex, const char * iValue);
@@ -44,7 +44,7 @@ public:
   // Return:
   //  Returns the index of the parameter if found. Returns -1 otherwise.
   //
-  int findIndex(const char * iValue);
+  int findIndex(const char * iValue) const;
 
   //
   // Description:
@@ -52,7 +52,7 @@ public:
   // Return:
   //  Returns the true if iValue can be found. Returns false otherwise.
   //
-  bool contains(const char * iValue);
+  bool contains(const char * iValue) const;
 
   //
   // Description:
@@ -63,8 +63,8 @@ public:
   // Return:
   //  Returns the true if iValue is specified. Returns false otherwise.
   //
-  bool findOption(const char * iValue);
-  bool findOption(const char * iValue, int & oIndex);
+  bool findOption(const char * iValue) const;
+  bool findOption(const char * iValue, int & oIndex) const;
   
   //
   // Description:
@@ -79,8 +79,8 @@ public:
   // Return:
   //  Returns the true if the option's name is specified. Returns false otherwise.
   //
-  bool findValue(const char * iValueName, int & oIndex, std::string & oValue);
-  bool findValue(const char * iValueName, int & oIndex, int & oValue);
+  bool findValue(const char * iValueName, int & oIndex, std::string & oValue) const;
+  bool findValue(const char * iValueName, int & oIndex, int & oValue) const;
 
   //
   // Description:
@@ -114,13 +114,13 @@ private:
 
   void rebuildArgv();
   char** mArgv;
-  bool isValid(int iIndex);
-  bool parseCmdLine(const char * iCmdLine, StringList & oArguments);
+  bool isValid(int iIndex) const;
+  //bool parseCmdLine(const char * iCmdLine, StringList & oArguments);
 
-public:
-  static bool isArgumentSeparator(const char c);
-  static bool isShellCharacter(const char c);
-  static bool hasShellCharacters(const char * iValue);
+//public:
+//  static bool isArgumentSeparator(const char c);
+//  static bool isShellCharacter(const char c);
+//  static bool hasShellCharacters(const char * iValue);
 
   StringList mArguments;
 };

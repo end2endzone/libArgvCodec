@@ -1,26 +1,11 @@
 #include "gtest_emulator.h"
-#include "ArgumentManager.h"
+#include "ArgumentList.h"
 #include "ArgumentLister.h"
 #include "utils.h"
 
 #define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
 
-std::string getSequencedFile(const char * iPrefix, int iValue, const char * iPostfix, int iValueLength)
-{
-  static const int BUFFER_SIZE = 1024;
-  char buffer[BUFFER_SIZE];
-
-  char valueFormat[BUFFER_SIZE];
-  char value[BUFFER_SIZE];
-  sprintf(valueFormat, "%%0%dd", iValueLength);
-  sprintf(value, valueFormat, iValue);
-
-  sprintf(buffer, "%s%s%s", iPrefix, value, iPostfix);
-
-  return std::string(buffer);
-}
-
-bool isIdentical(ArgumentManager & m, int expectedArgc, char ** expectedArgv)
+bool isIdentical(ArgumentList & m, int expectedArgc, char ** expectedArgv)
 {
   int mArgc = m.getArgc();
   char** mArgv = m.getArgv();
@@ -51,9 +36,9 @@ bool isIdentical(ArgumentManager & m, int expectedArgc, char ** expectedArgv)
   return true;
 }
 
-TEST_F(ArgumentManager, foo)
+TEST_F(TestArgumentList, foo)
 {
-  ArgumentManager m;
+  ArgumentList m;
   ////m.init("a ^\"^\" b");
   //m.init("^\"^\" a b");
   //m.init("a b ^\"^\"");
@@ -131,12 +116,12 @@ TEST_F(ArgumentManager, foo)
   ASSERT_FALSE(false);
 }
 
-TEST_F(ArgumentManager, testInitArgcArgv)
+TEST_F(TestArgumentList, testInitArgcArgv)
 {
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
   int argc2 = m.getArgc();
   char** argv2 = m.getArgv();
@@ -149,12 +134,12 @@ TEST_F(ArgumentManager, testInitArgcArgv)
   ASSERT_EQ(argv[4], argv2[4]);
 }
 
-TEST_F(ArgumentManager, testGetArgument)
+TEST_F(TestArgumentList, testGetArgument)
 {
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
   int argc2 = m.getArgc();
   char** argv2 = m.getArgv();
@@ -169,7 +154,7 @@ TEST_F(ArgumentManager, testGetArgument)
   ASSERT_CSTR_EQ("", m.getArgument(6)); //out of bounds
 }
 
-TEST_F(ArgumentManager, testInitVector)
+TEST_F(TestArgumentList, testInitVector)
 {
   std::vector<std::string> args;
   args.push_back("test.exe");
@@ -178,7 +163,7 @@ TEST_F(ArgumentManager, testInitVector)
   args.push_back("count=5");
   int argc = (int)args.size();
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(args);
   int argc2 = m.getArgc();
   char** argv2 = m.getArgv();
@@ -191,320 +176,12 @@ TEST_F(ArgumentManager, testInitVector)
   ASSERT_EQ(NULL, argv2[4]);
 }
 
-
-TEST_F(ArgumentManager, DISABLED_testInitString)
-{
-  const char * inputFile = "testInitString.txt";
-
-  ArgumentManager::StringList cmdLines;
-  ASSERT_TRUE( utils::readTextFile(inputFile, cmdLines) );
-  ASSERT_TRUE( cmdLines.size() > 0 );
-
-  printf("\n");
-
-  for(size_t i=0; i<cmdLines.size(); i++)
-  {
-    //arrange
-    const std::string cmdLine = cmdLines[i];
-    printf("Testing %d/%d: foo.exe %s\n", i+1, cmdLines.size(), cmdLine.c_str());
-
-    //compute the expected list of arguments
-    ArgumentManager::StringList expectedArgs;
-    bool success = decodeCommandLineArguments(cmdLine.c_str(), expectedArgs);
-    ASSERT_TRUE(success);
-
-    //act
-    ArgumentManager mgr;
-    mgr.init(cmdLine.c_str());
-
-    //debug
-    printf("  Expecting:\n");
-    for(size_t i=1; i<expectedArgs.size(); i++) //skip first argument since executable names may differ
-    {
-      const char * expectedArg = expectedArgs[i].c_str();
-      printf("   argv[%d]=%s\n", i, expectedArg);
-    }
-    printf("  Actuals:\n");
-    for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
-    {
-      const char * actualArg = mgr.getArgv()[i];
-      printf("   argv[%d]=%s\n", i, actualArg);
-    }
-
-    //assert
-    ASSERT_EQ( (int)expectedArgs.size(), mgr.getArgc() );
-    //compare each argument
-    for(int i=1; i<mgr.getArgc(); i++) //skip first argument since executable names may differ
-    {
-      const char * expectedArg = expectedArgs[i].c_str();
-      const char * actualArg = mgr.getArgv()[i];
-      ASSERT_CSTR_EQ(expectedArg, actualArg);
-    }
-    printf("  success\n");
-  }
-}
-
-TEST_F(ArgumentManager, testGetCommandLine)
-{
-  const char * inputFilePrefix = "testGetCommandLine";
-  const char * inputFilePostfix = ".txt";
-  
-  //discover test files
-  ArgumentManager::StringList testFiles;
-  static const int MAX_ID_LENGTH = 3;
-  int fileId = 1;
-  std::string inputFile = getSequencedFile(inputFilePrefix, fileId, inputFilePostfix, MAX_ID_LENGTH);
-  bool fileFound = utils::fileExists( inputFile.c_str() );
-  while(fileFound)
-  {
-    testFiles.push_back(inputFile);
-
-    //prepare for next loop
-    fileId++;
-    inputFile = getSequencedFile(inputFilePrefix, fileId, inputFilePostfix, MAX_ID_LENGTH);
-    fileFound = utils::fileExists( inputFile.c_str() );
-  }
-  ASSERT_TRUE( testFiles.size() > 0 );
-
-  printf("\n");
-
-  //for each test files
-  for(size_t i=0; i<testFiles.size(); i++)
-  {
-    const std::string & testFile = testFiles[i];
-
-    //arrange
-    ArgumentManager::StringList expectedArgs;
-    ASSERT_TRUE( utils::readTextFile(testFile.c_str(), expectedArgs) );
-    printf("Testing %d/%d, %s\n", i+1, testFiles.size(), testFile.c_str());
-
-    //insert fake .exe name
-    expectedArgs.insert(expectedArgs.begin(), "foo.exe");
-
-    ArgumentManager mgr;
-    mgr.init(expectedArgs);
-
-    //act
-    std::string cmdLine = mgr.getCommandLine();
-
-    //compute the actual list of arguments
-    ArgumentManager::StringList actualArgs;
-    bool success = decodeCommandLineArguments(cmdLine.c_str(), actualArgs);
-    ASSERT_TRUE(success);
-
-    //debug
-    printf("  Expecting\n");
-    for(size_t j=1; j<expectedArgs.size(); j++)
-    {
-      const std::string & arg = expectedArgs[j];
-      printf("    argv[%d]=%s\n", j, arg.c_str() );
-    }
-    printf("  Actuals:\n");
-    for(size_t j=1; j<actualArgs.size(); j++)
-    {
-      const std::string & arg = actualArgs[j];
-      printf("    argv[%d]=%s\n", j, arg.c_str() );
-    }
-
-    //assert
-    ASSERT_EQ( expectedArgs.size(), actualArgs.size() );
-    //compare each argument
-    for(size_t j=1; j<expectedArgs.size(); j++) //skip first argument since executable names may differ
-    {
-      const char * expectedArg = expectedArgs[j].c_str();
-      const char * actualArg = actualArgs[j].c_str();
-      ASSERT_CSTR_EQ(expectedArg, actualArg);
-    }
-    printf("  success\n");
-
-    //next test file
-  }
-}
-
-TEST_F(ArgumentManager, testGetCommandLine2)
-{
-  const char * inputFile = "testInitString.txt";
-
-  ArgumentManager::StringList testCmdLines;
-  ASSERT_TRUE( utils::readTextFile(inputFile, testCmdLines) );
-  ASSERT_TRUE( testCmdLines.size() > 0 );
-
-  printf("\n");
-
-  //for each testCmdLines
-  for(size_t i=0; i<testCmdLines.size(); i++)
-  {
-    //arrange
-    const std::string testCmdLine = testCmdLines[i];
-    printf("Testing %d/%d\n", i+1, testCmdLines.size());
-
-    //compute the expected list of arguments
-    ArgumentManager::StringList expectedArgs;
-    bool success = decodeCommandLineArguments(testCmdLine.c_str(), expectedArgs);
-    ASSERT_TRUE(success);
-
-    //init the manager
-    ArgumentManager mgr;
-    mgr.init(expectedArgs);
-
-    //act
-    std::string cmdLine = mgr.getCommandLine();
-
-    //compute the actual list of arguments
-    ArgumentManager::StringList actualArgs;
-    success = decodeCommandLineArguments(cmdLine.c_str(), actualArgs);
-    ASSERT_TRUE(success);
-
-    //debug
-    printf("  Expecting\n");
-    for(size_t j=1; j<expectedArgs.size(); j++)
-    {
-      const std::string & arg = expectedArgs[j];
-      printf("    argv[%d]=%s\n", j, arg.c_str() );
-    }
-    printf("  Actuals:\n");
-    printf("    cmdline=%s\n", cmdLine.c_str());
-    for(size_t j=1; j<actualArgs.size(); j++)
-    {
-      const std::string & arg = actualArgs[j];
-      printf("    argv[%d]=%s\n", j, arg.c_str() );
-    }
-
-    //assert
-    ASSERT_EQ( expectedArgs.size(), actualArgs.size() );
-    //compare each argument
-    for(size_t j=1; j<expectedArgs.size(); j++) //skip first argument since executable names may differ
-    {
-      const char * expectedArg = expectedArgs[j].c_str();
-      const char * actualArg = actualArgs[j].c_str();
-      ASSERT_CSTR_EQ(expectedArg, actualArg);
-    }
-    printf("  success\n");
-  }
-}
-
-void prepareTestGetCommandLineArgument(const char * iRawArguementValue, std::string & oEscapedArgument, std::string & oSystemArgumentValue)
-{
-  //arrange
-  ArgumentManager::StringList expectedArgs;
-  expectedArgs.push_back("foo.exe");
-  expectedArgs.push_back(iRawArguementValue);
-
-  ArgumentManager mgr;
-  mgr.init(expectedArgs);
-
-  //act
-  oEscapedArgument = mgr.getCommandLineArgument(1);
-  oSystemArgumentValue = decodeArgument( oEscapedArgument.c_str() );
-
-  //debug
-  printf("Testing decoded argument argv[1]=%s\n", iRawArguementValue);
-  printf("  Actual:\n");
-  printf("    foo.exe %s\n", oEscapedArgument.c_str());
-  printf("  Validating with system's cmd.exe...\n");
-  printf("    argv[1]=%s\n", oSystemArgumentValue.c_str());
-}
-
-TEST_F(ArgumentManager, testGetCommandLineArgument)
-{
-  printf("\n");
-
-  //-----------------------------------------------------------------------------------
-  {
-    const char * argumentValue      = "malicious argument\"&whoami";
-    std::string    actualEscapedArg;
-    std::string systemArgumentValue;
-
-    prepareTestGetCommandLineArgument(argumentValue, actualEscapedArg, systemArgumentValue);
-
-    //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
-    printf("good!\n");
-  }
-  //-----------------------------------------------------------------------------------
-  {
-    const char * argumentValue      = "\\\"hello\\\"";
-    std::string    actualEscapedArg;
-    std::string systemArgumentValue;
-
-    prepareTestGetCommandLineArgument(argumentValue, actualEscapedArg, systemArgumentValue);
-
-    //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
-    printf("good!\n");
-  }
-  //-----------------------------------------------------------------------------------
-  {
-    const char * argumentValue      = "\\\"hello\\ world";
-    std::string    actualEscapedArg;
-    std::string systemArgumentValue;
-
-    prepareTestGetCommandLineArgument(argumentValue, actualEscapedArg, systemArgumentValue);
-
-    //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
-    printf("good!\n");
-  }
-  //-----------------------------------------------------------------------------------
-  {
-    const char * argumentValue      = "test&whoami";
-    std::string    actualEscapedArg;
-    std::string systemArgumentValue;
-
-    prepareTestGetCommandLineArgument(argumentValue, actualEscapedArg, systemArgumentValue);
-
-    //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
-    printf("good!\n");
-  }
-  //-----------------------------------------------------------------------------------
-  {
-    const char * argumentValue      = "test\\\"&whoami";
-    std::string    actualEscapedArg;
-    std::string systemArgumentValue;
-
-    prepareTestGetCommandLineArgument(argumentValue, actualEscapedArg, systemArgumentValue);
-
-    //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
-    printf("good!\n");
-  }
-  //-----------------------------------------------------------------------------------
-
-
-}
-
-TEST_F(ArgumentManager, testInsertEnd)
+TEST_F(TestArgumentList, testInsertEndAbsolutePos)
 {
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  ArgumentManager m;
-  m.init(argc, argv);
-
-  std::string newArg = "new=true";
-  ASSERT_TRUE( m.insert(newArg.c_str()) );
-
-  int argc2 = m.getArgc();
-  char** argv2 = m.getArgv();
-
-  ASSERT_EQ(argc+1, argc2);
-  ASSERT_CSTR_EQ(argv[0], m.getArgument(0));
-  ASSERT_CSTR_EQ(argv[1], m.getArgument(1));
-  ASSERT_CSTR_EQ(argv[2], m.getArgument(2));
-  ASSERT_CSTR_EQ(argv[3], m.getArgument(3));
-  ASSERT_CSTR_EQ(newArg.c_str(), m.getArgument(4));
-  ASSERT_CSTR_EQ("", m.getArgument(5));
-  ASSERT_CSTR_EQ("", m.getArgument(6));
-  ASSERT_CSTR_EQ("", m.getArgument(7));
-}
-
-TEST_F(ArgumentManager, testInsertEndAbsolutePos)
-{
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
-  int argc = sizeof(argv)/sizeof(argv[0]) - 1;
-
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   std::string newArg = "new=true";
@@ -524,12 +201,12 @@ TEST_F(ArgumentManager, testInsertEndAbsolutePos)
   ASSERT_CSTR_EQ("", m.getArgument(7));
 }
 
-TEST_F(ArgumentManager, testInsertOutOfBound)
+TEST_F(TestArgumentList, testInsertOutOfBound)
 {
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   std::string newArg = "new=true";
@@ -547,12 +224,12 @@ TEST_F(ArgumentManager, testInsertOutOfBound)
   ASSERT_EQ(argv[4], argv2[4]);
 }
 
-TEST_F(ArgumentManager, testInsertFirst)
+TEST_F(TestArgumentList, testInsertFirst)
 {
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   std::string newArg = "new=true";
@@ -572,12 +249,12 @@ TEST_F(ArgumentManager, testInsertFirst)
   ASSERT_CSTR_EQ("", m.getArgument(7));
 }
 
-TEST_F(ArgumentManager, testInsertMiddle)
+TEST_F(TestArgumentList, testInsertMiddle)
 {
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   std::string newArg = "new=true";
@@ -597,7 +274,7 @@ TEST_F(ArgumentManager, testInsertMiddle)
   ASSERT_CSTR_EQ("", m.getArgument(7));
 }
 
-TEST_F(ArgumentManager, testRemoveEnd)
+TEST_F(TestArgumentList, testRemoveEnd)
 {
   //prepare
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
@@ -606,7 +283,7 @@ TEST_F(ArgumentManager, testRemoveEnd)
   char* expectedArgv[] = {"test.exe", "/p", "-logfile=log.txt", NULL};
   int expectedArgc = sizeof(expectedArgv)/sizeof(expectedArgv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   //act
@@ -616,7 +293,7 @@ TEST_F(ArgumentManager, testRemoveEnd)
   ASSERT_TRUE( isIdentical(m, expectedArgc, expectedArgv) == true );
 }
 
-TEST_F(ArgumentManager, testRemoveFirst)
+TEST_F(TestArgumentList, testRemoveFirst)
 {
   //prepare
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
@@ -625,7 +302,7 @@ TEST_F(ArgumentManager, testRemoveFirst)
   char* expectedArgv[] = {"/p", "-logfile=log.txt", "count=5", NULL};
   int expectedArgc = sizeof(expectedArgv)/sizeof(expectedArgv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   //act
@@ -635,7 +312,7 @@ TEST_F(ArgumentManager, testRemoveFirst)
   ASSERT_TRUE( isIdentical(m, expectedArgc, expectedArgv) == true );
 }
 
-TEST_F(ArgumentManager, testRemoveMiddle)
+TEST_F(TestArgumentList, testRemoveMiddle)
 {
   //prepare
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
@@ -644,7 +321,7 @@ TEST_F(ArgumentManager, testRemoveMiddle)
   char* expectedArgv[] = {"test.exe", "/p", "count=5", NULL};
   int expectedArgc = sizeof(expectedArgv)/sizeof(expectedArgv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   //act
@@ -654,20 +331,20 @@ TEST_F(ArgumentManager, testRemoveMiddle)
   ASSERT_TRUE( isIdentical(m, expectedArgc, expectedArgv) == true );
 }
 
-TEST_F(ArgumentManager, testRemoveOutOfBounds)
+TEST_F(TestArgumentList, testRemoveOutOfBounds)
 {
   //prepare
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   //act & assert
   ASSERT_FALSE( m.remove(4) );
 }
 
-TEST_F(ArgumentManager, testRemoveAll)
+TEST_F(TestArgumentList, testRemoveAll)
 {
   //prepare
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
@@ -676,7 +353,7 @@ TEST_F(ArgumentManager, testRemoveAll)
   char* expectedArgv[] = {NULL};
   int expectedArgc = sizeof(expectedArgv)/sizeof(expectedArgv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   //act
@@ -690,7 +367,7 @@ TEST_F(ArgumentManager, testRemoveAll)
   ASSERT_TRUE( isIdentical(m, expectedArgc, expectedArgv) == true );
 }
 
-TEST_F(ArgumentManager, testReplaceEnd)
+TEST_F(TestArgumentList, testReplaceEnd)
 {
   //prepare
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
@@ -699,7 +376,7 @@ TEST_F(ArgumentManager, testReplaceEnd)
   char* expectedArgv[] = {"test.exe", "/p", "-logfile=log.txt", "count=1", NULL};
   int expectedArgc = sizeof(expectedArgv)/sizeof(expectedArgv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   //act
@@ -709,7 +386,7 @@ TEST_F(ArgumentManager, testReplaceEnd)
   ASSERT_TRUE( isIdentical(m, expectedArgc, expectedArgv) == true );
 }
 
-TEST_F(ArgumentManager, testReplaceFirst)
+TEST_F(TestArgumentList, testReplaceFirst)
 {
   //prepare
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
@@ -718,7 +395,7 @@ TEST_F(ArgumentManager, testReplaceFirst)
   char* expectedArgv[] = {"good.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int expectedArgc = sizeof(expectedArgv)/sizeof(expectedArgv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   //act
@@ -728,7 +405,7 @@ TEST_F(ArgumentManager, testReplaceFirst)
   ASSERT_TRUE( isIdentical(m, expectedArgc, expectedArgv) == true );
 }
 
-TEST_F(ArgumentManager, testReplaceMiddle)
+TEST_F(TestArgumentList, testReplaceMiddle)
 {
   //prepare
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
@@ -737,7 +414,7 @@ TEST_F(ArgumentManager, testReplaceMiddle)
   char* expectedArgv[] = {"test.exe", "/p", "/q", "count=5", NULL};
   int expectedArgc = sizeof(expectedArgv)/sizeof(expectedArgv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   //act
@@ -747,26 +424,26 @@ TEST_F(ArgumentManager, testReplaceMiddle)
   ASSERT_TRUE( isIdentical(m, expectedArgc, expectedArgv) == true );
 }
 
-TEST_F(ArgumentManager, testReplaceOutOfBounds)
+TEST_F(TestArgumentList, testReplaceOutOfBounds)
 {
   //prepare
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   //act & assert
   ASSERT_FALSE( m.replace(4, "") );
 }
 
-TEST_F(ArgumentManager, testFindIndex)
+TEST_F(TestArgumentList, testFindIndex)
 {
   //prepare
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   //assert
@@ -778,13 +455,13 @@ TEST_F(ArgumentManager, testFindIndex)
   ASSERT_EQ( m.findIndex(NULL), -1 );
 }
 
-TEST_F(ArgumentManager, testFindOption)
+TEST_F(TestArgumentList, testFindOption)
 {
   //prepare
   char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   //assert
@@ -800,13 +477,13 @@ TEST_F(ArgumentManager, testFindOption)
 #undef ASSERT_OPTION
 }
 
-TEST_F(ArgumentManager, testExtractOption)
+TEST_F(TestArgumentList, testExtractOption)
 {
   //prepare
   char* argv[] = {"test.exe", "/p=7", "/p", "-logfile=log.txt", "--help", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   //assert
@@ -824,13 +501,13 @@ TEST_F(ArgumentManager, testExtractOption)
   ASSERT_TRUE ( m.getArgc() == argc - 2 );
 }
 
-TEST_F(ArgumentManager, testExtractValue)
+TEST_F(TestArgumentList, testExtractValue)
 {
   //prepare
   char* argv[] = {"test.exe", "/p=7", "/p", "-logfile=log.txt", "--help", "count=5", NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  ArgumentManager m;
+  ArgumentList m;
   m.init(argc, argv);
 
   //assert
@@ -849,25 +526,31 @@ TEST_F(ArgumentManager, testExtractValue)
 #undef ASSERT_EXTRACT
 }
 
-TEST_F(ArgumentManager, testCopyCtor)
+TEST_F(TestArgumentList, testCopyCtor)
 {
-  ArgumentManager a;
+  ArgumentList a;
 
-  a.init("a b c d e");
+  char * argv[] = {"a", "b", "c", "d", "e"};
+  const int argc = sizeof(argv)/sizeof(argv[0]);
 
-  ArgumentManager b(a);
+  a.init(argc, argv);
+
+  ArgumentList b(a);
 
   ASSERT_TRUE( a.getArgc() == b.getArgc() );
   ASSERT_TRUE( a == b );
 }
 
-TEST_F(ArgumentManager, testOperatorEqual) //operator ==
+TEST_F(TestArgumentList, testOperatorEqual) //operator ==
 {
-  ArgumentManager a;
-  ArgumentManager b;
+  ArgumentList a;
+  ArgumentList b;
 
-  a.init("a b c d e");
-  b.init("a b c d e");
+  char * argv[] = {"a", "b", "c", "d", "e"};
+  const int argc = sizeof(argv)/sizeof(argv[0]);
+
+  a.init(argc, argv);
+  b.init(argc, argv);
 
   //identical
   ASSERT_TRUE ( a == b );
@@ -901,13 +584,16 @@ TEST_F(ArgumentManager, testOperatorEqual) //operator ==
   ASSERT_FALSE( a != b );
 }
 
-TEST_F(ArgumentManager, testAssignmentOperator) //operator =
+TEST_F(TestArgumentList, testAssignmentOperator) //operator =
 {
-  ArgumentManager a;
+  ArgumentList a;
 
-  a.init("a b c d e");
+  char * argv[] = {"a", "b", "c", "d", "e"};
+  const int argc = sizeof(argv)/sizeof(argv[0]);
 
-  ArgumentManager b;
+  a.init(argc, argv);
+
+  ArgumentList b;
   b = a;
 
   ASSERT_TRUE( a.getArgc() == b.getArgc() );
