@@ -6,12 +6,12 @@
 #include <stdio.h>
 #include <tchar.h>
 
-#include "ArgumentManager.h"
+#include "ArgumentList.h"
 #include "gtest_emulator.h"
 
 #include "ArgumentLister.h"
 
-ArgumentManager gArgumentMgr;
+ArgumentList gArgumentMgr;
 
 //int _tmain(int argc, _TCHAR* argv[])
 int main(int argc, char* argv[])

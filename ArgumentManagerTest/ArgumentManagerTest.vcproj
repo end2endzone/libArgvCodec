@@ -187,7 +187,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TestArgumentManager.cpp"
+				RelativePath=".\TestArgumentList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TestCmdPromptArgumentCodec.cpp"
 				>
 			</File>
 		</Filter>
@@ -223,15 +227,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\testGetCommandLine001.txt"
-				>
-			</File>
-			<File
-				RelativePath=".\testGetCommandLine002.txt"
-				>
-			</File>
-			<File
-				RelativePath=".\testInitString.txt"
+				RelativePath=".\shellCommandLines.txt"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -251,6 +247,14 @@
 						Outputs="$(OutDir)\$(InputFileName)"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\TestEncodeCommandLine001.txt"
+				>
+			</File>
+			<File
+				RelativePath=".\TestEncodeCommandLine002.txt"
+				>
 			</File>
 		</Filter>
 		<Filter

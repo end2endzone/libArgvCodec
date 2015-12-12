@@ -1,13 +1,6 @@
-// ArgMgr.cpp : Defines the exported functions for the DLL application.
-//
-
-#include "targetver.h"
-
-#include "ArgumentManager.h"
+#include "CmdPromptArgumentCodec.h"
 #include "utils.h"
 #include "os.h"
-#include <assert.h>
-#include <vector>
 
 enum CharacterCodes
 {
@@ -29,92 +22,22 @@ enum CharacterCodes
 
 typedef std::vector<CharacterCodes> CodeList;
 
-ArgumentManager::ArgumentManager() :
-  mArgv(NULL)
+CmdPromptArgumentCodec::CmdPromptArgumentCodec()
 {
 }
 
-ArgumentManager::ArgumentManager(const ArgumentManager & iArgumentManager) :
-  mArgv(NULL)
+CmdPromptArgumentCodec::~CmdPromptArgumentCodec()
 {
-  (*this) = iArgumentManager;
 }
 
-ArgumentManager::~ArgumentManager()
-{
-  SAFE_DELETE_ARRAY(mArgv);
-}
-
-void ArgumentManager::init(int argc, char** argv)
-{
-  StringList tmp;
-  for(int i=0; i<argc; i++)
-  {
-    tmp.push_back(argv[i]);
-  }
-  init(tmp);
-}
-
-void ArgumentManager::init(const char * iCmdLine)
-{
-  init(iCmdLine, true);
-}
-
-void ArgumentManager::init(const char * iCmdLine, bool iIncludeExec)
-{
-  StringList args;
-
-  bool parseSuccess = parseCmdLine(iCmdLine, args);
-  if (!parseSuccess)
-    args.clear();
-
-  //insert .exe path
-  if (iIncludeExec)
-  {
-    args.insert( args.begin(), getLocalExePath() );
-  }
-
-  init(args);
-}
-
-void ArgumentManager::init(const StringList & iArguments)
-{
-  mArguments = iArguments;
-  rebuildArgv();
-}
-
-char * ArgumentManager::getArgument(int iIndex)
-{
-  if (!isValid(iIndex))
-    return ""; //out of bounds
-  return mArgv[iIndex];
-}
-
-std::string ArgumentManager::getCommandLine()
-{
-  std::string cmdLine;
-
-  for(size_t i=1; i<mArguments.size(); i++) //skip first element since it refers to the actual .exe that was launched
-  {
-    std::string arg = getCommandLineArgument((int)i);
-    cmdLine.append(arg);
-
-    //add a space between arguments (except the last one)
-    bool isLastArgument = !(i+1<mArguments.size());
-    if (!isLastArgument)
-      cmdLine.append(" ");
-  }
-
-  return cmdLine;
-}
-
-std::string ArgumentManager::getCommandLineArgument(int iIndex)
+//IArgumentEncoder
+std::string CmdPromptArgumentCodec::encodeArgument(const char * iValue)
 {
   //http://blogs.msdn.com/b/twistylittlepassagesallalike/archive/2011/04/23/everyone-quotes-arguments-the-wrong-way.aspx
   //http://stackoverflow.com/questions/2393384/escape-string-for-process-start
   //http://stackoverflow.com/questions/5510343/escape-command-line-arguments-in-c-sharp/6040946#6040946
 
-  std::string plainArgument = getArgument(iIndex);
+  std::string plainArgument = iValue;
 
   //Rule 6. Deal with empty argument ASAP
   if (plainArgument == "")
@@ -136,16 +59,6 @@ std::string ArgumentManager::getCommandLineArgument(int iIndex)
   //Rule 4.
   bool isCaretStringArgument = false; // isStringArgument && hasShellCharacters_;
 
-  ////Unknown rule.
-  ////force caret-string if a shell character follows a " character.
-  //for(size_t i=0; i<plainArgument.size(); i++)
-  //{
-  //  char c = plainArgument[i];
-  //  bool isLastChar = !((i+1)<plainArgument.size());
-  //  if (!isLastChar && c == '\"' && isShellCharacter(plainArgument[i+1]))
-  //    isCaretStringArgument = true;
-  //}
-
   std::string escapedArg;
   size_t numBackslashes = 0;
   //for each characters
@@ -158,10 +71,6 @@ std::string ArgumentManager::getCommandLineArgument(int iIndex)
       //Rule 3.
       //Unescaped \ characters
       //flush backslashes accumulator
-      //if (numBackslashes > 0)
-      //{
-      //  escapedArg.append(numBackslashes, '\\');
-      //}
       escapedArg.append( numBackslashes, '\\' );
       numBackslashes = 0;
 
@@ -223,10 +132,6 @@ std::string ArgumentManager::getCommandLineArgument(int iIndex)
       //Rule 3.
       //Unescaped \ characters
       //flush backslashes accumulator
-      //if (numBackslashes > 0)
-      //{
-      //  escapedArg.append(numBackslashes, '\\');
-      //}
       escapedArg.append( numBackslashes, '\\' );
       numBackslashes = 0;
 
@@ -240,10 +145,6 @@ std::string ArgumentManager::getCommandLineArgument(int iIndex)
   //Rule 3.
   //Unescaped \ characters
   //flush backslashes accumulator
-  //if (numBackslashes > 0)
-  //{
-  //  escapedArg.append(numBackslashes, '\\');
-  //}
   escapedArg.append( numBackslashes, '\\' );
   numBackslashes = 0;
 
@@ -286,108 +187,91 @@ std::string ArgumentManager::getCommandLineArgument(int iIndex)
   return escapedArg;
 }
 
-bool ArgumentManager::insert(int iIndex, const char * iValue)
+std::string CmdPromptArgumentCodec::encodeCommandLine(const ArgumentList & iArguments)
 {
-  if (iValue == NULL)
-    return false;
-  if (iIndex == getArgc())
-    return insert(iValue); //insert at the end
-  if (!isValid(iIndex))
-    return false; //out of bounds
+  std::string cmdLine;
 
-  mArguments.insert(mArguments.begin() + iIndex, iValue);
-  rebuildArgv();
-  return true;
-}
-
-bool ArgumentManager::insert(const char * iValue)
-{
-  if (iValue == NULL)
-    return false;
-  mArguments.push_back(iValue);
-  rebuildArgv();
-  return true;
-}
-
-bool ArgumentManager::remove(int iIndex)
-{
-  if (!isValid(iIndex))
-    return false; //out of bounds
-  mArguments.erase(mArguments.begin() + iIndex);
-  rebuildArgv();
-  return true;
-}
-
-bool ArgumentManager::replace(int iIndex, const char * iValue)
-{
-  if (iValue == NULL)
-    return false;
-  if (!isValid(iIndex))
-    return false; //out of bounds
-
-  std::string & value = mArguments[iIndex];
-  value = iValue;
-
-  rebuildArgv();
-  return true;
-}
-
-int ArgumentManager::getArgc()
-{
-  return (int)mArguments.size();
-}
-
-char** ArgumentManager::getArgv()
-{
-  return mArgv;
-}
-
-const ArgumentManager & ArgumentManager::operator = (const ArgumentManager & iArgumentManager)
-{
-  this->init(iArgumentManager.mArguments);
-  return (*this);
-}
-
-bool ArgumentManager::operator == (const ArgumentManager & iArgumentManager) const
-{
-  bool equals = (this->mArguments == iArgumentManager.mArguments);
-  return equals;
-}
-
-bool ArgumentManager::operator != (const ArgumentManager & iArgumentManager) const
-{
-  bool notEquals = (this->mArguments != iArgumentManager.mArguments);
-  return notEquals;
-}
-
-void ArgumentManager::rebuildArgv()
-{
-  SAFE_DELETE_ARRAY(mArgv);
-
-  //argv size is 1 element bigger than argc (the number of arguments)
-  //the last element of argv must be an empty string (NULL character)
-  //the last element is *not* an argument
-  int argvSize = mArguments.size() + 1;
-
-  typedef char * cStr;
-  mArgv = new cStr[argvSize];
-  if (mArgv)
+  for(int i=1; i<iArguments.getArgc(); i++) //skip first element since it refers to the actual .exe that was launched
   {
-    //fill
-    for(size_t i=0; i<mArguments.size(); i++)
-    {
-      mArgv[i] = (char*)mArguments[i].c_str();
-    }
-    //last vector element must be NULL
-    mArgv[mArguments.size()] = NULL;
+    const char * argValue = iArguments.getArgument(i);
+    std::string arg = encodeArgument(argValue);
+    cmdLine.append(arg);
+
+    //add a space between arguments (except the last one)
+    bool isLastArgument = !(i+1<iArguments.getArgc());
+    if (!isLastArgument)
+      cmdLine.append(" ");
   }
+
+  return cmdLine;
 }
 
-bool ArgumentManager::isValid(int iIndex)
+//IArgumentDecoder
+std::string CmdPromptArgumentCodec::decodeArgument(const char * iValue)
 {
-  if (iIndex >= 0 && iIndex < getArgc())
+  ArgumentList arglist = decodeCommandLine(iValue);
+  if (arglist.getArgc() >= 2) //at least a exe name and an argument
   {
+    std::string arg = arglist.getArgument(1);
+    return arg;
+  }
+
+  return std::string();
+}
+
+ArgumentList CmdPromptArgumentCodec::decodeCommandLine(const char * iValue)
+{
+  ArgumentList arglist;
+
+  ArgumentList::StringList args;
+  bool success = parseCmdLine(iValue, args);
+  if (success)
+  {
+    //insert local .exe path
+    args.insert( args.begin(), getLocalExePath() );
+
+    arglist.init(args);
+  }
+
+  return arglist;
+}
+
+bool CmdPromptArgumentCodec::isArgumentSeparator(const char c)
+{
+  bool isSeparator = (c == '\0' || c == ' ' || c == '\t');
+  return isSeparator;
+}
+
+bool CmdPromptArgumentCodec::isShellCharacter(const char c)
+{
+  switch(c)
+  {
+  case '^':
+  case '&':
+  case '|':
+  case '(':
+  case ')':
+  case '<':
+  case '>':
+  case '%':
+  case '!':
     return true;
+  default:
+    return false;
+  };
+}
+
+bool CmdPromptArgumentCodec::hasShellCharacters(const char * iValue)
+{
+  if (iValue == NULL)
+    return false;
+
+  size_t len = std::string(iValue).size();
+  for(size_t i=0; i<len; i++)
+  {
+    char c = iValue[i];
+    if (isShellCharacter(c))
+      return true;
   }
   return false;
 }
@@ -476,7 +360,7 @@ bool isStringStart(const char * iCmdLine, size_t iOffset, const CodeList & iCode
     offset--;
     previous = getSafeCharacter(iCmdLine, offset);
   }
-  return ArgumentManager::isArgumentSeparator(previous);
+  return CmdPromptArgumentCodec::isArgumentSeparator(previous);
 }
 bool isStringEnd(const char * iCmdLine, size_t iOffset, size_t iSequenceLength, const CodeList & iCodes)
 {
@@ -492,51 +376,10 @@ bool isStringEnd(const char * iCmdLine, size_t iOffset, size_t iSequenceLength, 
     offset--;
     previous = getSafeCharacter(iCmdLine, offset);
   }
-  return ArgumentManager::isArgumentSeparator(previous);
+  return CmdPromptArgumentCodec::isArgumentSeparator(previous);
 }
 
-
-bool ArgumentManager::isArgumentSeparator(const char c)
-{
-  bool isSeparator = (c == '\0' || c == ' ' || c == '\t');
-  return isSeparator;
-}
-
-bool ArgumentManager::isShellCharacter(const char c)
-{
-  switch(c)
-  {
-  case '^':
-  case '&':
-  case '|':
-  case '(':
-  case ')':
-  case '<':
-  case '>':
-  case '%':
-  case '!':
-    return true;
-  default:
-    return false;
-  };
-}
-
-bool ArgumentManager::hasShellCharacters(const char * iValue)
-{
-  if (iValue == NULL)
-    return false;
-
-  size_t len = std::string(iValue).size();
-  for(size_t i=0; i<len; i++)
-  {
-    char c = iValue[i];
-    if (isShellCharacter(c))
-      return true;
-  }
-  return false;
-}
-
-bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArguments)
+bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::StringList & oArguments)
 {
   CodeList codes;
 
@@ -759,6 +602,8 @@ bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArgument
     {
       //Rule 1.
       //argument separator
+
+      //flush accumulator
       if (accumulator != "")
       {
         oArguments.push_back(accumulator);
@@ -787,180 +632,10 @@ bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArgument
     }
 
 
-    //if ( !inString && !inCaretString && matchesSequence(iCmdLine, i, "^\""))
-    //{
-    //  //Rule 6 (old).
-    //  //new caret-string
-    //  inString = false;
-    //  inCaretString = true;
-
-    //  //Rule 10 (old). Validate isEmptyArgumentString
-    //  char previous = '\0';
-    //  {
-    //    //find previous character that is not a ^
-    //    size_t offset = i-1;
-    //    previous = getSafeCharacter(iCmdLine, offset);
-    //    while (previous == '^')
-    //    {
-    //      offset--;
-    //      previous = getSafeCharacter(iCmdLine, offset);
-    //    }
-    //  }
-    //  isValidEmptyArgument = isArgumentSeparator(previous);
-
-    //  i=i+1; //skip next character
-    //}
-    //else if ( !inString && inCaretString && matchesSequence(iCmdLine, i, "^\""))
-    //{
-    //  //Rule 6 (old).
-    //  //end caret-string
-    //  inString = false;
-    //  inCaretString = false;
-
-    //  //Rule 10 (old). Validate isEmptyArgumentString
-    //  char next = '\0';
-    //  {
-    //    //find next character that is not a ^
-    //    size_t offset = i+2;
-    //    next = getSafeCharacter(iCmdLine, offset);
-    //    while( next == '^' )
-    //    {
-    //      offset++;
-    //      next = getSafeCharacter(iCmdLine, offset);
-    //    }
-    //    next = getSafeCharacter(iCmdLine, offset);
-    //  }
-    //  isValidEmptyArgument = isValidEmptyArgument && accumulator.size() == 0 && isArgumentSeparator(next);
-
-    //  if (isValidEmptyArgument)
-    //  {
-    //    //insert an empty argument
-    //    oArguments.push_back("");
-    //  }
-
-    //  i=i+1; //skip next character
-    //}
-    //else if (c == '^' && inString && !inCaretString)
-    //{
-    //  //Rule 5 (old).
-    //  accumulator.push_back(c);
-    //}
-    //else if (c == '^' && (!inString || !inCaretString) )
-    //{
-    //  //Rule 8 (old).
-    //  //skip this character
-    //}
-    //else if (c == '\"' && !inString && !inCaretString)
-    //{
-    //  //Rule 1 (old).
-    //  //new string
-    //  inString = true;
-    //  inCaretString = false;
-
-    //  //Rule 10 (old). Validate isEmptyArgumentString
-    //  char previous = '\0';
-    //  {
-    //    //find previous character that is not a ^
-    //    size_t offset = i-1;
-    //    previous = getSafeCharacter(iCmdLine, offset);
-    //    while (previous == '^')
-    //    {
-    //      offset--;
-    //      previous = getSafeCharacter(iCmdLine, offset);
-    //    }
-    //  }
-    //  isValidEmptyArgument = isArgumentSeparator(previous);
-
-    //  //ie:
-    //  //  a"b  c" d
-    //  //  a "b   c"d
-    //}
-    //else if ( matchesSequence(iCmdLine, i, "\\^\"") && (inCaretString || !inString) )
-    //{
-    //  //Rule 2 (old).
-    //  // for \^" character sequence inside a caret-string
-    //  accumulator.push_back('\"');
-    //  i=i+2; //skip next character
-    //}
-    //else if ( matchesSequence(iCmdLine, i, "\\\"") )
-    //{
-    //  //Rule 2 (old).
-    //  // for \" character sequence outside/inside a string or caret-string
-    //  accumulator.push_back('\"');
-    //  i=i+1; //skip next character
-    //}
-    //else if ( matchesBackSlashDblQuoteSequence(iCmdLine, i, numBackSlashes, backSlashSequenceLength, inString, inCaretString) )
-    //{
-    //  //Rule 3 (old).
-    //  // for \\" character sequence (or any combination like \\\" or \\\\" )
-    //  size_t numEscapedBackSlashes = numBackSlashes/2;
-    //  std::string s;
-    //  s.append(numEscapedBackSlashes, '\\');
-
-    //  accumulator.append(s);
-
-    //  i=i+backSlashSequenceLength-1; //skip escaped \ characters (but not the last \ if odd backslashes are found) but not the " character
-    //}
-    //else if ( (inString || inCaretString) && matchesSequence(iCmdLine, i, "\"\"") )
-    //{
-    //  //Rule 2 (old).
-    //  // for "" character sequence inside a string or caret-string
-    //  accumulator.push_back('\"');
-    //  i=i+1; //skip next character
-    //}
-    //else if (c == '\"' && (inString || inCaretString) )
-    //{
-    //  //Rule 1 (old).
-    //  //ends a new string or caret-string
-    //  inString = false;
-    //  inCaretString = false;
-
-    //  //Rule 10 (old). Validate isEmptyArgumentString
-    //  char next = '\0';
-    //  {
-    //    //find next character that is not a ^
-    //    size_t offset = i+1;
-    //    next = getSafeCharacter(iCmdLine, offset);
-    //    while( next == '^' )
-    //    {
-    //      offset++;
-    //      next = getSafeCharacter(iCmdLine, offset);
-    //    }
-    //    next = getSafeCharacter(iCmdLine, offset);
-    //  }
-    //  isValidEmptyArgument = isValidEmptyArgument && accumulator.size() == 0 && isArgumentSeparator(next);
-    //  if (isValidEmptyArgument)
-    //  {
-    //    //insert an empty argument
-    //    oArguments.push_back("");
-    //  }
-    //}
-    //else if ( isArgumentSeparator(c) && !inString && !inCaretString )
-    //{
-    //  //Rule 9 (old).
-    //  //argument separator
-    //  if (accumulator != "")
-    //  {
-    //    oArguments.push_back(accumulator);
-    //    accumulator = "";
-    //  }
-    //}
-    //else if (c == '\\' && !inString && !inCaretString)
-    //{
-    //  //Rule 4 (old).
-    //  accumulator.push_back(c);
-    //}
-    //else
-    //{
-    //  //Rule 11 (old).
-    //  //plain text character
-    //  accumulator.push_back(c);
-    //}
-
     //next character
   }
 
-  //flush accumulator;
+  //flush accumulator
   if (accumulator != "")
   {
     oArguments.push_back(accumulator);
@@ -968,139 +643,4 @@ bool ArgumentManager::parseCmdLine(const char * iCmdLine, StringList & oArgument
   }
 
   return true;
-}
-
-int ArgumentManager::findIndex(const char * iValue)
-{
-  if (iValue == NULL)
-    return -1;
-  for(size_t i=0; i<mArguments.size(); i++)
-  {
-    const std::string & arg = mArguments[i];
-    if (arg == iValue)
-      return (int)i;
-  }
-  return -1;
-}
-
-bool ArgumentManager::contains(const char * iValue)
-{
-  if (iValue == NULL)
-    return false;
-  int pos = findIndex(iValue);
-  return pos != -1;
-}
-
-bool ArgumentManager::findOption(const char * iValue)
-{
-  if (iValue == NULL)
-    return false;
-  int tmp = 0;
-  return findOption(iValue, tmp);
-}
-
-bool ArgumentManager::findOption(const char * iValue, int & oIndex)
-{
-  oIndex = -1;
-  if (iValue == NULL)
-    return false;
-  oIndex = findIndex(iValue);
-  return oIndex != -1;
-}
-
-bool ArgumentManager::findValue(const char * iValueName, int & oIndex, std::string & oValue)
-{
-  oIndex = -1;
-  oValue= "";
-  if (iValueName == NULL)
-    return false;
-  for(size_t i=0; i<mArguments.size(); i++)
-  {
-    const std::string & arg = mArguments[i];
-    std::string argPrefix = arg.substr(0, std::string(iValueName).size());
-    if (argPrefix == iValueName)
-    {
-      oIndex = (int)i;
-      oValue = arg.substr(argPrefix.size(), 999999);
-      return true;
-    }
-  }
-  return false;
-}
-
-bool ArgumentManager::findValue(const char * iValueName, int & oIndex, int & oValue)
-{
-  oIndex = -1;
-  oValue = 0;
-
-  int index = 0;
-  std::string sValue;
-  bool found = findValue(iValueName, index, sValue);
-  if (!found)
-    return false;
-  if (sValue != "")
-  {
-    oValue = atoi(sValue.c_str());
-  }
-  return true;
-}
-
-bool ArgumentManager::extractOption(const char * iValue)
-{
-  if (iValue == NULL)
-    return false;
-  int index = 0;
-  bool found = findOption(iValue, index);
-  if (found)
-  {
-    return this->remove(index);
-  }
-  return false;
-}
-
-bool ArgumentManager::extractValue(const char * iValueName, std::string & oValue)
-{
-  oValue = "";
-  if (iValueName == NULL)
-    return false;
-  int index = 0;
-  bool found = findValue(iValueName, index, oValue);
-  if (found)
-  {
-    return this->remove(index);
-  }
-  return false;
-}
-
-bool ArgumentManager::extractValue(const char * iValueName, int & oValue)
-{
-  oValue = 0;
-
-  std::string sValue;
-  bool found = extractValue(iValueName, sValue);
-  if (!found)
-    return false;
-  if (sValue != "")
-  {
-    oValue = atoi(sValue.c_str());
-  }
-  return true;
-}
-
-std::string ArgumentManager::extractValue(const char * iValueName)
-{
-  if (iValueName == NULL)
-    return "";
-  int index = 0;
-  std::string value;
-  bool found = findValue(iValueName, index, value);
-  if (found)
-  {
-    bool removed = this->remove(index);
-    if (removed)
-      return value;
-    else
-      return "";
-  }
-  return "";
 }

@@ -3,4 +3,4 @@
 :: %2 is $(OutDir)
 ::
 
-copy /v "%~1testGetCommandLine*" "%~2"
+copy /v "%~1TestEncodeCommandLine*" "%~2"

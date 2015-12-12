@@ -171,7 +171,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\ArgumentManager.cpp"
+				RelativePath=".\ArgumentList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CmdPromptArgumentCodec.cpp"
 				>
 			</File>
 			<File
@@ -219,7 +223,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ArgumentManager.h"
+				RelativePath=".\ArgumentList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CmdPromptArgumentCodec.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IArgumentDecoder.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IArgumentEncoder.h"
 				>
 			</File>
 			<File

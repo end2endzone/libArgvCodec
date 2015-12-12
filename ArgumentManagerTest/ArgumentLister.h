@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ArgumentManager.h"
+#include "ArgumentList.h"
 
 std::string getExePath();
 bool isPrinterExec();
@@ -21,5 +21,5 @@ int logArgs(int argc, char* argv[]);
 */
 void initExecStubs();
 
-std::string decodeArgument(const char * iValue);
-bool decodeCommandLineArguments(const char * iCmdLine, ArgumentManager::StringList & oArguments);
+std::string systemDecodeArgument(const char * iValue);
+bool systemDecodeCommandLineArguments(const char * iCmdLine, ArgumentList::StringList & oArguments);
