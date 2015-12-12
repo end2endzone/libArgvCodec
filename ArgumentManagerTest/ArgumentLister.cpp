@@ -86,7 +86,19 @@ int printArgs(int argc, char* argv[])
 {
   for(int i=0; i<argc; i++)
   {
-    printf("argv[%d]=%s\n", i, argv[i]);
+    std::string arg = argv[i];
+    
+    //replace tabs by [tabs] code since they are not visible on the console.
+    utils::strReplace(arg, "\t", "[tabs]");
+
+    //since arguments that ends with spaces will not be seen properly on the console,
+    //show the argument enclosed in ().
+    bool showParenthesis = (arg.size() > 0 && arg[arg.size()-1] == ' ');
+
+    if (!showParenthesis)
+      printf("argv[%d]=%s\n", i, arg.c_str());
+    else
+      printf("argv[%d]=(%s) without enclosing parenthesis\n", i, arg.c_str());
   }
   return 0;
 }
