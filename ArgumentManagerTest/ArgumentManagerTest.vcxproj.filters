@@ -64,7 +64,6 @@
     <None Include="postbuild.bat">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="TODO.txt" />
     <None Include="TestEncodeCommandLine001.txt">
       <Filter>Resource Files</Filter>
     </None>

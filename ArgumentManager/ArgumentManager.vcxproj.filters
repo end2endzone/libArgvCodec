@@ -38,6 +38,7 @@
     <None Include="Rules.txt">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgMgrExports.h">

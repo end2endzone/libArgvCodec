@@ -308,47 +308,96 @@ bool CmdPromptArgumentCodec::matchesSequence(const char * iValue, size_t iValueO
   return matchesSequence( &iValue[iValueOffset], iSequenceExpr );
 }
 
-bool CmdPromptArgumentCodec::matchesBackSlashDblQuoteSequence(const char * iValue, size_t iValueOffset, size_t & oNumBlackSlash, size_t & oSkipLength, bool iInString, bool iInCaretString)
+bool CmdPromptArgumentCodec::matchesBackSlashDblQuoteSequence(const char * iValue, size_t iValueOffset, size_t & oNumBlackSlash, size_t & oSequenceLength, bool iInString, bool iInCaretString)
 {
   oNumBlackSlash = 0;
-  size_t quoteOffset = 0;
+  //size_t quoteOffset = 0;
   size_t lastBackSlashOffset = 0;
+  //size_t sequenceLength = 0;
 
   //count the maximum sequence of \ characters
-  char c = iValue[iValueOffset+quoteOffset];
-  while( c == '\\' || (supportsShellCharacters() && iInCaretString && c == '^') )
-  {
-    if (c == '\\')
-    {
-      oNumBlackSlash++;
-      lastBackSlashOffset = quoteOffset;
-    }
+  //the sequence ends with a " character.
+  //the sequence can also ends with ^" characters but only if !iInString || iInCaretString and encoder has support for shell characters
+  //char c = iValue[iValueOffset+quoteOffset];
+  //while( c == '\\' || (supportsShellCharacters() && (iInCaretString || !iInString) && c == '^') )
+  //{
+  //  if (c == '\\')
+  //  {
+  //    oNumBlackSlash++;
+  //    lastBackSlashOffset = quoteOffset;
+  //  }
 
-    quoteOffset++; //next character
-    c = iValue[iValueOffset+quoteOffset];
+  //  quoteOffset++; //next character
+  //  c = iValue[iValueOffset+quoteOffset];
+  //}
+
+  //bool valid = (oNumBlackSlash > 0 && iValue[iValueOffset+quoteOffset] == '\"');
+
+  ////Compute skip offset
+  //if (valid)
+  //{
+  //  if (oNumBlackSlash%2 == 0)
+  //  {
+  //    //the " character is a starts/ends string character and must not part of the \ sequence.
+  //    //ie: a\\\\"b   =>    a\\[openstring]b
+  //    oSkipLength = quoteOffset;
+  //  }
+  //  else
+  //  {
+  //    //the last " character is an escaped " character and must not be included in the sequence.
+  //    //ie: a\\\"b   =>    a\"b
+  //    oSkipLength = lastBackSlashOffset;
+  //  }
+  //}
+  //else
+  //{
+  //  oSkipLength = 0;
+  //}
+
+  bool acceptCaretCharacters = (supportsShellCharacters() && (iInCaretString || !iInString) );
+  char c = iValue[iValueOffset+oSequenceLength];
+
+  while( c == '\\' || (acceptCaretCharacters && /*c == '^'*/matchesSequence(iValue, iValueOffset+oSequenceLength, "^\\")) ) //allow accepting sequences in the following format:    ^"a\^\^\\"b"
+  {
+    //oNumBlackSlash++;
+    //c = iValue[iValueOffset+oNumBlackSlash];
+    if (c != '\\')
+    {
+      //assume its a ^\ character sequence
+
+      //skip ^ character
+      oSequenceLength++;
+    }
+    oNumBlackSlash++;
+    lastBackSlashOffset = iValueOffset+oSequenceLength;
+
+    oSequenceLength++; //next character
+    c = iValue[iValueOffset+oSequenceLength];
   }
 
-  bool valid = (oNumBlackSlash > 0 && iValue[iValueOffset+quoteOffset] == '\"');
+  bool validString      = (oNumBlackSlash > 0 && iValue[iValueOffset+oSequenceLength] == '\"');
+  bool validCaretString = (oNumBlackSlash > 0 && supportsShellCharacters() && (iInCaretString || !iInString) && matchesSequence(&iValue[iValueOffset+oSequenceLength], "^\"") );
+  bool valid = validString || validCaretString;
 
   //Compute skip offset
   if (valid)
   {
     if (oNumBlackSlash%2 == 0)
     {
-      //the " character is a starts/ends string character and must not part of the \ sequence.
-      //ie: a\\\\"b   =>    a\\[openstring]b
-      oSkipLength = quoteOffset;
+      //the next processed character must be " (or ^")
+      //oSequenceLength stays the same
     }
     else
     {
-      //the last " character is an escaped " character and must not be included in the sequence.
+      //the next processed character must be the last \ character of the sequence
       //ie: a\\\"b   =>    a\"b
-      oSkipLength = lastBackSlashOffset;
+      oSequenceLength--;
     }
   }
   else
   {
-    oSkipLength = 0;
+    oNumBlackSlash = 0;
+    oSequenceLength = 0;
   }
 
   return valid;
@@ -409,7 +458,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
 
     bool isLastCharacter = !(i+1<cmdLineStr.size());
     size_t numBackSlashes = 0;
-    size_t backSlashSequenceLength = 0;
+    size_t backslashSequenceLength = 0;
 
     if ( supportsShellCharacters() && !inString && !inCaretString && matchesSequence(iCmdLine, i, "^\""))
     {
@@ -474,6 +523,17 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
 
       //Remember what was found
       codes.push_back(Plain);
+    }
+    else if (supportsShellCharacters() && c == '^' && (!inString || !inCaretString) && matchesSequence(iCmdLine, i, "^^") )
+    {
+      //Rule 5.2.
+      accumulator.push_back(c);
+
+      //Remember what was found
+      codes.push_back(EscapingCaret);
+      codes.push_back(Plain);
+
+      i=i+1; //skip next character
     }
     else if (supportsShellCharacters() && c == '^' && (!inString || !inCaretString) )
     {
@@ -558,10 +618,10 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
 
       i=i+1; //skip next character
     }
-    else if ( matchesBackSlashDblQuoteSequence(iCmdLine, i, numBackSlashes, backSlashSequenceLength, inString, inCaretString) )
+    else if ( matchesBackSlashDblQuoteSequence(iCmdLine, i, numBackSlashes, backslashSequenceLength, inString, inCaretString) )
     {
       //Rule 3.
-      // for \\" character sequence (or any combination like \\\" or \\\\" or \\\^" or \\\\^" )
+      // for \\" character sequence (or any combination like \\\" or \\\\" or \\^" or \\\^" or \\\\^" or even \^\^\\" )
       size_t numEscapedBackSlashes = numBackSlashes/2;
       std::string s;
       s.append(numEscapedBackSlashes, '\\');
@@ -569,13 +629,23 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
       accumulator.append(s);
 
       //Remember what was found
-      for(size_t j=0; j<numEscapedBackSlashes; j++)
+      for(size_t j=0; j<backslashSequenceLength; j++)
       {
-        codes.push_back(EscapingBackslash);
-        codes.push_back(Plain);
+        codes.push_back(Skipped);
       }
 
-      i=i+backSlashSequenceLength-1; //skip escaped \ characters (but not the last \ if odd backslashes are found) but not the " character
+      //for(size_t j=0; j<numEscapedBackSlashes; j++)
+      //{
+      //  //can never be sure because of ^\^\ sequence
+      //  //codes.push_back(EscapingBackslash);
+      //  //codes.push_back(Plain);
+      //}
+      //for(size_t j=2*numEscapedBackSlashes; j<backSlashSequenceLength; j++)
+      //{
+      //  codes.push_back(Skipped);
+      //}
+
+      i=i+backslashSequenceLength-1; //skip escaped \ characters (but not the last \ if odd backslashes are found) but not the " character
     }
     else if ( (inString || inCaretString) && matchesSequence(iCmdLine, i, "\"\"") )
     {

@@ -6,23 +6,15 @@ a b c
 "a b" c
 "a b c"
 "a b c
-"a b c"
-a" b" c
-"a "b c
 a b c"
 "a b" c"
 "a b\" c" d
 "a b\" c d
 a\\b
 "a\\b"
-a\\"b c
-a\\"b c"
-"a\\\"b c"
-a\\^"b c
-a\\^"b c"
-"a\\\^"b c"
 a\"b
 "a\"b"
+a\\"b
 a\\"b c d"
 a\\\"b
 "a\\\"b"
@@ -32,19 +24,7 @@ a b\\ \" c d
 a b\" c d
 a \t c
 a \"b c
-a "" b
-"" a b
-a b ""
-a ^"^" b
-^"^" a b
-a b ^"^"
-a ^"" b
-^"" a b
-a b ^""
 a "" b c
-a \"b c
-"a \"b" c
-"a ""b" c
 a ""b c
 a b"" c
 "" a b c
@@ -103,15 +83,6 @@ a "bc\"o" e"
 ^"a^b" c
 ^"ab^" c
 ^"ab^"" c
-^"a \^" b^" c
-^"a \" b^" c
-a b\^"c
-^"a b^" c
-^"a b" c
-^"a b^"c
-a^"b c^"
-"a < b" c 
-"a ^< b" c
 a \bb c
 a \"bb c" d
 a ^"bb^" c" d
@@ -132,18 +103,6 @@ a\\\\"b
 ^"a\^\^\\"b"
 ^"a\^\\^\"b"
 ^"a\^\\\^"b"
-"a b""c d"
-^"a b^"^"c d^"
-^"a b^""c d"
-"a b"^"c d^"
-"a b^"^"c d"
-a ^< b
-^"a ^< b^" c
-^"a < b^" c
-^"a & b^" c
-^"a &whoami^"
-^a^b ^c
-"^a^b" ^c
 "a b""c d"
 ^"a b^"^"c d^"
 ^"a b^""c d"
