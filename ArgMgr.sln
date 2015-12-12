@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArgMgrTest", "ArgMgrTest\ArgMgrTest.vcproj", "{12E9683C-378D-4F85-AB1C-1250119047CD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArgMgr", "ArgMgr\ArgMgr.vcproj", "{8B120F17-D63D-4783-A96A-08D495065758}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{12E9683C-378D-4F85-AB1C-1250119047CD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{12E9683C-378D-4F85-AB1C-1250119047CD}.Debug|Win32.Build.0 = Debug|Win32
+		{12E9683C-378D-4F85-AB1C-1250119047CD}.Release|Win32.ActiveCfg = Release|Win32
+		{12E9683C-378D-4F85-AB1C-1250119047CD}.Release|Win32.Build.0 = Release|Win32
+		{8B120F17-D63D-4783-A96A-08D495065758}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8B120F17-D63D-4783-A96A-08D495065758}.Debug|Win32.Build.0 = Debug|Win32
+		{8B120F17-D63D-4783-A96A-08D495065758}.Release|Win32.ActiveCfg = Release|Win32
+		{8B120F17-D63D-4783-A96A-08D495065758}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
