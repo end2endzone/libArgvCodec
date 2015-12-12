@@ -213,12 +213,13 @@ bool ArgumentList::findValue2(const char * iValueName, bool iCaseSensitive, int 
   oValue= "";
   if (iValueName == NULL)
     return false;
-  std::string uppercaseValueName = utils::uppercase(iValueName);
+  std::string valueName = equalize(iValueName);
+  std::string uppercaseValueName = utils::uppercase(valueName);
   for(size_t i=0; i<mArguments.size(); i++)
   {
     const std::string & arg = mArguments[i];
-    std::string argPrefix = arg.substr(0, std::string(iValueName).size());
-    if (    ( iCaseSensitive && argPrefix == iValueName) ||
+    std::string argPrefix = arg.substr(0, valueName.size());
+    if (    ( iCaseSensitive && argPrefix == valueName) ||
             (!iCaseSensitive && utils::uppercase(argPrefix) == uppercaseValueName)    )
     {
       oIndex = (int)i;
