@@ -1,10 +1,20 @@
-#include "gtest_emulator.h"
+#include "TestCmdPromptArgumentCodec.h"
+#include "gTestHelper.h"
 #include "CmdPromptArgumentCodec.h"
 #include "ArgumentLister.h"
 #include "utils.h"
 #include "TestUtils.h"
 
 #define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
+
+void TestCmdPromptArgumentCodec::SetUp()
+{
+  gTestHelper & helper = gTestHelper::getInstance();
+}
+
+void TestCmdPromptArgumentCodec::TearDown()
+{
+}
 
 TEST_F(TestCmdPromptArgumentCodec, DISABLED_testDecodeCommandLine)
 {
