@@ -1,4 +1,5 @@
-#include "gtest_emulator.h"
+#include "TestValidator.h"
+#include "gTestHelper.h"
 #include "Validator.h"
 #include "utils.h"
 
@@ -106,6 +107,15 @@ bool findRule(const ValidationRuleList & iRules, const ValidationRule * iRule)
     }
   }
   return false;
+}
+
+void TestValidator::SetUp()
+{
+  gTestHelper & helper = gTestHelper::getInstance();
+}
+
+void TestValidator::TearDown()
+{
 }
 
 TEST_F(TestValidator, testValidatorWithOrphan)
