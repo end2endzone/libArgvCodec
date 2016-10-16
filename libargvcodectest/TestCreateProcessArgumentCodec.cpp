@@ -16,7 +16,7 @@ void TestCreateProcessArgumentCodec::TearDown()
 {
 }
 
-TEST_F(TestCreateProcessArgumentCodec, DISABLED_testDecodeCommandLine)
+TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
@@ -68,7 +68,7 @@ TEST_F(TestCreateProcessArgumentCodec, DISABLED_testDecodeCommandLine)
   }
 }
 
-TEST_F(TestCreateProcessArgumentCodec, DISABLED_testEncodeCommandLine)
+TEST_F(TestCreateProcessArgumentCodec, testEncodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
@@ -154,7 +154,7 @@ void prepareTestCreateProcessEncodeArgument(const char * iRawArguementValue, std
   printf("    argv[1]=%s\n", oCreateProcessArgumentValue.c_str());
 }
 
-TEST_F(TestCreateProcessArgumentCodec, DISABLED_testEncodeArgument)
+TEST_F(TestCreateProcessArgumentCodec, testEncodeArgument)
 {
   printf("\n");
 

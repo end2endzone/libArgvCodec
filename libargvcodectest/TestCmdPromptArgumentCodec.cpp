@@ -16,7 +16,7 @@ void TestCmdPromptArgumentCodec::TearDown()
 {
 }
 
-TEST_F(TestCmdPromptArgumentCodec, DISABLED_testDecodeCommandLine)
+TEST_F(TestCmdPromptArgumentCodec, testDecodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
@@ -68,7 +68,7 @@ TEST_F(TestCmdPromptArgumentCodec, DISABLED_testDecodeCommandLine)
   }
 }
 
-TEST_F(TestCmdPromptArgumentCodec, DISABLED_testEncodeCommandLine)
+TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
 {
   const char * inputFilePrefix = "TestEncodeCommandLine";
   const char * inputFilePostfix = ".txt";
@@ -146,7 +146,7 @@ TEST_F(TestCmdPromptArgumentCodec, DISABLED_testEncodeCommandLine)
   }
 }
 
-TEST_F(TestCmdPromptArgumentCodec, DISABLED_testEncodeCommandLine2)
+TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine2)
 {
   const char * inputFile = "shellCommandLines.txt";
 
@@ -232,7 +232,7 @@ void prepareTestCmdPromptEncodeArgument(const char * iRawArguementValue, std::st
   printf("    argv[1]=%s\n", oSystemArgumentValue.c_str());
 }
 
-TEST_F(TestCmdPromptArgumentCodec, DISABLED_testEncodeArgument)
+TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
 {
   printf("\n");
 
