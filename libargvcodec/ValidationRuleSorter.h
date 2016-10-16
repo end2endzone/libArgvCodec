@@ -1,6 +1,7 @@
 #pragma once
 
 #include "libargvcodec.h"
+#include "macros.h"
 #include "advancedsort.h"
 #include "ValidationRuleList.h"
 
@@ -14,15 +15,9 @@ public:
 private:
   bool * newBool(bool iValue);
 
-  //Disable the following warning: 
-  //    warning C4251: 'ValidationRuleSorter::mBoolInstances' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'ValidationRuleSorter'
-#ifdef _MSC_VER
- #pragma warning( push )
- #pragma warning( disable: 4251 )
-#endif
+  //warning C4251: 'ValidationRuleSorter::mBoolInstances' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'ValidationRuleSorter'
+  SAFE_WARNING_DISABLE(4251);
   std::vector<bool*> mBoolInstances;
-#ifdef _MSC_VER
- #pragma warning( pop )
-#endif
+  SAFE_WARNING_RESTORE();
 
 };

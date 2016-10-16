@@ -1,6 +1,7 @@
 #pragma once
 
 #include "libargvcodec.h"
+#include "macros.h"
 #include <string>
 #include <vector>
 
@@ -231,15 +232,9 @@ private:
   bool findValue2(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const;
   bool findNextValue2(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const;
 
-  //Disable the following warning: 
-  //    warning C4251: 'ArgumentList::mArguments' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'ArgumentList'
-#ifdef _MSC_VER
- #pragma warning( push )
- #pragma warning( disable: 4251 )
-#endif
+  //warning C4251: 'ArgumentList::mArguments' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'ArgumentList'
+  SAFE_WARNING_DISABLE(4251);
   StringList mArguments;
   StringList mPrefixes;
-#ifdef _MSC_VER
- #pragma warning( pop )
-#endif
+  SAFE_WARNING_RESTORE();
 };
