@@ -25,39 +25,6 @@ void strReplace(std::string & iValue, const char * iOldStr, const char * iNewStr
   }
 }
 
-bool readTextFile(const char * iPath, StringList & oLines)
-{
-  oLines.clear();
-
-  FILE * f = fopen(iPath, "r");
-  if ( f == NULL )
-    return false;
-
-  static const int BUFFER_SIZE = 10240;
-  char buffer[BUFFER_SIZE];
-
-  while( fgets(buffer, BUFFER_SIZE, f) != NULL )
-  {
-    std::string line = buffer;
-    strReplace(line, "\n", "");
-
-    oLines.push_back(line);
-  }
-
-  fclose(f);
-
-  return true;
-}
-
-bool fileExists(const char * iPath)
-{
-  FILE * f = fopen(iPath, "rb");
-  if (f == NULL)
-    return false;
-  fclose(f);
-  return true;
-}
-
 size_t findNumTrailingBackslashes(const char * iValue)
 {
   if (iValue == NULL)

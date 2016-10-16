@@ -20,8 +20,10 @@ TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
+  gTestHelper & helper = gTestHelper::getInstance();
+
   ArgumentList::StringList cmdLines;
-  ASSERT_TRUE( utils::readTextFile(inputFile, cmdLines) );
+  ASSERT_TRUE( helper.getTextFileContent(inputFile, cmdLines) );
   ASSERT_TRUE( cmdLines.size() > 0 );
 
   printf("\n");
@@ -72,8 +74,10 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
+  gTestHelper & helper = gTestHelper::getInstance();
+
   ArgumentList::StringList testCmdLines;
-  ASSERT_TRUE( utils::readTextFile(inputFile, testCmdLines) );
+  ASSERT_TRUE( helper.getTextFileContent(inputFile, testCmdLines) );
   ASSERT_TRUE( testCmdLines.size() > 0 );
 
   printf("\n");

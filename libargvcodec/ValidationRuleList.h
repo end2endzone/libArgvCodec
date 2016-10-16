@@ -45,5 +45,15 @@ private:
   void copyFrom(const ValidationRuleList & ioRuleList);
 
   //attributes
+
+  //Disable the following warning: 
+  //    warning C4251: 'ValidationRuleList::mRules' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'ValidationRuleList'
+#ifdef _MSC_VER
+ #pragma warning( push )
+ #pragma warning( disable: 4251 )
+#endif
   ValidationRulePtrList mRules;
+#ifdef _MSC_VER
+ #pragma warning( pop )
+#endif
 };
