@@ -1,6 +1,7 @@
 #pragma once
 
 #include "libargvcodec.h"
+#include "macros.h"
 #include "ValidationRule.h"
 #include <vector>
 
@@ -46,14 +47,8 @@ private:
 
   //attributes
 
-  //Disable the following warning: 
-  //    warning C4251: 'ValidationRuleList::mRules' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'ValidationRuleList'
-#ifdef _MSC_VER
- #pragma warning( push )
- #pragma warning( disable: 4251 )
-#endif
+  //warning C4251: 'ValidationRuleList::mRules' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'ValidationRuleList'
+  SAFE_WARNING_DISABLE(4251);
   ValidationRulePtrList mRules;
-#ifdef _MSC_VER
- #pragma warning( pop )
-#endif
+  SAFE_WARNING_RESTORE();
 };
