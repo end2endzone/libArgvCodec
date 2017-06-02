@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libargvcodec.h"
+#include "libargvcodecvalidator.h"
 #include "ArgumentList.h"
 #include "ValidationRuleList.h"
 #include <string>
@@ -9,7 +9,7 @@
 namespace libargvcodec
 {
 
-  class LIBARGVCODEC_API Validator
+  class LIBARGVCODECVALIDATOR_API Validator
   {
   public:
     Validator();
@@ -26,11 +26,7 @@ namespace libargvcodec
   private:
     //private attributes
     bool mUnknownArgumentAsError;
-
-    //warning C4251: 'Validator::mDefaultArgumentPrefixes' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'Validator'
-    SAFE_WARNING_DISABLE(4251);
     ArgumentList::StringList mDefaultArgumentPrefixes;
-    SAFE_WARNING_RESTORE();
 
     //private methods
     bool validateRule(const ValidationRule * iRule, std::string & oErrorMessage);

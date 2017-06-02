@@ -18,60 +18,36 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="os.cpp">
+    <ClCompile Include="ValidationRule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utils.cpp">
+    <ClCompile Include="ValidationRuleList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ArgumentList.cpp">
+    <ClCompile Include="ValidationRuleSorter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CmdPromptArgumentCodec.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CreateProcessArgumentCodec.cpp">
+    <ClCompile Include="Validator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Rules.txt">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="TODO.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="os.h">
+    <ClInclude Include="libargvcodecvalidator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils.h">
+    <ClInclude Include="ValidationRule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IArgumentEncoder.h">
+    <ClInclude Include="ValidationRuleList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ArgumentList.h">
+    <ClInclude Include="ValidationRuleSorter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IArgumentDecoder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdPromptArgumentCodec.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CreateProcessArgumentCodec.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="libargvcodec.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="advancedsort.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="macros.h">
+    <ClInclude Include="Validator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

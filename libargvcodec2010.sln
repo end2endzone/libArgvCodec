@@ -5,7 +5,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libargvcodec", "libargvcode
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libargvcodectest", "libargvcodectest\libargvcodectest.vcxproj", "{12E9683C-378D-4F85-AB1C-1250119047CD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libargvcodecvalidator", "libargvcodecvalidator\libargvcodecvalidator.vcxproj", "{BF073A7B-A727-4092-94E2-77F0F6F8FA32}"
+EndProject
 Global
+	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
+		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
@@ -19,6 +24,10 @@ Global
 		{12E9683C-378D-4F85-AB1C-1250119047CD}.Debug|Win32.Build.0 = Debug|Win32
 		{12E9683C-378D-4F85-AB1C-1250119047CD}.Release|Win32.ActiveCfg = Release|Win32
 		{12E9683C-378D-4F85-AB1C-1250119047CD}.Release|Win32.Build.0 = Release|Win32
+		{BF073A7B-A727-4092-94E2-77F0F6F8FA32}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF073A7B-A727-4092-94E2-77F0F6F8FA32}.Debug|Win32.Build.0 = Debug|Win32
+		{BF073A7B-A727-4092-94E2-77F0F6F8FA32}.Release|Win32.ActiveCfg = Release|Win32
+		{BF073A7B-A727-4092-94E2-77F0F6F8FA32}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

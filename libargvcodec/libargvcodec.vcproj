@@ -171,6 +171,18 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\ArgumentList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CmdPromptArgumentCodec.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CreateProcessArgumentCodec.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\dllmain.cpp"
 				>
 				<FileConfiguration
@@ -215,6 +227,26 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ArgumentList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CmdPromptArgumentCodec.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CreateProcessArgumentCodec.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IArgumentDecoder.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IArgumentEncoder.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libargvcodec.h"
 				>
 			</File>
@@ -240,78 +272,6 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-		</Filter>
-		<Filter
-			Name="Codec"
-			>
-			<File
-				RelativePath=".\ArgumentList.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ArgumentList.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CmdPromptArgumentCodec.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CmdPromptArgumentCodec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CreateProcessArgumentCodec.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CreateProcessArgumentCodec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\IArgumentDecoder.h"
-				>
-			</File>
-			<File
-				RelativePath=".\IArgumentEncoder.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Arguments Validation"
-			>
-			<File
-				RelativePath=".\ValidationRule.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ValidationRule.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ValidationRuleList.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ValidationRuleList.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ValidationRuleSorter.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ValidationRuleSorter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Validator.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Validator.h"
-				>
-			</File>
 		</Filter>
 		<File
 			RelativePath=".\TODO.txt"

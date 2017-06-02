@@ -1,14 +1,13 @@
 #pragma once
 
-#include "libargvcodec.h"
-#include "macros.h"
+#include "libargvcodecvalidator.h"
 #include "ValidationRule.h"
 #include <vector>
 
 namespace libargvcodec
 {
 
-  class LIBARGVCODEC_API ValidationRuleList
+  class LIBARGVCODECVALIDATOR_API ValidationRuleList
   {
   public:
     ValidationRuleList();
@@ -49,11 +48,7 @@ namespace libargvcodec
     void copyFrom(const ValidationRuleList & ioRuleList);
 
     //attributes
-
-    //warning C4251: 'ValidationRuleList::mRules' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'ValidationRuleList'
-    SAFE_WARNING_DISABLE(4251);
     ValidationRulePtrList mRules;
-    SAFE_WARNING_RESTORE();
   };
 
 }; //namespace libargvcodec

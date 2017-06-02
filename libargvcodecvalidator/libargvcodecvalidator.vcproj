@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="libargvcodectest"
-	ProjectGUID="{12E9683C-378D-4F85-AB1C-1250119047CD}"
-	RootNamespace="ArgMgrTest"
+	Name="libargvcodecvalidator"
+	ProjectGUID="{BF073A7B-A727-4092-94E2-77F0F6F8FA32}"
+	RootNamespace="libargvcodecvalidator"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="2"
 			>
 			<Tool
@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\libargvcodec;..\libargvcodecvalidator;&quot;$(GTEST_INCLUDE)&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="..\libargvcodec"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBARGVCODECVALIDATOR_EXPORTS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,11 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vc90_$(ConfigurationName)_MT_DLL_$(PlatformName)_gtest.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(GTEST_LIBRARY_DIR)&quot;"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -88,14 +86,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="call PostBuild.bat $(ProjectDir) $(OutDir)"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -118,8 +115,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\libargvcodec;..\libargvcodecvalidator;&quot;$(GTEST_INCLUDE)&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="..\libargvcodec"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBARGVCODECVALIDATOR_EXPORTS;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -137,11 +134,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vc90_$(ConfigurationName)_MT_DLL_$(PlatformName)_gtest.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(GTEST_LIBRARY_DIR)&quot;"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -166,7 +161,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="call PostBuild.bat $(ProjectDir) $(OutDir)"
 			/>
 		</Configuration>
 	</Configurations>
@@ -174,10 +168,6 @@
 		<ProjectReference
 			ReferencedProjectIdentifier="{8B120F17-D63D-4783-A96A-08D495065758}"
 			RelativePathToProject=".\libargvcodec\libargvcodec.vcproj"
-		/>
-		<ProjectReference
-			ReferencedProjectIdentifier="{BF073A7B-A727-4092-94E2-77F0F6F8FA32}"
-			RelativePathToProject=".\libargvcodecvalidator\libargvcodecvalidator.vcproj"
 		/>
 	</References>
 	<Files>
@@ -187,19 +177,41 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\ArgumentLister.cpp"
+				RelativePath=".\dllmain.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\ValidationRule.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\gtesthelper.cpp"
+				RelativePath=".\ValidationRuleList.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\main.cpp"
+				RelativePath=".\ValidationRuleSorter.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\TestUtils.cpp"
+				RelativePath=".\Validator.cpp"
 				>
 			</File>
 		</Filter>
@@ -209,11 +221,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\ArgumentLister.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gtesthelper.h"
+				RelativePath=".\libargvcodecvalidator.h"
 				>
 			</File>
 			<File
@@ -221,7 +229,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TestUtils.h"
+				RelativePath=".\ValidationRule.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ValidationRuleList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ValidationRuleSorter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Validator.h"
 				>
 			</File>
 		</Filter>
@@ -230,100 +250,6 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-			<File
-				RelativePath=".\postbuild.bat"
-				>
-			</File>
-			<File
-				RelativePath=".\shellCommandLines.txt"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						CommandLine="copy /v &quot;$(InputPath)&quot; &quot;$(OutDir)\&quot;&#x0D;&#x0A;"
-						Outputs="$(OutDir)\$(InputFileName)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						CommandLine="copy /v &quot;$(InputPath)&quot; &quot;$(OutDir)\&quot;&#x0D;&#x0A;"
-						Outputs="$(OutDir)\$(InputFileName)"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\TestEncodeCommandLine001.txt"
-				>
-			</File>
-			<File
-				RelativePath=".\TestEncodeCommandLine002.txt"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="External Files"
-			>
-			<File
-				RelativePath="..\libargvcodec\utils.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\libargvcodec\utils.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Tests"
-			>
-			<File
-				RelativePath=".\TestArgumentList.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TestArgumentList.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TestCmdPromptArgumentCodec.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TestCmdPromptArgumentCodec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TestCreateProcessArgumentCodec.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TestCreateProcessArgumentCodec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TestValidator.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TestValidator.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Generated Files"
-			>
-			<File
-				RelativePath=".\libargvcodectest.x86.debug.xml"
-				>
-			</File>
-			<File
-				RelativePath=".\libargvcodectest.x86.release.xml"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>
