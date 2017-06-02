@@ -36,3 +36,4 @@ DONE! - Fix issues about warning C4251: 'libargvcodec::validation::ValidationRul
 DONE! - Move code in libargvcodecvalidator under its own namespace
 - Add support for validating arguments againts an argument list specification. This will allow users to specify the argument format/names/meaning and ask the manager to validate the given arguments against this specification. If will also provide a custom error message for invalid/missing arguments.
 - Create a command line project which ask for arguments and outputs the full command line.
+- Add LGPL license file.
