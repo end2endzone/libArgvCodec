@@ -3,6 +3,8 @@
 #include "Validator.h"
 #include "utils.h"
 
+using namespace libargvcodec;
+
 //#define DECLARE_FLAG_RULE(name, arg, mandatory) \
 //  VALIDATION_RULE name;                         \
 //  name.argumentName = arg;                      \
@@ -111,7 +113,6 @@ bool findRule(const ValidationRuleList & iRules, const ValidationRule * iRule)
 
 void TestValidator::SetUp()
 {
-  gTestHelper & helper = gTestHelper::getInstance();
 }
 
 void TestValidator::TearDown()

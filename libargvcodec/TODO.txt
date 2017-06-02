@@ -1,5 +1,4 @@
 DONE! - Rename project to (CommandLineEncoder & ArgumentDecoder) or (ArgumentEncoder, ArgumentDecoder, CommandLineEncoder, CommandLineDecoder)
-- Add support for validating arguments againts an argument list specification. This will allow users to specify the argument format/names/meaning and ask the manager to validate the given arguments against this specification. If will also provide a custom error message for invalid/missing arguments.
 DONE! - Move global functions of ArgumentManager.cpp out to an utility class (or util.h/cpp files)
 DONE! - Change calls like c == '\\' && getSafeCharacter(cmdLine, i+1) == '\\' && getSafeCharacter(cmdLine, i+2) == '\\' && getSafeCharacter(cmdLine, i+3) == '\"'    by isSequence(cmdLine, i, "abcd")
 DONE! - Rename getCommandLineArgument() to getEscapedArgument() and make it static like: static std::string getEscapedArgument(const char * iValue)
@@ -28,6 +27,9 @@ DONE! - Rename the tool to libcleanargv or libcleanarg, libargvcodec. libargvcod
 DONE! - Implement case insensitive ArgumentList APIs.
 DONE! - Implement automatic insertion of the = sign for "-name=value" in the following APIs: extractValue() and findValue()
 DONE! - Implement automatic search for expected prefix if "name=value" not found. Search for "/", "-", and "--" expected prefixes.
-- Define all functions into libargvcodec namespace
+DONE! - Define all functions into libargvcodec namespace
 - Rename Validator::setOrphanArgumentsAccepted(bool iOrphanArgumentsAccepted); to something more meaningful like setUnknownArgumentAsError(bool)
 - Rename ValidationRule::RESULT::validity to valid
+- Enable all tests
+- Move code which handles command line arguments validation to its own specific library. The code might be deleted later since there are already many argument validation api that already exists.
+- Add support for validating arguments againts an argument list specification. This will allow users to specify the argument format/names/meaning and ask the manager to validate the given arguments against this specification. If will also provide a custom error message for invalid/missing arguments.

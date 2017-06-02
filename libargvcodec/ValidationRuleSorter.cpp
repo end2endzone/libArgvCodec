@@ -1,5 +1,8 @@
 #include "ValidationRuleSorter.h"
 
+namespace libargvcodec
+{
+
 ValidationRuleSorter::~ValidationRuleSorter()
 {
   //free bools
@@ -67,3 +70,5 @@ advancedsort::SortAttributeList ValidationRuleSorter::getSortAttributes(const VA
       
   return f;
 }
+
+}; //namespace libargvcodec

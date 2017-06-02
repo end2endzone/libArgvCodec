@@ -4,6 +4,9 @@
 #include "IArgumentDecoder.h"
 #include "CmdPromptArgumentCodec.h"
 
+namespace libargvcodec
+{
+
   class LIBARGVCODEC_API CreateProcessArgumentCodec : public CmdPromptArgumentCodec
   {
   public:
@@ -24,3 +27,5 @@
     virtual bool supportsShellCharacters();
 
   };
+
+}; //namespace libargvcodec

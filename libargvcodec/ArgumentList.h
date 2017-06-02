@@ -5,6 +5,9 @@
 #include <string>
 #include <vector>
 
+namespace libargvcodec
+{
+
   class LIBARGVCODEC_API ArgumentList
   {
   public:
@@ -238,3 +241,5 @@
     StringList mPrefixes;
     SAFE_WARNING_RESTORE();
   };
+
+}; //namespace libargvcodec

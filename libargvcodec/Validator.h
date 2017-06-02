@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 
+namespace libargvcodec
+{
+
   class LIBARGVCODEC_API Validator
   {
   public:
@@ -36,3 +39,5 @@
     //ValidationRuleList makeCopy(ValidationRuleList & iRuleList);
 
   };
+
+}; //namespace libargvcodec

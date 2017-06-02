@@ -309,6 +309,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Generated Files"
+			>
+			<File
+				RelativePath=".\libargvcodectest.x86.debug.xml"
+				>
+			</File>
+			<File
+				RelativePath=".\libargvcodectest.x86.release.xml"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

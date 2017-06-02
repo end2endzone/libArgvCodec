@@ -5,6 +5,9 @@
 #include "advancedsort.h"
 #include "ValidationRuleList.h"
 
+namespace libargvcodec
+{
+
   class LIBARGVCODEC_API ValidationRuleSorter : public advancedsort::SortFunctionT<ValidationRule*>
   {
   public:
@@ -21,3 +24,5 @@
     SAFE_WARNING_RESTORE();
 
   };
+
+}; //namespace libargvcodec

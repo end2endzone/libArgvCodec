@@ -3,6 +3,9 @@
 #include "libargvcodec.h"
 #include <string>
 
+namespace libargvcodec
+{
+
   class LIBARGVCODEC_API ValidationRule
   {
   public:
@@ -70,3 +73,5 @@
     std::string mDescription;
     FLAGS mFlags;
   };
+
+}; //namespace libargvcodec

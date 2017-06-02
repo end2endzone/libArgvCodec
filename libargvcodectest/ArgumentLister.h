@@ -2,6 +2,8 @@
 
 #include "ArgumentList.h"
 
+using namespace libargvcodec;
+
 std::string getExePath();
 bool isPrinterExec();
 bool isLoggerExec();

@@ -1,5 +1,8 @@
 #include "CreateProcessArgumentCodec.h"
 
+namespace libargvcodec
+{
+
 CreateProcessArgumentCodec::CreateProcessArgumentCodec()
 {
 }
@@ -22,3 +25,5 @@ bool CreateProcessArgumentCodec::supportsShellCharacters()
 {
   return false;
 }
+
+}; //namespace libargvcodec

@@ -6,6 +6,9 @@
 #include "os.h"
 #include <algorithm>
 
+namespace libargvcodec
+{
+
 Validator::Validator()
 : mOrphanArgumentsAccepted(false)
 {
@@ -244,3 +247,5 @@ void Validator::applyDefaultArgumentPrefixes(ArgumentList & ioArgumentList)
 //
 //  return newList;
 //}
+
+}; //namespace libargvcodec

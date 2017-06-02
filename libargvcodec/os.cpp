@@ -7,6 +7,8 @@
 #include "psapi.h"
 #pragma comment(lib,"psapi.lib")
 
+namespace libargvcodec
+{
 
 std::string getLastErrorDescription()
 {
@@ -76,3 +78,5 @@ std::string getLocalExePath()
   }
   return path;
 }
+
+}; //namespace libargvcodec

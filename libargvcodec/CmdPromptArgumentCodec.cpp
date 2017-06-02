@@ -2,6 +2,9 @@
 #include "utils.h"
 #include "os.h"
 
+namespace libargvcodec
+{
+
 enum CharacterCodes
 {
   Plain,
@@ -680,3 +683,5 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
 
   return true;
 }
+
+}; //namespace libargvcodec

@@ -3,6 +3,9 @@
 #include "libargvcodec.h"
 #include "ArgumentList.h"
 
+namespace libargvcodec
+{
+
   class LIBARGVCODEC_API IArgumentDecoder
   {
   public:
@@ -23,3 +26,5 @@
     //
     virtual ArgumentList decodeCommandLine(const char * iValue) = 0;
   };
+
+}; //namespace libargvcodec

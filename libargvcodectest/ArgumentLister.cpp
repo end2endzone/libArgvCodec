@@ -3,6 +3,8 @@
 #include "utils.h"
 #include <Windows.h>
 
+using namespace libargvcodec;
+
 std::string getExePath()
 {
   CmdPromptArgumentCodec c;

@@ -9,6 +9,9 @@
 
 static const bool gDefaultCaseSensitive = true;
 
+namespace libargvcodec
+{
+
 ArgumentList::ArgumentList() :
   mArgv(NULL)
 {
@@ -611,3 +614,5 @@ bool ArgumentList::findNextValue(const char * iValueName, bool iCaseSensitive, i
   return false; //failed
 
 }
+
+}; //namespace libargvcodec

@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+namespace libargvcodec
+{
 namespace utils
 {
 
@@ -14,3 +16,4 @@ std::string uppercase(const char * iValue);
 size_t findNumTrailingBackslashes(const char * iValue);
 
 }; //namespace utils
+}; //namespace libargvcodec

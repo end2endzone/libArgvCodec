@@ -1,5 +1,7 @@
 #include "utils.h"
 
+namespace libargvcodec
+{
 namespace utils
 {
 
@@ -62,3 +64,4 @@ std::string uppercase(const char * iValue)
 }
 
 }; //namespace utils
+}; //namespace libargvcodec
