@@ -6,6 +6,8 @@
 
 namespace libargvcodec
 {
+namespace validation
+{
 
   class LIBARGVCODECVALIDATOR_API ValidationRuleSorter : public advancedsort::SortFunctionT<ValidationRule*>
   {
@@ -14,10 +16,16 @@ namespace libargvcodec
     virtual ~ValidationRuleSorter();
     advancedsort::SortAttributeList getSortAttributes(const VALIDATION_RULE_PTR & iObject);
 
+    typedef std::vector<bool*> BoolPtrVector;
+
   private:
     bool * newBool(bool iValue);
-    std::vector<bool*> mBoolInstances;
+    #pragma warning(push)
+    #pragma warning(disable: 4251)  // warning C4251: 'foo' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'bar'
+    BoolPtrVector mBoolInstances;
+    #pragma warning(pop)
 
   };
 
+}; //namespace validation
 }; //namespace libargvcodec

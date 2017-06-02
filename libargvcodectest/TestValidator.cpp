@@ -3,6 +3,7 @@
 #include "utils.h"
 
 using namespace libargvcodec;
+using namespace libargvcodec::validation;
 
 //#define DECLARE_FLAG_RULE(name, arg, mandatory) \
 //  VALIDATION_RULE name;                         \

@@ -2,6 +2,8 @@
 
 namespace libargvcodec
 {
+namespace validation
+{
 
 ValidationRuleList::ValidationRuleList()
 {
@@ -140,4 +142,5 @@ void ValidationRuleList::copyFrom(const ValidationRuleList & ioRuleList)
   }
 }
 
+}; //namespace validation
 }; //namespace libargvcodec
