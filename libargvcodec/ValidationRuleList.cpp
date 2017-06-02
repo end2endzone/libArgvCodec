@@ -82,7 +82,7 @@ const ValidationRule * ValidationRuleList::getFailedRuleAbout(const char * iArgu
   {
     const ValidationRule * rule = mRules[i];
     const ValidationRule::RESULT & result = rule->getResult();
-    if (!result.validity)
+    if (!result.valid)
     {
       size_t pos = rule->getResult().errorDescription.find(iArgumentName);
       if (pos != std::string::npos)
@@ -100,7 +100,7 @@ const ValidationRule * ValidationRuleList::getValidRuleAbout(const char * iArgum
   {
     const ValidationRule * rule = mRules[i];
     const ValidationRule::RESULT & result = rule->getResult();
-    if (result.validity == true)
+    if (result.valid == true)
     {
       size_t pos = rule->getName().find(iArgumentName);
       if (pos != std::string::npos)

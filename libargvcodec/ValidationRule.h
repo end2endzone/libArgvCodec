@@ -58,7 +58,7 @@ namespace libargvcodec
 
     struct RESULT
     {
-      bool validity;
+      bool valid;
       std::string errorDescription;
       std::string value;
     };
