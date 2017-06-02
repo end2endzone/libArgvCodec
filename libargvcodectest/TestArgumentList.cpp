@@ -1,5 +1,4 @@
 #include "TestArgumentList.h"
-#include "gTestHelper.h"
 #include "ArgumentList.h"
 #include "ArgumentLister.h"
 #include "utils.h"
@@ -48,9 +47,9 @@ bool isIdentical(ArgumentList & m, int expectedArgc, char ** expectedArgv)
   return true;
 }
 
+
 void TestArgumentList::SetUp()
 {
-  gTestHelper & helper = gTestHelper::getInstance();
 }
 
 void TestArgumentList::TearDown()

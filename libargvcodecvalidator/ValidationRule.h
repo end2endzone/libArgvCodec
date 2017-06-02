@@ -1,12 +1,12 @@
 #pragma once
 
-#include "libargvcodec.h"
+#include "libargvcodecvalidator.h"
 #include <string>
 
 namespace libargvcodec
 {
 
-  class LIBARGVCODEC_API ValidationRule
+  class LIBARGVCODECVALIDATOR_API ValidationRule
   {
   public:
     struct FLAGS
@@ -45,7 +45,7 @@ namespace libargvcodec
     void set(const char * iName, const char * iDescription, const FLAGS & iFlags);
 
     //Basic flags
-    class LIBARGVCODEC_API FlagFactory
+    class LIBARGVCODECVALIDATOR_API FlagFactory
     {
     public:
       static FLAGS optionalFlag();

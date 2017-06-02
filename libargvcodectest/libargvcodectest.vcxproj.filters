@@ -14,13 +14,13 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
     <Filter Include="External Files">
-      <UniqueIdentifier>{8b0faa72-9e72-4e14-a938-b5e735d710d1}</UniqueIdentifier>
+      <UniqueIdentifier>{c5e4da0a-57f4-4f96-8722-500bf25751e2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Tests">
-      <UniqueIdentifier>{ab67dc95-fddc-4831-af79-41d63791cb52}</UniqueIdentifier>
+      <UniqueIdentifier>{68b8070a-f087-40ab-9c3d-ed9e7b99aed9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Generated Files">
-      <UniqueIdentifier>{02b14b96-12e8-4b1f-af47-0c29708c839b}</UniqueIdentifier>
+      <UniqueIdentifier>{600fa715-181e-4d55-a41b-53c79544037e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -32,9 +32,6 @@
     </ClCompile>
     <ClCompile Include="TestUtils.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gtesthelper.cpp">
-      <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="..\libargvcodec\utils.cpp">
       <Filter>External Files</Filter>
@@ -51,12 +48,12 @@
     <ClCompile Include="TestValidator.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="gtesthelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentLister.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gtesthelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
@@ -67,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="..\libargvcodec\utils.h">
       <Filter>External Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtesthelper.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TestArgumentList.h">
       <Filter>Tests</Filter>
