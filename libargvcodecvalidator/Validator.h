@@ -8,6 +8,8 @@
 
 namespace libargvcodec
 {
+namespace validation
+{
 
   class LIBARGVCODECVALIDATOR_API Validator
   {
@@ -26,7 +28,10 @@ namespace libargvcodec
   private:
     //private attributes
     bool mUnknownArgumentAsError;
+    #pragma warning(push)
+    #pragma warning(disable: 4251)  // warning C4251: 'foo' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'bar'
     ArgumentList::StringList mDefaultArgumentPrefixes;
+    #pragma warning(pop)
 
     //private methods
     bool validateRule(const ValidationRule * iRule, std::string & oErrorMessage);
@@ -36,4 +41,5 @@ namespace libargvcodec
 
   };
 
+}; //namespace validation
 }; //namespace libargvcodec

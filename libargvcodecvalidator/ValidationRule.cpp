@@ -4,6 +4,8 @@
 
 namespace libargvcodec
 {
+namespace validation
+{
 
 ValidationRule::ValidationRule()
 {
@@ -168,4 +170,5 @@ void ValidationRule::setResult(const ValidationRule::RESULT & iResult)
   mResult = iResult;
 }
 
+}; //namespace validation
 }; //namespace libargvcodec

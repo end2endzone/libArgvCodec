@@ -8,6 +8,8 @@
 
 namespace libargvcodec
 {
+namespace validation
+{
 
 Validator::Validator()
 : mUnknownArgumentAsError(false)
@@ -248,4 +250,5 @@ void Validator::applyDefaultArgumentPrefixes(ArgumentList & ioArgumentList)
 //  return newList;
 //}
 
+}; //namespace validation
 }; //namespace libargvcodec

@@ -2,6 +2,8 @@
 
 namespace libargvcodec
 {
+namespace validation
+{
 
 ValidationRuleSorter::~ValidationRuleSorter()
 {
@@ -71,4 +73,5 @@ advancedsort::SortAttributeList ValidationRuleSorter::getSortAttributes(const VA
   return f;
 }
 
+}; //namespace validation
 }; //namespace libargvcodec

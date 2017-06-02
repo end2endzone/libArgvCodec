@@ -5,6 +5,8 @@
 
 namespace libargvcodec
 {
+namespace validation
+{
 
   class LIBARGVCODECVALIDATOR_API ValidationRule
   {
@@ -74,4 +76,5 @@ namespace libargvcodec
     FLAGS mFlags;
   };
 
+}; //namespace validation
 }; //namespace libargvcodec
