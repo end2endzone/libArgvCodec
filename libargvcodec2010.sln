@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libargvcodec", "libargvcodec\libargvcodec.vcxproj", "{8B120F17-D63D-4783-A96A-08D495065758}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libargvcodectest", "libargvcodectest\libargvcodectest.vcxproj", "{12E9683C-378D-4F85-AB1C-1250119047CD}"

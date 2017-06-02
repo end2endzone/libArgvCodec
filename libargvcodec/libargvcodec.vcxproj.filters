@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="Codec">
+      <UniqueIdentifier>{dd115b46-0c0d-457c-b9b3-96bfc318f622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arguments Validation">
+      <UniqueIdentifier>{0971e279-6a1b-43d0-a36b-14488219544b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -25,25 +31,25 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ArgumentList.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Codec</Filter>
     </ClCompile>
     <ClCompile Include="CmdPromptArgumentCodec.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Codec</Filter>
     </ClCompile>
     <ClCompile Include="CreateProcessArgumentCodec.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Validator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ValidationRuleSorter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Codec</Filter>
     </ClCompile>
     <ClCompile Include="ValidationRule.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Arguments Validation</Filter>
     </ClCompile>
     <ClCompile Include="ValidationRuleList.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Arguments Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="ValidationRuleSorter.cpp">
+      <Filter>Arguments Validation</Filter>
+    </ClCompile>
+    <ClCompile Include="Validator.cpp">
+      <Filter>Arguments Validation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +59,15 @@
     <None Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="advancedsort.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libargvcodec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="macros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="os.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -62,38 +77,32 @@
     <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IArgumentEncoder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ArgumentList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IArgumentDecoder.h">
-      <Filter>Header Files</Filter>
+      <Filter>Codec</Filter>
     </ClInclude>
     <ClInclude Include="CmdPromptArgumentCodec.h">
-      <Filter>Header Files</Filter>
+      <Filter>Codec</Filter>
     </ClInclude>
     <ClInclude Include="CreateProcessArgumentCodec.h">
-      <Filter>Header Files</Filter>
+      <Filter>Codec</Filter>
     </ClInclude>
-    <ClInclude Include="libargvcodec.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="IArgumentDecoder.h">
+      <Filter>Codec</Filter>
     </ClInclude>
-    <ClInclude Include="Validator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ValidationRuleList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="advancedsort.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ValidationRuleSorter.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="IArgumentEncoder.h">
+      <Filter>Codec</Filter>
     </ClInclude>
     <ClInclude Include="ValidationRule.h">
-      <Filter>Header Files</Filter>
+      <Filter>Arguments Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="ValidationRuleList.h">
+      <Filter>Arguments Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="ValidationRuleSorter.h">
+      <Filter>Arguments Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="Validator.h">
+      <Filter>Arguments Validation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
