@@ -1,9 +1,9 @@
 #include "TestCreateProcessArgumentCodec.h"
-#include "gTestHelper.h"
 #include "CmdPromptArgumentCodec.h"
 #include "CreateProcessArgumentCodec.h"
 #include "ArgumentLister.h"
 #include "utils.h"
+#include "gTestHelper.h"
 
 using namespace libargvcodec;
 
@@ -21,10 +21,8 @@ TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
-  gTestHelper & helper = gTestHelper::getInstance();
-
-  ArgumentList::StringList cmdLines;
-  ASSERT_TRUE( helper.getTextFileContent(inputFile, cmdLines) );
+  gTestHelper::StringVector cmdLines;
+  ASSERT_TRUE( gTestHelper::getInstance().getTextFileContent(inputFile, cmdLines) );
   ASSERT_TRUE( cmdLines.size() > 0 );
 
   printf("\n");
@@ -75,10 +73,8 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
-  gTestHelper & helper = gTestHelper::getInstance();
-
-  ArgumentList::StringList testCmdLines;
-  ASSERT_TRUE( helper.getTextFileContent(inputFile, testCmdLines) );
+  gTestHelper::StringVector testCmdLines;
+  ASSERT_TRUE( gTestHelper::getInstance().getTextFileContent(inputFile, testCmdLines) );
   ASSERT_TRUE( testCmdLines.size() > 0 );
 
   printf("\n");

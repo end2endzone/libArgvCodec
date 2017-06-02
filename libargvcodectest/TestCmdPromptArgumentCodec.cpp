@@ -1,9 +1,9 @@
 #include "TestCmdPromptArgumentCodec.h"
-#include "gTestHelper.h"
 #include "CmdPromptArgumentCodec.h"
 #include "ArgumentLister.h"
 #include "utils.h"
 #include "TestUtils.h"
+#include "gTestHelper.h"
 
 using namespace libargvcodec;
 
@@ -21,10 +21,8 @@ TEST_F(TestCmdPromptArgumentCodec, testDecodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
-  gTestHelper & helper = gTestHelper::getInstance();
-
-  ArgumentList::StringList cmdLines;
-  ASSERT_TRUE( helper.getTextFileContent(inputFile, cmdLines) );
+  gTestHelper::StringVector cmdLines;
+  ASSERT_TRUE( gTestHelper::getInstance().getTextFileContent(inputFile, cmdLines) );
   ASSERT_TRUE( cmdLines.size() > 0 );
 
   printf("\n");
@@ -76,14 +74,12 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
   const char * inputFilePrefix = "TestEncodeCommandLine";
   const char * inputFilePostfix = ".txt";
   
-  gTestHelper & helper = gTestHelper::getInstance();
-
   //discover test files
   ArgumentList::StringList testFiles;
   static const int MAX_ID_LENGTH = 3;
   int fileId = 1;
   std::string inputFile = getSequencedFile(inputFilePrefix, fileId, inputFilePostfix, MAX_ID_LENGTH);
-  bool fileFound = helper.fileExists( inputFile.c_str() );
+  bool fileFound = gTestHelper::getInstance().fileExists( inputFile.c_str() );
   while(fileFound)
   {
     testFiles.push_back(inputFile);
@@ -91,7 +87,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
     //prepare for next loop
     fileId++;
     inputFile = getSequencedFile(inputFilePrefix, fileId, inputFilePostfix, MAX_ID_LENGTH);
-    fileFound = helper.fileExists( inputFile.c_str() );
+    fileFound = gTestHelper::getInstance().fileExists( inputFile.c_str() );
   }
   ASSERT_TRUE( testFiles.size() > 0 );
 
@@ -103,8 +99,8 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
     const std::string & testFile = testFiles[i];
 
     //arrange
-    ArgumentList::StringList expectedArgs;
-    ASSERT_TRUE( helper.getTextFileContent(testFile.c_str(), expectedArgs) );
+    gTestHelper::StringVector expectedArgs;
+    ASSERT_TRUE( gTestHelper::getInstance().getTextFileContent(testFile.c_str(), expectedArgs) );
     printf("Testing %d/%d, %s\n", i+1, testFiles.size(), testFile.c_str());
 
     //insert fake .exe name
@@ -155,10 +151,8 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine2)
 {
   const char * inputFile = "shellCommandLines.txt";
 
-  gTestHelper & helper = gTestHelper::getInstance();
-
-  ArgumentList::StringList testCmdLines;
-  ASSERT_TRUE( helper.getTextFileContent(inputFile, testCmdLines) );
+  gTestHelper::StringVector testCmdLines;
+  ASSERT_TRUE( gTestHelper::getInstance().getTextFileContent(inputFile, testCmdLines) );
   ASSERT_TRUE( testCmdLines.size() > 0 );
 
   printf("\n");
