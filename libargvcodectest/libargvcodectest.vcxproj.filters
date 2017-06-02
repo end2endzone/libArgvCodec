@@ -19,6 +19,9 @@
     <Filter Include="Tests">
       <UniqueIdentifier>{ab67dc95-fddc-4831-af79-41d63791cb52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{02b14b96-12e8-4b1f-af47-0c29708c839b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArgumentLister.cpp">
@@ -87,6 +90,12 @@
     </None>
     <None Include="TestEncodeCommandLine002.txt">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="libargvcodectest.x86.debug.xml">
+      <Filter>Generated Files</Filter>
+    </None>
+    <None Include="libargvcodectest.x86.release.xml">
+      <Filter>Generated Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

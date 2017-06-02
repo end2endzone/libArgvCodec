@@ -5,11 +5,12 @@
 #include "utils.h"
 #include "TestUtils.h"
 
+using namespace libargvcodec;
+
 #define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
 
 void TestCmdPromptArgumentCodec::SetUp()
 {
-  gTestHelper & helper = gTestHelper::getInstance();
 }
 
 void TestCmdPromptArgumentCodec::TearDown()

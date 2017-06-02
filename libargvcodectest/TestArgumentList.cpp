@@ -4,6 +4,8 @@
 #include "ArgumentLister.h"
 #include "utils.h"
 
+using namespace libargvcodec;
+
 #define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
 
 void setDefaultOptionPrefix(ArgumentList & m)

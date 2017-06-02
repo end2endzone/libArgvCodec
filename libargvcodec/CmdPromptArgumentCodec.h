@@ -3,8 +3,11 @@
 #include "IArgumentEncoder.h"
 #include "IArgumentDecoder.h"
 
+namespace libargvcodec
+{
+
   class LIBARGVCODEC_API CmdPromptArgumentCodec : public virtual IArgumentEncoder,
-                                            public virtual IArgumentDecoder
+    public virtual IArgumentDecoder
   {
   public:
     CmdPromptArgumentCodec();
@@ -34,3 +37,5 @@
     bool isStringEnd(const char * iCmdLine, size_t iOffset, size_t iSequenceLength);
 
   };
+
+}; //namespace libargvcodec

@@ -5,6 +5,9 @@
 #include "ValidationRule.h"
 #include <vector>
 
+namespace libargvcodec
+{
+
   class LIBARGVCODEC_API ValidationRuleList
   {
   public:
@@ -33,7 +36,7 @@
 
     //rule modification methods
     void setAllRulesInvalid();
-  
+
     //rules query methods
     bool isAllRulesValid();
     const ValidationRule * getFailedRuleAbout(const char * iArgumentName);
@@ -52,3 +55,5 @@
     ValidationRulePtrList mRules;
     SAFE_WARNING_RESTORE();
   };
+
+}; //namespace libargvcodec

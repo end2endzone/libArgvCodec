@@ -85,6 +85,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ArgumentList.cpp" />
+    <ClCompile Include="CmdPromptArgumentCodec.cpp" />
+    <ClCompile Include="CreateProcessArgumentCodec.cpp" />
     <ClCompile Include="dllmain.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -95,9 +98,6 @@
     </ClCompile>
     <ClCompile Include="os.cpp" />
     <ClCompile Include="utils.cpp" />
-    <ClCompile Include="ArgumentList.cpp" />
-    <ClCompile Include="CmdPromptArgumentCodec.cpp" />
-    <ClCompile Include="CreateProcessArgumentCodec.cpp" />
     <ClCompile Include="ValidationRule.cpp" />
     <ClCompile Include="ValidationRuleList.cpp" />
     <ClCompile Include="ValidationRuleSorter.cpp" />
@@ -109,16 +109,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="advancedsort.h" />
-    <ClInclude Include="libargvcodec.h" />
-    <ClInclude Include="macros.h" />
-    <ClInclude Include="os.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="utils.h" />
     <ClInclude Include="ArgumentList.h" />
     <ClInclude Include="CmdPromptArgumentCodec.h" />
     <ClInclude Include="CreateProcessArgumentCodec.h" />
     <ClInclude Include="IArgumentDecoder.h" />
     <ClInclude Include="IArgumentEncoder.h" />
+    <ClInclude Include="libargvcodec.h" />
+    <ClInclude Include="macros.h" />
+    <ClInclude Include="os.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="utils.h" />
     <ClInclude Include="ValidationRule.h" />
     <ClInclude Include="ValidationRuleList.h" />
     <ClInclude Include="ValidationRuleSorter.h" />

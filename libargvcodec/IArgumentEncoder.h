@@ -3,6 +3,9 @@
 #include "libargvcodec.h"
 #include "ArgumentList.h"
 
+namespace libargvcodec
+{
+
   class LIBARGVCODEC_API IArgumentEncoder
   {
   public:
@@ -22,3 +25,5 @@
     //
     virtual std::string encodeCommandLine(const ArgumentList & iArguments) = 0;
   };
+
+}; //namespace libargvcodec

@@ -126,6 +126,8 @@
     <ClInclude Include="TestValidator.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="libargvcodectest.x86.debug.xml" />
+    <None Include="libargvcodectest.x86.release.xml" />
     <None Include="postbuild.bat" />
     <CustomBuild Include="shellCommandLines.txt">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /v "%(FullPath)" "$(OutDir)"

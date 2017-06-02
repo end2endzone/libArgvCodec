@@ -1,12 +1,13 @@
 // test.cpp : Defines the entry point for the console application.
 //
 
+#include "targetver.h"
+
 #include <stdio.h>
 #include <iostream>
 #include <stdio.h>
 
 #include <gtest/gtest.h>
-
 #include "gtesthelper.h"
 
 #include "ArgumentLister.h"
@@ -24,8 +25,7 @@ int main(int argc, char **argv)
   }
   initExecStubs();
 
-  //Continue with gTest execution...
-
+  //init google test
   gTestHelper & hlp = gTestHelper::getInstance();
   if (hlp.isProcessorX86())
   {
@@ -41,6 +41,11 @@ int main(int argc, char **argv)
     else
       ::testing::GTEST_FLAG(output) = "xml:libargvcodectest.x64.release.xml";
   }
+
+  //ArgumentList::StringList args;
+  //bool a = createProcessDecodeCommandLineArguments("test \"allo toi\" \"\" ^\"test^\" coucou", args);
+  //std::string b = createProcessDecodeArgument("ab");
+  //int c = 0;
 
   ::testing::GTEST_FLAG(filter) = "*";
   ::testing::InitGoogleTest(&argc, argv);

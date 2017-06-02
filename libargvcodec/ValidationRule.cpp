@@ -2,6 +2,9 @@
 
 #include "ValidationRule.h"
 
+namespace libargvcodec
+{
+
 ValidationRule::ValidationRule()
 {
   memset(&mFlags, 0, sizeof(mFlags));
@@ -164,3 +167,5 @@ void ValidationRule::setResult(const ValidationRule::RESULT & iResult)
 {
   mResult = iResult;
 }
+
+}; //namespace libargvcodec

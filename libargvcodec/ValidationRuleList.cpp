@@ -1,5 +1,8 @@
 #include "ValidationRuleList.h"
 
+namespace libargvcodec
+{
+
 ValidationRuleList::ValidationRuleList()
 {
 }
@@ -136,3 +139,5 @@ void ValidationRuleList::copyFrom(const ValidationRuleList & ioRuleList)
     }
   }
 }
+
+}; //namespace libargvcodec
