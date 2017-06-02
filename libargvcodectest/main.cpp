@@ -1,18 +1,22 @@
-// test.cpp : Defines the entry point for the console application.
+// ArgMgrTest.c pp : Defines the entry point for the console application.
 //
 
 #include "targetver.h"
 
 #include <stdio.h>
-#include <iostream>
-#include <stdio.h>
+#include <tchar.h>
+
+#include "ArgumentList.h"
 
 #include <gtest/gtest.h>
 #include "gtesthelper.h"
 
 #include "ArgumentLister.h"
 
-int main(int argc, char **argv)
+//libargvcodec::ArgumentList gArgumentMgr;
+
+//int _tmain(int argc, _TCHAR* argv[])
+int main(int argc, char* argv[])
 {
   //Handle argument stubs
   if (isPrinterExec())

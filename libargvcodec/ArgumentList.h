@@ -1,7 +1,6 @@
 #pragma once
 
 #include "libargvcodec.h"
-#include "macros.h"
 #include <string>
 #include <vector>
 
@@ -12,6 +11,7 @@ namespace libargvcodec
   {
   public:
     typedef std::vector<std::string> StringList;
+    ARGVCODEC_EXPORT_STL_VECTOR(LIBARGVCODEC_API, std::string);
 
     ArgumentList();
     ArgumentList(const ArgumentList & iArgumentManager);
@@ -235,11 +235,12 @@ namespace libargvcodec
     bool findValue2(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const;
     bool findNextValue2(const char * iValueName, bool iCaseSensitive, int & oIndex, std::string & oValue) const;
 
-    //warning C4251: 'ArgumentList::mArguments' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'ArgumentList'
-    SAFE_WARNING_DISABLE(4251);
+    #pragma warning(push)
+    #pragma warning(disable: 4251)  // warning C4251: 'foo' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'bar'
     StringList mArguments;
     StringList mPrefixes;
-    SAFE_WARNING_RESTORE();
+    #pragma warning(pop)
+
   };
 
 }; //namespace libargvcodec

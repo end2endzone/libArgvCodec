@@ -34,6 +34,6 @@ DONE! - Enable all tests
 DONE! - Move code which handles command line arguments validation to its own specific library. The code might be deleted later since there are already many argument validation api that already exists.
 DONE! - Fix issues about warning C4251: 'libargvcodec::validation::ValidationRuleSorter::mBoolInstances' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'libargvcodec::validation::ValidationRuleSorter'
 DONE! - Move code in libargvcodecvalidator under its own namespace
+DONE! - Create a command line project which ask for arguments and outputs the full command line.
+DONE! - Add LGPL license file.
 - Add support for validating arguments againts an argument list specification. This will allow users to specify the argument format/names/meaning and ask the manager to validate the given arguments against this specification. If will also provide a custom error message for invalid/missing arguments.
-- Create a command line project which ask for arguments and outputs the full command line.
-- Add LGPL license file.
