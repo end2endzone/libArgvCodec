@@ -2,6 +2,6 @@
 
 #include <string>
 
-std::string getLastErrorDescription();
-std::string getLocalDllPath();
-std::string getLocalExePath();
+  std::string getLastErrorDescription();
+  std::string getLocalDllPath();
+  std::string getLocalExePath();
