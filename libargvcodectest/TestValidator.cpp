@@ -1,5 +1,4 @@
 #include "TestValidator.h"
-#include "gTestHelper.h"
 #include "Validator.h"
 #include "utils.h"
 
@@ -144,7 +143,7 @@ TEST_F(TestValidator, testValidatorWithOrphan)
   //rules.push_back(&ruleY);
   
   Validator v;
-  v.setOrphanArgumentsAccepted(true);
+  v.setUnknownArgumentAsError(true);
   v.validate(m, rules);
 
   //expecting ruleX and ruleY found in result lists
@@ -182,7 +181,7 @@ TEST_F(TestValidator, testValidatorWithoutOrphan)
   //rules.push_back(&ruleY);
   
   Validator v;
-  v.setOrphanArgumentsAccepted(false);
+  v.setUnknownArgumentAsError(false);
   v.validate(m, rules);
 
   //expecting ruleX and ruleY found in result lists
@@ -247,7 +246,7 @@ TEST_F(TestValidator, testMissingMandatoryArgument)
   DECLARE_MANDATORY_FLAG_RULE(ruleZ, "/z");
 
   Validator v;
-  v.setOrphanArgumentsAccepted(true);
+  v.setUnknownArgumentAsError(true);
   v.validate(m, rules);
 
   ASSERT_EQ(rules.getRules().size(), 4);
@@ -273,7 +272,7 @@ TEST_F(TestValidator, testMissingOptionalArgument)
   DECLARE_OPTIONAL_FLAG_RULE(ruleZ, "/z");
 
   Validator v;
-  v.setOrphanArgumentsAccepted(true);
+  v.setUnknownArgumentAsError(true);
   v.validate(m, rules);
 
   ASSERT_EQ(rules.getRules().size(), 4);

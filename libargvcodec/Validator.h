@@ -18,14 +18,14 @@ namespace libargvcodec
     bool validate(const ArgumentList & iArgumentList, ValidationRuleList & ioRuleList);
 
     //global options
-    void setOrphanArgumentsAccepted(bool iOrphanArgumentsAccepted);
+    void setUnknownArgumentAsError(bool iOrphanArgumentsAccepted);
 
     //static 
     static void sortRules(ValidationRuleList & ioRuleList);
 
   private:
     //private attributes
-    bool mOrphanArgumentsAccepted;
+    bool mUnknownArgumentAsError;
 
     //warning C4251: 'Validator::mDefaultArgumentPrefixes' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'Validator'
     SAFE_WARNING_DISABLE(4251);

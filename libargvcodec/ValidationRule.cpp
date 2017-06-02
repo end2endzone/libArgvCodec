@@ -40,12 +40,12 @@ ValidationRule::~ValidationRule()
 
 void ValidationRule::setInvalid()
 {
-  mResult.validity = false;
+  mResult.valid = false;
 }
 
 bool ValidationRule::isValid() const
 {
-  return mResult.validity;
+  return mResult.valid;
 }
 
 const std::string & ValidationRule::getName() const

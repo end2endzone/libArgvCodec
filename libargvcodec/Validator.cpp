@@ -10,7 +10,7 @@ namespace libargvcodec
 {
 
 Validator::Validator()
-: mOrphanArgumentsAccepted(false)
+: mUnknownArgumentAsError(false)
 {
   //build default list of prefixes
   mDefaultArgumentPrefixes.clear();
@@ -49,7 +49,7 @@ bool Validator::validate(const ArgumentList & iArgumentList, ValidationRuleList 
   }
 
   //check for orphan argument
-  if (!mOrphanArgumentsAccepted && arguments.getArgc() > 0)
+  if (!mUnknownArgumentAsError && arguments.getArgc() > 0)
   {
     //define failed rules for each remaining arguments
     static const int BUFFER_SIZE = 1024;
@@ -65,7 +65,7 @@ bool Validator::validate(const ArgumentList & iArgumentList, ValidationRuleList 
       sprintf(errorMessage, "Unknown argument \"%s\".", argValue);
 
       ValidationRule::RESULT r;
-      r.validity = false;
+      r.valid = false;
       r.errorDescription = errorMessage;
 
       rule->setResult(r);
@@ -77,9 +77,9 @@ bool Validator::validate(const ArgumentList & iArgumentList, ValidationRuleList 
   return ioRuleList.isAllRulesValid();
 }
 
-void Validator::setOrphanArgumentsAccepted(bool iOrphanArgumentsAccepted)
+void Validator::setUnknownArgumentAsError(bool iOrphanArgumentsAccepted)
 {
-  this->mOrphanArgumentsAccepted = iOrphanArgumentsAccepted;
+  this->mUnknownArgumentAsError = iOrphanArgumentsAccepted;
 }
 
 void Validator::sortRules(ValidationRuleList & ioRuleList)
@@ -125,7 +125,7 @@ void Validator::processRule(ValidationRule * iRule, ArgumentList & ioArgumentLis
 {
   iRule->setInvalid();
   ValidationRule::RESULT r;
-  r.validity = false;
+  r.valid = false;
 
   //validate rule
   if (!validateRule(iRule, r.errorDescription))
@@ -220,7 +220,7 @@ void Validator::processRule(ValidationRule * iRule, ArgumentList & ioArgumentLis
   }
 
   //expected successful result at this point
-  r.validity = true;
+  r.valid = true;
   iRule->setResult(r);
   return; //success
 }
