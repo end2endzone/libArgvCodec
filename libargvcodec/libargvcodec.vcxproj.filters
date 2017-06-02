@@ -71,8 +71,5 @@
     <ClInclude Include="advancedsort.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="macros.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

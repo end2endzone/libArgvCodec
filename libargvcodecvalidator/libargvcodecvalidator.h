@@ -9,3 +9,10 @@
 #else
 #define LIBARGVCODECVALIDATOR_API __declspec(dllimport)
 #endif
+
+/// <summary>
+/// Macro to export a stl::vector template
+/// </summary>
+#define VALIDATOR_EXPORT_STL_VECTOR( apimacro, vectortype ) /*\
+  template class apimacro std::allocator< vectortype >; \
+  template class apimacro std::vector<vectortype, std::allocator< vectortype > >;*/

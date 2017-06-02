@@ -17,6 +17,7 @@ namespace validation
     advancedsort::SortAttributeList getSortAttributes(const VALIDATION_RULE_PTR & iObject);
 
     typedef std::vector<bool*> BoolPtrVector;
+    VALIDATOR_EXPORT_STL_VECTOR(LIBARGVCODECVALIDATOR_API, bool *);
 
   private:
     bool * newBool(bool iValue);
