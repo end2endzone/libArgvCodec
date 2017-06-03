@@ -9,20 +9,20 @@
 
 #include "ArgumentList.h"
 #include "CmdPromptArgumentCodec.h"
+#include "CreateProcessArgumentCodec.h"
 
 using namespace libargvcodec;
 using namespace std;
 
 void printHeader()
 {
-  cout << "argencoder v1.0 - console command line encoder" << endl;
+  cout << "argencoder v1.0 - command line encoder" << endl;
   cout << endl;
 }
 
 int main(int argc, _TCHAR* argv[])
 {
   printHeader();
-  //printUsage();
 
   int numArguments = 0;
   cout << "Enter the number of arguments to encode: ";
@@ -33,6 +33,7 @@ int main(int argc, _TCHAR* argv[])
   std::string tmp;
   std::getline(std::cin, tmp);
 
+  //validate
   if (numArguments < 0)
   {
     cout << "invalid number of arguments" << endl;
@@ -61,11 +62,20 @@ int main(int argc, _TCHAR* argv[])
   cout << endl;
 
   //Encode
-  CmdPromptArgumentCodec codec;
-  std::string cmdLine = codec.encodeCommandLine(arglist);
-
-  cout << "The encoded command line is the following:" << endl;
-  cout << cmdLine << endl;
+  {
+    CmdPromptArgumentCodec codec;
+    std::string cmdLine = codec.encodeCommandLine(arglist);
+    cout << "The encoded command line for the command prompt is the following:" << endl;
+    cout << cmdLine << endl;
+    cout << endl;
+  }
+  {
+    CreateProcessArgumentCodec codec;
+    std::string cmdLine = codec.encodeCommandLine(arglist);
+    cout << "The encoded command line for CreatePaocess() api is the following:" << endl;
+    cout << cmdLine << endl;
+    cout << endl;
+  }
 
 	return 0;
 }
