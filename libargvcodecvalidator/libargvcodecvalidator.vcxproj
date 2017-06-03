@@ -108,6 +108,7 @@
     <ClCompile Include="Validator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="advancedsort.h" />
     <ClInclude Include="libargvcodecvalidator.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ValidationRule.h" />

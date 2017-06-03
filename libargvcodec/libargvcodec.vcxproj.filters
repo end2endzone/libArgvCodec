@@ -68,8 +68,5 @@
     <ClInclude Include="libargvcodec.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="advancedsort.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
