@@ -221,6 +221,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\advancedsort.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libargvcodecvalidator.h"
 				>
 			</File>

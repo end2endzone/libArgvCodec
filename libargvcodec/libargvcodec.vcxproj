@@ -104,7 +104,6 @@
     <None Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="advancedsort.h" />
     <ClInclude Include="ArgumentList.h" />
     <ClInclude Include="CmdPromptArgumentCodec.h" />
     <ClInclude Include="CreateProcessArgumentCodec.h" />
