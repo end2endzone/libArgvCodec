@@ -77,11 +77,6 @@ echo.
 echo =============================================
 echo Building installer package...
 echo =============================================
-REM echo %1\argencoder.exe>%1\files.txt
-REM echo %1\libargvcodec.dll>%1\files.txt
-REM echo %1\libargvcodectest.exe>%1\files.txt
-REM 
-REM "C:\Program Files\7-Zip\7z.exe" a -tzip "%OUTPUT_FILE%" @%1\files.txt
 del /Q "%OUTPUT_FILE%" >NUL 2>NUL
 "C:\Program Files\7-Zip\7z.exe" a -tzip "%OUTPUT_FILE%" "%1\package\tests" "%1\package\include" "%1\package\lib" "%1\package\bin"
 echo done
