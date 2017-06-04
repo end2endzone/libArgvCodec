@@ -13,10 +13,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "showargs", "showargs\showar
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "installer", "installer\installer.vcxproj", "{46B5139D-BC8C-48A8-905B-89742FD32059}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "promptconsole", "promptconsole\promptconsole.vcxproj", "{48128FD1-DA22-4E33-B0A6-F7FC6F08BFDD}"
+EndProject
 Global
-	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
-		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
@@ -46,8 +45,15 @@ Global
 		{46B5139D-BC8C-48A8-905B-89742FD32059}.Debug|Win32.Build.0 = Debug|Win32
 		{46B5139D-BC8C-48A8-905B-89742FD32059}.Release|Win32.ActiveCfg = Release|Win32
 		{46B5139D-BC8C-48A8-905B-89742FD32059}.Release|Win32.Build.0 = Release|Win32
+		{48128FD1-DA22-4E33-B0A6-F7FC6F08BFDD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{48128FD1-DA22-4E33-B0A6-F7FC6F08BFDD}.Debug|Win32.Build.0 = Debug|Win32
+		{48128FD1-DA22-4E33-B0A6-F7FC6F08BFDD}.Release|Win32.ActiveCfg = Release|Win32
+		{48128FD1-DA22-4E33-B0A6-F7FC6F08BFDD}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
+		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
 	EndGlobalSection
 EndGlobal
