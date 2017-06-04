@@ -18,7 +18,6 @@ namespace validation
     virtual ~ValidationRuleList();
 
     typedef std::vector<ValidationRule*> ValidationRulePtrList;
-    VALIDATOR_EXPORT_STL_VECTOR(LIBARGVCODECVALIDATOR_API, ValidationRule*);
 
     const ValidationRulePtrList & getRules() const;
     ValidationRulePtrList & getRules();
