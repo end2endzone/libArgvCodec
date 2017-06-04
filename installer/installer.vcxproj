@@ -75,6 +75,9 @@
     <ProjectReference Include="..\libargvcodec\libargvcodec.vcxproj">
       <Project>{8b120f17-d63d-4783-a96a-08d495065758}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\promptconsole\promptconsole.vcxproj">
+      <Project>{48128fd1-da22-4e33-b0a6-f7fc6f08bfdd}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\showargs\showargs.vcxproj">
       <Project>{3645ffdb-5e6d-4c43-ac20-9de61c00dcd1}</Project>
     </ProjectReference>

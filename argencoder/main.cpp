@@ -6,10 +6,12 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <iostream>
+#include <conio.h>
 
 #include "ArgumentList.h"
 #include "CmdPromptArgumentCodec.h"
 #include "CreateProcessArgumentCodec.h"
+#include "promptconsole.h"
 
 using namespace libargvcodec;
 using namespace std;
@@ -75,6 +77,14 @@ int main(int argc, _TCHAR* argv[])
     cout << "The encoded command line for CreatePaocess() api is the following:" << endl;
     cout << cmdLine << endl;
     cout << endl;
+  }
+
+  //is this application that spawned a console?
+  //if so, then we ask the user to press a key before it goes away
+  if (hasConsoleOwnership())
+  {
+    cout << "Press a key to terminate application..." << endl;
+    _getch();
   }
 
 	return 0;
