@@ -1,12 +1,11 @@
-// ArgMgrTest.c pp : Defines the entry point for the console application.
+// test.cpp : Defines the entry point for the console application.
 //
 
 #include "targetver.h"
 
 #include <stdio.h>
-#include <tchar.h>
-
-#include "ArgumentList.h"
+#include <iostream>
+#include <stdio.h>
 
 #include <gtest/gtest.h>
 #include "gtesthelper.h"
