@@ -237,18 +237,5 @@ void Validator::applyDefaultArgumentPrefixes(ArgumentList & ioArgumentList)
   }
 }
 
-//ValidationRuleList Validator::makeCopy(ValidationRuleList & iRuleList)
-//{
-//  ValidationRuleList newList;
-//
-//  ValidationRuleList::ValidationRulePtrList & rules = iRuleList.getRules();
-//  for(size_t i=0; i<rules.size(); i++)
-//  {
-//    newList.addRule( rules[i] );
-//  }
-//
-//  return newList;
-//}
-
 }; //namespace validation
 }; //namespace libargvcodec
