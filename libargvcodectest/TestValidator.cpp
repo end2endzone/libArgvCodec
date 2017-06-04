@@ -5,35 +5,6 @@
 using namespace libargvcodec;
 using namespace libargvcodec::validation;
 
-//#define DECLARE_FLAG_RULE(name, arg, mandatory) \
-//  VALIDATION_RULE name;                         \
-//  name.argumentName = arg;                      \
-//  name.flags.isMandatory = mandatory;           \
-//  name.flags.isFlag = true;                     \
-//  rules.add(&name);
-//
-//#define DECLARE_MANDATORY_FLAG_RULE(name, arg)  \
-//  VALIDATION_RULE name;                         \
-//  name.argumentName = arg;                      \
-//  name.flags.isMandatory = true;                \
-//  name.flags.isFlag = true;                     \
-//  rules.add(&name);
-//
-//#define DECLARE_OPTIONAL_FLAG_RULE(name, arg) \
-//  VALIDATION_RULE name;                       \
-//  name.argumentName = arg;                    \
-//  name.flags.isOptional = true;               \
-//  name.flags.isFlag = true;                   \
-//  rules.add(&name);
-//
-//#define DECLARE_NEXTVALUE_RULE(name, arg, nextvalue)  \
-//  VALIDATION_RULE name;                               \
-//  name.argumentName = arg;                            \
-//  name.flags.isMandatory = true;                      \
-//  name.flags.isFlag = !nextvalue;                     \
-//  name.flags.hasNextValue = nextvalue;                \
-//  rules.add(&name);
-
 #define DECLARE_FLAG_RULE(name, arg, mandatory)         \
   ValidationRule * name = NULL;                         \
   {                                                     \
@@ -132,17 +103,6 @@ TEST_F(TestValidator, testValidatorWithOrphan)
   DECLARE_FLAG_RULE(ruleX, "/x", true);
   DECLARE_FLAG_RULE(ruleY, "/y", true);
 
-  //VALIDATION_RULE ruleX;
-  //ruleX.argumentName = "/x";
-  //ruleX.flags.isMandatory = true;
-  //ruleX.flags.isFlag = true;
-  //rules.push_back(&ruleX);
-  //VALIDATION_RULE ruleY;
-  //ruleY.argumentName = "/y";
-  //ruleY.flags.isMandatory = true;
-  //ruleY.flags.isFlag = true;
-  //rules.push_back(&ruleY);
-  
   Validator v;
   v.setUnknownArgumentAsError(true);
   v.validate(m, rules);
@@ -170,17 +130,6 @@ TEST_F(TestValidator, testValidatorWithoutOrphan)
   DECLARE_FLAG_RULE(ruleX, "/x", true);
   DECLARE_FLAG_RULE(ruleY, "/y", true);
 
-  //VALIDATION_RULE ruleX;
-  //ruleX.argumentName = "/x";
-  //ruleX.flags.isMandatory = true;
-  //ruleX.flags.isFlag = true;
-  //rules.push_back(&ruleX);
-  //VALIDATION_RULE ruleY;
-  //ruleY.argumentName = "/y";
-  //ruleY.flags.isMandatory = true;
-  //ruleY.flags.isFlag = true;
-  //rules.push_back(&ruleY);
-  
   Validator v;
   v.setUnknownArgumentAsError(false);
   v.validate(m, rules);
