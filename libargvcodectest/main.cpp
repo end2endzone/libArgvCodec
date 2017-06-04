@@ -13,9 +13,6 @@
 
 #include "ArgumentLister.h"
 
-//libargvcodec::ArgumentList gArgumentMgr;
-
-//int _tmain(int argc, _TCHAR* argv[])
 int main(int argc, char* argv[])
 {
   //Handle argument stubs
@@ -45,11 +42,6 @@ int main(int argc, char* argv[])
     else
       ::testing::GTEST_FLAG(output) = "xml:libargvcodectest.x64.release.xml";
   }
-
-  //ArgumentList::StringList args;
-  //bool a = createProcessDecodeCommandLineArguments("test \"allo toi\" \"\" ^\"test^\" coucou", args);
-  //std::string b = createProcessDecodeArgument("ab");
-  //int c = 0;
 
   ::testing::GTEST_FLAG(filter) = "*";
   ::testing::InitGoogleTest(&argc, argv);
