@@ -28,10 +28,10 @@ namespace validation
   private:
     //private attributes
     bool mUnknownArgumentAsError;
-    #pragma warning(push)
-    #pragma warning(disable: 4251)  // warning C4251: 'foo' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'bar'
+
+    SAFE_WARNING_DISABLE(4251); //warning C4251: 'ArgumentList::mArguments' : // warning C4251: 'foo' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'bar'
     ArgumentList::StringList mDefaultArgumentPrefixes;
-    #pragma warning(pop)
+    SAFE_WARNING_RESTORE();
 
     //private methods
     bool validateRule(const ValidationRule * iRule, std::string & oErrorMessage);

@@ -247,6 +247,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\macros.h"
+				>
+			</File>
+			<File
 				RelativePath=".\os.h"
 				>
 			</File>

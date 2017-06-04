@@ -110,6 +110,7 @@
     <ClInclude Include="IArgumentDecoder.h" />
     <ClInclude Include="IArgumentEncoder.h" />
     <ClInclude Include="libargvcodec.h" />
+    <ClInclude Include="macros.h" />
     <ClInclude Include="os.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="utils.h" />

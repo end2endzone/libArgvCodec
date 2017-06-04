@@ -55,6 +55,7 @@ copy /v "%1\TestEncodeCommandLine002.txt"              "%1\package\tests"
 
 mkdir "%1\package\include" >NUL 2>NUL
 del /Q "%1\package\include\*.*" >NUL 2>NUL
+copy /v "%2\libargvcodec\macros.h"                     "%1\package\include"
 copy /v "%2\libargvcodec\ArgumentList.h"               "%1\package\include"
 copy /v "%2\libargvcodec\CmdPromptArgumentCodec.h"     "%1\package\include"
 copy /v "%2\libargvcodec\CreateProcessArgumentCodec.h" "%1\package\include"

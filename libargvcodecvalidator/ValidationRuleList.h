@@ -2,6 +2,7 @@
 
 #include "libargvcodecvalidator.h"
 #include "ValidationRule.h"
+#include "macros.h"
 #include <vector>
 
 namespace libargvcodec
@@ -51,10 +52,9 @@ namespace validation
     void copyFrom(const ValidationRuleList & ioRuleList);
 
     //attributes
-    #pragma warning(push)
-    #pragma warning(disable: 4251)  // warning C4251: 'foo' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'bar'
+    SAFE_WARNING_DISABLE(4251); //warning C4251: 'ArgumentList::mArguments' : // warning C4251: 'foo' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'bar'
     ValidationRulePtrList mRules;
-    #pragma warning(pop)
+    SAFE_WARNING_RESTORE();
   };
 
 }; //namespace validation
