@@ -126,10 +126,10 @@
   //        a "" b                      a                     [empty]                 c
   //        "" a b                      [empty]               a                       b
   //        a b ""                      a                     b                       [empty]
-  //        a ^"^" b                    a                     [empty]                 c
+  //        a ^"^" b                    a                     [empty]                 b
   //        ^"^" a b                    [empty]               a                       b
   //        a b ^"^"                    a                     b                       [empty]
-  //        a ^"" b                     a                     [empty]                 c
+  //        a ^"" b                     a                     [empty]                 b
   //        ^"" a b                     [empty]               a                       b
   //        a b ^""                     a                     b                       [empty]
   // 7. Two juxtaposed strings (not separated by a delimiter character), will insert a plain " character between each other.
