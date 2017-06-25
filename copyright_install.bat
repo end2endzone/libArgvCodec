@@ -37,8 +37,8 @@ call :INSERT %~dp0libargvcodectest\TestUtils.h
 call :INSERT %~dp0libargvcodectest\TestValidator.cpp
 call :INSERT %~dp0libargvcodectest\TestValidator.h
 
-call :INSERT %~dp0promptconsole\promptconsole.cpp
-call :INSERT %~dp0promptconsole\promptconsole.h
+call :INSERT %~dp0libPromptConsole\libPromptConsole.cpp
+call :INSERT %~dp0libPromptConsole\libPromptConsole.h
 
 call :INSERT %~dp0showargs\showargs.cpp
 call :INSERT %~dp0showargs\targetver.h
