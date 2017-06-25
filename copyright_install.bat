@@ -1,7 +1,7 @@
 @echo off
 
-call :INSERT %~dp0argencoder\main.cpp
-call :INSERT %~dp0argencoder\targetver.h
+call :INSERT %~dp0ArgEncoder\main.cpp
+call :INSERT %~dp0ArgEncoder\targetver.h
 
 call :INSERT %~dp0libargvcodec\ArgumentList.cpp
 call :INSERT %~dp0libargvcodec\ArgumentList.h
@@ -40,8 +40,8 @@ call :INSERT %~dp0libargvcodectest\TestValidator.h
 call :INSERT %~dp0libPromptConsole\libPromptConsole.cpp
 call :INSERT %~dp0libPromptConsole\libPromptConsole.h
 
-call :INSERT %~dp0showargs\showargs.cpp
-call :INSERT %~dp0showargs\targetver.h
+call :INSERT %~dp0ShowArgs\ShowArgs.cpp
+call :INSERT %~dp0ShowArgs\targetver.h
 
 pause
 
