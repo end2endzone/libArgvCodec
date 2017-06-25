@@ -12,8 +12,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{43F1DD48-0897-4D9C-B8F7-A33671D9785C}</ProjectGuid>
-    <RootNamespace>argencoder</RootNamespace>
+    <RootNamespace>ArgEncoder</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>ArgEncoder</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
