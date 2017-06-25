@@ -12,9 +12,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8B120F17-D63D-4783-A96A-08D495065758}</ProjectGuid>
-    <RootNamespace>libArgvCodec</RootNamespace>
+    <RootNamespace>ArgMgr</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <ProjectName>libArgvCodec</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

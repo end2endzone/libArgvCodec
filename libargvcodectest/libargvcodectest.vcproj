@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="libArgvCodecTest"
+	Name="libargvcodectest"
 	ProjectGUID="{12E9683C-378D-4F85-AB1C-1250119047CD}"
 	RootNamespace="ArgMgrTest"
 	Keyword="Win32Proj"
