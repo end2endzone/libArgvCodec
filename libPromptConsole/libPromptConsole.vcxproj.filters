@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="promptconsole.cpp">
+    <ClCompile Include="libPromptConsole.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="promptconsole.h">
+    <ClInclude Include="libPromptConsole.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
