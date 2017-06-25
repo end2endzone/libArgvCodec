@@ -106,7 +106,6 @@
     <ClCompile Include="TestCmdPromptArgumentCodec.cpp" />
     <ClCompile Include="TestCreateProcessArgumentCodec.cpp" />
     <ClCompile Include="TestUtils.cpp" />
-    <ClCompile Include="TestValidator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\libargvcodec\utils.h" />
@@ -117,7 +116,6 @@
     <ClInclude Include="TestCmdPromptArgumentCodec.h" />
     <ClInclude Include="TestCreateProcessArgumentCodec.h" />
     <ClInclude Include="TestUtils.h" />
-    <ClInclude Include="TestValidator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libargvcodectest.x86.debug.xml" />

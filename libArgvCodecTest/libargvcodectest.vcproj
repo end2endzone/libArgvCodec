@@ -177,7 +177,6 @@
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{BF073A7B-A727-4092-94E2-77F0F6F8FA32}"
-			RelativePathToProject=".\libargvcodecvalidator\libargvcodecvalidator.vcproj"
 		/>
 	</References>
 	<Files>
@@ -302,14 +301,6 @@
 			</File>
 			<File
 				RelativePath=".\TestCreateProcessArgumentCodec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TestValidator.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TestValidator.h"
 				>
 			</File>
 		</Filter>

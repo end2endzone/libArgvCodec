@@ -45,9 +45,6 @@
     <ClCompile Include="TestCreateProcessArgumentCodec.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="TestValidator.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
     <ClCompile Include="gtesthelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -75,9 +72,6 @@
       <Filter>Tests</Filter>
     </ClInclude>
     <ClInclude Include="TestCreateProcessArgumentCodec.h">
-      <Filter>Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="TestValidator.h">
       <Filter>Tests</Filter>
     </ClInclude>
   </ItemGroup>
