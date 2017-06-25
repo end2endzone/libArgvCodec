@@ -8,4 +8,5 @@ rmdir /q/s .\libargvcodec\Release
 rmdir /q/s .\libargvcodectest\Debug
 rmdir /q/s .\libargvcodectest\Release
 del *.ncb
+del *.sdf
 del /ah *.suo
