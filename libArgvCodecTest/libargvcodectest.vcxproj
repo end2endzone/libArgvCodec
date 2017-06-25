@@ -11,9 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{43F1DD48-0897-4D9C-B8F7-A33671D9785C}</ProjectGuid>
-    <RootNamespace>argencoder</RootNamespace>
+    <ProjectGuid>{12E9683C-378D-4F85-AB1C-1250119047CD}</ProjectGuid>
+    <RootNamespace>libArgvCodecTest</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>libArgvCodecTest</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -49,17 +50,13 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\libargvcodec;..\libPromptConsole;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libargvcodec;..\libargvcodecvalidator;$(GTEST_INCLUDE);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>
-      </PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
@@ -67,22 +64,23 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(GTEST_LIBRARY_DIR)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vc90_$(Configuration)_MT_DLL_$(Platform)_gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>call PostBuild.bat $(ProjectDir) $(OutDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\libargvcodec;..\libPromptConsole;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libargvcodec;..\libargvcodecvalidator;$(GTEST_INCLUDE);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>
-      </PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
@@ -92,23 +90,57 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(GTEST_LIBRARY_DIR)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vc90_$(Configuration)_MT_DLL_$(Platform)_gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>call PostBuild.bat $(ProjectDir) $(OutDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\libargvcodec\utils.cpp" />
+    <ClCompile Include="ArgumentLister.cpp" />
+    <ClCompile Include="gtesthelper.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="TestArgumentList.cpp" />
+    <ClCompile Include="TestCmdPromptArgumentCodec.cpp" />
+    <ClCompile Include="TestCreateProcessArgumentCodec.cpp" />
+    <ClCompile Include="TestUtils.cpp" />
+    <ClCompile Include="TestValidator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\libargvcodec\utils.h" />
+    <ClInclude Include="ArgumentLister.h" />
+    <ClInclude Include="gtesthelper.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="TestArgumentList.h" />
+    <ClInclude Include="TestCmdPromptArgumentCodec.h" />
+    <ClInclude Include="TestCreateProcessArgumentCodec.h" />
+    <ClInclude Include="TestUtils.h" />
+    <ClInclude Include="TestValidator.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="libargvcodectest.x86.debug.xml" />
+    <None Include="libargvcodectest.x86.release.xml" />
+    <None Include="postbuild.bat" />
+    <None Include="TestEncodeCommandLine001.txt" />
+    <None Include="TestEncodeCommandLine002.txt" />
+    <CustomBuild Include="shellCommandLines.txt">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /v "%(FullPath)" "$(OutDir)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension);%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /v "%(FullPath)" "$(OutDir)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension);%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libargvcodecvalidator\libargvcodecvalidator.vcxproj">
+      <Project>{bf073a7b-a727-4092-94e2-77f0f6f8fa32}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\libargvcodec\libargvcodec.vcxproj">
       <Project>{8b120f17-d63d-4783-a96a-08d495065758}</Project>
-      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\libPromptConsole\libPromptConsole.vcxproj">
-      <Project>{48128fd1-da22-4e33-b0a6-f7fc6f08bfdd}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="targetver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

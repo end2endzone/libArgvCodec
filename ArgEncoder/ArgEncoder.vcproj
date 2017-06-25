@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="showargs"
-	ProjectGUID="{3645FFDB-5E6D-4C43-AC20-9DE61C00DCD1}"
-	RootNamespace="showargs"
+	Name="ArgEncoder"
+	ProjectGUID="{43F1DD48-0897-4D9C-B8F7-A33671D9785C}"
+	RootNamespace="argencoder"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -41,12 +41,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\libPromptConsole"
+				AdditionalIncludeDirectories="..\libargvcodec;..\libPromptConsole"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
+				PrecompiledHeaderThrough=""
+				PrecompiledHeaderFile=""
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -115,11 +117,13 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\libPromptConsole"
+				AdditionalIncludeDirectories="..\libargvcodec;..\libPromptConsole"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
+				PrecompiledHeaderThrough=""
+				PrecompiledHeaderFile=""
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -166,6 +170,10 @@
 	</Configurations>
 	<References>
 		<ProjectReference
+			ReferencedProjectIdentifier="{8B120F17-D63D-4783-A96A-08D495065758}"
+			RelativePathToProject=".\libargvcodec\libargvcodec.vcproj"
+		/>
+		<ProjectReference
 			ReferencedProjectIdentifier="{48128FD1-DA22-4E33-B0A6-F7FC6F08BFDD}"
 			RelativePathToProject=".\libPromptConsole\libPromptConsole.vcproj"
 		/>
@@ -177,7 +185,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\showargs.cpp"
+				RelativePath=".\main.cpp"
 				>
 			</File>
 		</Filter>
