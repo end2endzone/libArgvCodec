@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="libargvcodec"
-	ProjectGUID="{8B120F17-D63D-4783-A96A-08D495065758}"
-	RootNamespace="ArgMgr"
+	Name="libArgvCodecValidator"
+	ProjectGUID="{BF073A7B-A727-4092-94E2-77F0F6F8FA32}"
+	RootNamespace="libargvcodecvalidator"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -41,7 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBARGVCODEC_EXPORTS;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="..\libargvcodec"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBARGVCODECVALIDATOR_EXPORTS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -114,7 +115,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBARGVCODEC_EXPORTS;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="..\libargvcodec"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBARGVCODECVALIDATOR_EXPORTS;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -163,6 +165,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{8B120F17-D63D-4783-A96A-08D495065758}"
+			RelativePathToProject=".\libargvcodec\libargvcodec.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter
@@ -170,18 +176,6 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath=".\ArgumentList.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CmdPromptArgumentCodec.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CreateProcessArgumentCodec.cpp"
-				>
-			</File>
 			<File
 				RelativePath=".\dllmain.cpp"
 				>
@@ -205,15 +199,19 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\os.cpp"
+				RelativePath=".\ValidationRule.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Rules.txt"
+				RelativePath=".\ValidationRuleList.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\utils.cpp"
+				RelativePath=".\ValidationRuleSorter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Validator.cpp"
 				>
 			</File>
 		</Filter>
@@ -223,35 +221,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\ArgumentList.h"
+				RelativePath=".\advancedsort.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CmdPromptArgumentCodec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CreateProcessArgumentCodec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\IArgumentDecoder.h"
-				>
-			</File>
-			<File
-				RelativePath=".\IArgumentEncoder.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libargvcodec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\macros.h"
-				>
-			</File>
-			<File
-				RelativePath=".\os.h"
+				RelativePath=".\libargvcodecvalidator.h"
 				>
 			</File>
 			<File
@@ -259,7 +233,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\utils.h"
+				RelativePath=".\ValidationRule.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ValidationRuleList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ValidationRuleSorter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Validator.h"
 				>
 			</File>
 		</Filter>
@@ -269,10 +255,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
-		<File
-			RelativePath=".\TODO.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
