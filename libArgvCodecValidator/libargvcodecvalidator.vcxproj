@@ -11,19 +11,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{12E9683C-378D-4F85-AB1C-1250119047CD}</ProjectGuid>
-    <RootNamespace>ArgMgrTest</RootNamespace>
+    <ProjectGuid>{BF073A7B-A727-4092-94E2-77F0F6F8FA32}</ProjectGuid>
+    <RootNamespace>libArgvCodecValidator</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>libArgvCodecValidator</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v90</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v90</PlatformToolset>
   </PropertyGroup>
@@ -49,8 +50,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\libargvcodec;..\libargvcodecvalidator;$(GTEST_INCLUDE);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\libargvcodec;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBARGVCODECVALIDATOR_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -61,21 +62,16 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>$(GTEST_LIBRARY_DIR)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vc90_$(Configuration)_MT_DLL_$(Platform)_gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>call PostBuild.bat $(ProjectDir) $(OutDir)</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\libargvcodec;..\libargvcodecvalidator;$(GTEST_INCLUDE);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\libargvcodec;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBARGVCODECVALIDATOR_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>
@@ -85,61 +81,41 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>$(GTEST_LIBRARY_DIR)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vc90_$(Configuration)_MT_DLL_$(Platform)_gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>call PostBuild.bat $(ProjectDir) $(OutDir)</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\libargvcodec\utils.cpp" />
-    <ClCompile Include="ArgumentLister.cpp" />
-    <ClCompile Include="gtesthelper.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="TestArgumentList.cpp" />
-    <ClCompile Include="TestCmdPromptArgumentCodec.cpp" />
-    <ClCompile Include="TestCreateProcessArgumentCodec.cpp" />
-    <ClCompile Include="TestUtils.cpp" />
-    <ClCompile Include="TestValidator.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\libargvcodec\utils.h" />
-    <ClInclude Include="ArgumentLister.h" />
-    <ClInclude Include="gtesthelper.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="TestArgumentList.h" />
-    <ClInclude Include="TestCmdPromptArgumentCodec.h" />
-    <ClInclude Include="TestCreateProcessArgumentCodec.h" />
-    <ClInclude Include="TestUtils.h" />
-    <ClInclude Include="TestValidator.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="libargvcodectest.x86.debug.xml" />
-    <None Include="libargvcodectest.x86.release.xml" />
-    <None Include="postbuild.bat" />
-    <None Include="TestEncodeCommandLine001.txt" />
-    <None Include="TestEncodeCommandLine002.txt" />
-    <CustomBuild Include="shellCommandLines.txt">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /v "%(FullPath)" "$(OutDir)"
-</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /v "%(FullPath)" "$(OutDir)"
-</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension);%(Outputs)</Outputs>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\libargvcodecvalidator\libargvcodecvalidator.vcxproj">
-      <Project>{bf073a7b-a727-4092-94e2-77f0f6f8fa32}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\libargvcodec\libargvcodec.vcxproj">
       <Project>{8b120f17-d63d-4783-a96a-08d495065758}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="ValidationRule.cpp" />
+    <ClCompile Include="ValidationRuleList.cpp" />
+    <ClCompile Include="ValidationRuleSorter.cpp" />
+    <ClCompile Include="Validator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="advancedsort.h" />
+    <ClInclude Include="libargvcodecvalidator.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="ValidationRule.h" />
+    <ClInclude Include="ValidationRuleList.h" />
+    <ClInclude Include="ValidationRuleSorter.h" />
+    <ClInclude Include="Validator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
