@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="argencoder"
+	Name="ArgEncoder"
 	ProjectGUID="{43F1DD48-0897-4D9C-B8F7-A33671D9785C}"
 	RootNamespace="argencoder"
 	Keyword="Win32Proj"
