@@ -8,7 +8,7 @@
 #include <iostream>
 #include <conio.h>
 
-#include "promptconsole.h"
+#include "libPromptConsole.h"
 
 using namespace std;
 

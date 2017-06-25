@@ -1,4 +1,4 @@
-#include "promptconsole.h"
+#include "libPromptConsole.h"
 #include <cstdlib>
 #include <iostream>
 

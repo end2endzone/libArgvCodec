@@ -13,7 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "showargs", "showargs\showar
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "installer", "installer\installer.vcxproj", "{46B5139D-BC8C-48A8-905B-89742FD32059}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "promptconsole", "promptconsole\promptconsole.vcxproj", "{48128FD1-DA22-4E33-B0A6-F7FC6F08BFDD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libPromptConsole2", "libPromptConsole\libPromptConsole.vcxproj", "{48128FD1-DA22-4E33-B0A6-F7FC6F08BFDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -11,7 +11,7 @@
 #include "ArgumentList.h"
 #include "CmdPromptArgumentCodec.h"
 #include "CreateProcessArgumentCodec.h"
-#include "promptconsole.h"
+#include "libPromptConsole.h"
 
 using namespace libargvcodec;
 using namespace std;

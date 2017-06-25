@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\libargvcodec;..\promptconsole"
+				AdditionalIncludeDirectories="..\libargvcodec;..\libPromptConsole"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\libargvcodec;..\promptconsole"
+				AdditionalIncludeDirectories="..\libargvcodec;..\libPromptConsole"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -175,7 +175,7 @@
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{48128FD1-DA22-4E33-B0A6-F7FC6F08BFDD}"
-			RelativePathToProject=".\promptconsole\promptconsole.vcproj"
+			RelativePathToProject=".\libPromptConsole\libPromptConsole.vcproj"
 		/>
 	</References>
 	<Files>
