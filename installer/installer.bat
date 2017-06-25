@@ -34,7 +34,7 @@ set SVN_REVISION=%SVN_REVISION:Last Changed Rev: =%
 echo.   version:     %MAIN_VERSION%.%SVN_REVISION%
 
 REM building output file...
-set OUTPUT_FILE=%1\libArgvCodec %_PLATFORMNAME% v%MAIN_VERSION%.%SVN_REVISION% portable.zip
+set OUTPUT_FILE=%1\libargvcodec %_PLATFORMNAME% v%MAIN_VERSION%.%SVN_REVISION% portable.zip
 echo.   output file: %OUTPUT_FILE%
 echo done
 echo.
@@ -47,32 +47,32 @@ mkdir "%1\package" >NUL 2>NUL
 
 mkdir "%1\package\tests" >NUL 2>NUL
 del /Q "%1\package\tests\*.*" >NUL 2>NUL
-copy /v "%1\libArgvCodecTest.exe"                      "%1\package\tests"
-copy /v "%1\libArgvCodec.dll"                          "%1\package\tests"
+copy /v "%1\libargvcodectest.exe"                      "%1\package\tests"
+copy /v "%1\libargvcodec.dll"                          "%1\package\tests"
 copy /v "%1\shellCommandLines.txt"                     "%1\package\tests"
 copy /v "%1\TestEncodeCommandLine001.txt"              "%1\package\tests"
 copy /v "%1\TestEncodeCommandLine002.txt"              "%1\package\tests"
 
 mkdir "%1\package\include" >NUL 2>NUL
 del /Q "%1\package\include\*.*" >NUL 2>NUL
-copy /v "%2\libArgvCodec\macros.h"                     "%1\package\include"
-copy /v "%2\libArgvCodec\ArgumentList.h"               "%1\package\include"
-copy /v "%2\libArgvCodec\CmdPromptArgumentCodec.h"     "%1\package\include"
-copy /v "%2\libArgvCodec\CreateProcessArgumentCodec.h" "%1\package\include"
-copy /v "%2\libArgvCodec\IArgumentDecoder.h"           "%1\package\include"
-copy /v "%2\libArgvCodec\IArgumentEncoder.h"           "%1\package\include"
-copy /v "%2\libArgvCodec\libArgvCodec.h"               "%1\package\include"
-copy /v "%2\libArgvCodec\targetver.h"                  "%1\package\include"
+copy /v "%2\libargvcodec\macros.h"                     "%1\package\include"
+copy /v "%2\libargvcodec\ArgumentList.h"               "%1\package\include"
+copy /v "%2\libargvcodec\CmdPromptArgumentCodec.h"     "%1\package\include"
+copy /v "%2\libargvcodec\CreateProcessArgumentCodec.h" "%1\package\include"
+copy /v "%2\libargvcodec\IArgumentDecoder.h"           "%1\package\include"
+copy /v "%2\libargvcodec\IArgumentEncoder.h"           "%1\package\include"
+copy /v "%2\libargvcodec\libargvcodec.h"               "%1\package\include"
+copy /v "%2\libargvcodec\targetver.h"                  "%1\package\include"
 
 mkdir "%1\package\lib" >NUL 2>NUL
 del /Q "%1\package\lib\*.*" >NUL 2>NUL
-copy /v "%1\libArgvCodec.lib"                           "%1\package\lib\libArgvCodec_%_TOOLSET%_%_PLATFORMNAME%_%RUNTIME_LIBRARY%.lib"
+copy /v "%1\libargvcodec.lib"                           "%1\package\lib\libargvcodec_%_TOOLSET%_%_PLATFORMNAME%_%RUNTIME_LIBRARY%.lib"
 
 mkdir "%1\package\bin" >NUL 2>NUL
 del /Q "%1\package\bin\*.*" >NUL 2>NUL
-copy /v "%1\ArgEncoder.exe"                             "%1\package\bin"
-copy /v "%1\ShowArgs.exe"                               "%1\package\bin"
-copy /v "%1\libArgvCodec.dll"                           "%1\package\bin"
+copy /v "%1\argencoder.exe"                             "%1\package\bin"
+copy /v "%1\showargs.exe"                               "%1\package\bin"
+copy /v "%1\libargvcodec.dll"                           "%1\package\bin"
 echo done
 echo.
 

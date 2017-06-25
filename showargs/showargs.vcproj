@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="libArgvCodecValidator"
-	ProjectGUID="{BF073A7B-A727-4092-94E2-77F0F6F8FA32}"
-	RootNamespace="libargvcodecvalidator"
+	Name="showargs"
+	ProjectGUID="{3645FFDB-5E6D-4C43-AC20-9DE61C00DCD1}"
+	RootNamespace="showargs"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="2"
 			>
 			<Tool
@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\libargvcodec"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBARGVCODECVALIDATOR_EXPORTS;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="..\libPromptConsole"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -92,7 +92,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -115,8 +115,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\libargvcodec"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBARGVCODECVALIDATOR_EXPORTS;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="..\libPromptConsole"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -136,7 +136,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -166,8 +166,8 @@
 	</Configurations>
 	<References>
 		<ProjectReference
-			ReferencedProjectIdentifier="{8B120F17-D63D-4783-A96A-08D495065758}"
-			RelativePathToProject=".\libargvcodec\libargvcodec.vcproj"
+			ReferencedProjectIdentifier="{48128FD1-DA22-4E33-B0A6-F7FC6F08BFDD}"
+			RelativePathToProject=".\libPromptConsole\libPromptConsole.vcproj"
 		/>
 	</References>
 	<Files>
@@ -177,41 +177,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\dllmain.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						CompileAsManaged="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						CompileAsManaged="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\ValidationRule.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ValidationRuleList.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ValidationRuleSorter.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Validator.cpp"
+				RelativePath=".\showargs.cpp"
 				>
 			</File>
 		</Filter>
@@ -221,31 +187,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\advancedsort.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libargvcodecvalidator.h"
-				>
-			</File>
-			<File
 				RelativePath=".\targetver.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ValidationRule.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ValidationRuleList.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ValidationRuleSorter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Validator.h"
 				>
 			</File>
 		</Filter>
