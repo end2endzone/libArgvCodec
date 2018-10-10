@@ -16,7 +16,7 @@ echo ===========================================================================
 cd /d %APPVEYOR_BUILD_FOLDER%
 mkdir build >NUL 2>NUL
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=%INSTALL_LOCATION% -DNUMBERTOWORDS_BUILD_TEST=ON ..
+cmake -DCMAKE_INSTALL_PREFIX=%INSTALL_LOCATION% -DLIBARGVCODEC_BUILD_TEST=ON ..
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo ============================================================================
