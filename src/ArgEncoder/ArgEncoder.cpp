@@ -1,16 +1,15 @@
 // argencoder.cpp : Defines the entry point for the console application.
 //
 
-#include "targetver.h"
-
 #include <stdio.h>
 #include <tchar.h>
 #include <iostream>
 #include <conio.h>
 
-#include "ArgumentList.h"
-#include "CmdPromptArgumentCodec.h"
-#include "CreateProcessArgumentCodec.h"
+#include "libargvcodec/ArgumentList.h"
+#include "libargvcodec/CmdPromptArgumentCodec.h"
+#include "libargvcodec/CreateProcessArgumentCodec.h"
+
 #include "libPromptConsole.h"
 
 using namespace libargvcodec;
