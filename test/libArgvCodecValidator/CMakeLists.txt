@@ -2,7 +2,7 @@ add_library(libargvcodecvalidator
   ${LIBARGVCODEC_EXPORT_HEADER}
   ${LIBARGVCODEC_VERSION_HEADER}
   ${LIBARGVCODEC_CONFIG_HEADER}
-  advancedsort.h
+  AdvancedSort.h
   dllmain.cpp
   libargvcodecvalidator.h
   ValidationRule.cpp
