@@ -21,8 +21,6 @@ add_executable(libargvcodec_unittest
   TestUtils.h
   TestValidator.cpp
   TestValidator.h
-  ${CMAKE_SOURCE_DIR}/src/libArgvCodec/utils.h
-  ${CMAKE_SOURCE_DIR}/src/libArgvCodec/utils.cpp
 )
 
 # Unit test projects requires to link with pthread if also linking with gtest
@@ -36,7 +34,6 @@ set_target_properties(libargvcodec_unittest PROPERTIES DEBUG_POSTFIX ${CMAKE_DEB
 target_include_directories(libargvcodec_unittest 
   PRIVATE
     ${CMAKE_SOURCE_DIR}/test/libArgvCodecValidator  # for Validator.h
-    ${CMAKE_SOURCE_DIR}/src/libArgvCodec            # for utils.h
     ${GTEST_INCLUDE_DIR}
 )
 add_dependencies(libargvcodec_unittest libargvcodec)

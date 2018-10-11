@@ -1,7 +1,7 @@
 #include "TestCmdPromptArgumentCodec.h"
 #include "libargvcodec/CmdPromptArgumentCodec.h"
 #include "ArgumentLister.h"
-#include "utils.h"
+#include "rapidassist/strings.h"
 #include "TestUtils.h"
 #include "gTestHelper.h"
 

@@ -1,9 +1,27 @@
 #include "libargvcodec/CmdPromptArgumentCodec.h"
-#include "utils.h"
+#include "rapidassist/strings.h"
 #include "os.h"
 
 namespace libargvcodec
 {
+
+size_t findNumTrailingBackslashes(const char * iValue)
+{
+  if (iValue == NULL)
+    return 0;
+
+  size_t numTrailingBackslashes = 0;
+  size_t len = std::string(iValue).size();
+  for(size_t i=0; i<len; i++)
+  {
+    char c = iValue[i];
+    if (c == '\\')
+      numTrailingBackslashes++;
+    else
+      numTrailingBackslashes = 0;
+  }
+  return numTrailingBackslashes;
+}
 
 enum CharacterCodes
 {
@@ -167,7 +185,7 @@ std::string CmdPromptArgumentCodec::encodeArgument(const char * iValue)
 
     //Rule 3.
     //but watch out for arguments that ends with \ character
-    size_t numTrailingBackslashes = utils::findNumTrailingBackslashes(escapedArg.c_str());
+    size_t numTrailingBackslashes = findNumTrailingBackslashes(escapedArg.c_str());
     if (numTrailingBackslashes > 0)
     {
       escapedArg.append(numTrailingBackslashes, '\\');
@@ -183,7 +201,7 @@ std::string CmdPromptArgumentCodec::encodeArgument(const char * iValue)
 
     //Rule 3.
     //but watch out for arguments that ends with \ character
-    size_t numTrailingBackslashes = utils::findNumTrailingBackslashes(escapedArg.c_str());
+    size_t numTrailingBackslashes = findNumTrailingBackslashes(escapedArg.c_str());
     if (numTrailingBackslashes > 0)
     {
       escapedArg.append(numTrailingBackslashes, '\\');

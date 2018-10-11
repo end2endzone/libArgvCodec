@@ -13,17 +13,11 @@ add_library(libargvcodecvalidator
   ValidationRuleSorter.h
   Validator.cpp
   Validator.h
-  ${CMAKE_SOURCE_DIR}/src/libArgvCodec/utils.h
-  ${CMAKE_SOURCE_DIR}/src/libArgvCodec/utils.cpp
 )
 
 # Force CMAKE_DEBUG_POSTFIX for executables
 set_target_properties(libargvcodecvalidator PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 
-target_include_directories(libargvcodecvalidator
-  PRIVATE
-    ${CMAKE_SOURCE_DIR}/src/libArgvCodec          # for utils.h
-)
 add_dependencies(libargvcodecvalidator libargvcodec)
 target_link_libraries(libargvcodecvalidator PRIVATE rapidassist libargvcodec )
 

@@ -1,6 +1,6 @@
 #include "ArgumentLister.h"
 #include "libargvcodec/CmdPromptArgumentCodec.h"
-#include "utils.h"
+#include "rapidassist/strings.h"
 #include <Windows.h>
 
 using namespace libargvcodec;
@@ -36,7 +36,7 @@ std::string getPrinterExecFilePath()
     return localExec;
 
   std::string printerExec = localExec;
-  utils::strReplace(printerExec, ".exe", ".printer.exe");
+  ra::strings::replace(printerExec, ".exe", ".printer.exe");
   return printerExec;
 }
 
@@ -48,14 +48,14 @@ std::string getLoggerExecFilePath()
     return localExec;
 
   std::string loggerExec = localExec;
-  utils::strReplace(loggerExec, ".exe", ".logger.exe");
+  ra::strings::replace(loggerExec, ".exe", ".logger.exe");
   return loggerExec;
 }
 
 std::string getLogFilePath()
 {
   std::string logPath = getLoggerExecFilePath();
-  utils::strReplace(logPath, ".exe", ".log");
+  ra::strings::replace(logPath, ".exe", ".log");
   return logPath;
 }
 
@@ -93,7 +93,7 @@ int printArgs(int argc, char* argv[])
     std::string arg = argv[i];
     
     //replace tabs by [tabs] code since they are not visible on the console.
-    utils::strReplace(arg, "\t", "[tabs]");
+    ra::strings::replace(arg, "\t", "[tabs]");
 
     //since arguments that ends with spaces will not be seen properly on the console,
     //show the argument enclosed in ().
@@ -180,10 +180,10 @@ bool systemDecodeCommandLineArguments(const char * iCmdLine, ArgumentList::Strin
     sprintf(buffer, "argv[%d]=", argNumber);
 
     //remove from line;
-    utils::strReplace(line, buffer, "");
+    ra::strings::replace(line, buffer, "");
 
     //remove ending CRLF at the end of the line;
-    utils::strReplace(line, "\n", "");
+    ra::strings::replace(line, "\n", "");
 
     oArguments.push_back(line);
 
@@ -253,10 +253,10 @@ bool createProcessDecodeCommandLineArguments(const char * iCmdLine, ArgumentList
     sprintf(buffer, "argv[%d]=", argNumber);
 
     //remove from line;
-    utils::strReplace(line, buffer, "");
+    ra::strings::replace(line, buffer, "");
 
     //remove ending CRLF at the end of the line;
-    utils::strReplace(line, "\n", "");
+    ra::strings::replace(line, "\n", "");
 
     oArguments.push_back(line);
 

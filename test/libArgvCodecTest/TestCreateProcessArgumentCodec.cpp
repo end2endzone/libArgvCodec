@@ -2,7 +2,7 @@
 #include "libargvcodec/CmdPromptArgumentCodec.h"
 #include "libargvcodec/CreateProcessArgumentCodec.h"
 #include "ArgumentLister.h"
-#include "utils.h"
+#include "rapidassist/strings.h"
 #include "gTestHelper.h"
 
 using namespace libargvcodec;

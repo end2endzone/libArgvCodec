@@ -1,5 +1,5 @@
 #include "libargvcodec/ArgumentList.h"
-#include "utils.h"
+#include "rapidassist/strings.h"
 #include "os.h"
 #include <assert.h>
 #include <vector>
@@ -159,12 +159,12 @@ int ArgumentList::findIndex(const char * iValue, bool iCaseSensitive) const
 {
   if (iValue == NULL)
     return -1;
-  std::string uppercaseValue = utils::uppercase(iValue);
+  std::string uppercaseValue = ra::strings::uppercase(iValue);
   for(size_t i=0; i<mArguments.size(); i++)
   {
     const std::string & arg = mArguments[i];
     if (    ( iCaseSensitive && arg == iValue) ||
-            (!iCaseSensitive && utils::uppercase(arg) == uppercaseValue)    )
+            (!iCaseSensitive && ra::strings::uppercase(arg) == uppercaseValue)    )
       return (int)i;
   }
   return -1;
@@ -215,13 +215,13 @@ bool ArgumentList::findValue2(const char * iValueName, bool iCaseSensitive, int 
   if (iValueName == NULL)
     return false;
   std::string valueName = equalize(iValueName);
-  std::string uppercaseValueName = utils::uppercase(valueName);
+  std::string uppercaseValueName = ra::strings::uppercase(valueName);
   for(size_t i=0; i<mArguments.size(); i++)
   {
     const std::string & arg = mArguments[i];
     std::string argPrefix = arg.substr(0, valueName.size());
     if (    ( iCaseSensitive && argPrefix == valueName) ||
-            (!iCaseSensitive && utils::uppercase(argPrefix) == uppercaseValueName)    )
+            (!iCaseSensitive && ra::strings::uppercase(argPrefix) == uppercaseValueName)    )
     {
       oIndex = (int)i;
       oValue = arg.substr(argPrefix.size(), 999999);
@@ -265,12 +265,12 @@ bool ArgumentList::findNextValue2(const char * iValueName, bool iCaseSensitive, 
   oValue= "";
   if (iValueName == NULL)
     return false;
-  std::string uppercaseValueName = utils::uppercase(iValueName);
+  std::string uppercaseValueName = ra::strings::uppercase(iValueName);
   for(size_t i=0; i<mArguments.size(); i++)
   {
     const std::string & arg = mArguments[i];
     if (    ( iCaseSensitive && arg == iValueName) ||
-            (!iCaseSensitive && utils::uppercase(arg) == uppercaseValueName)    )
+            (!iCaseSensitive && ra::strings::uppercase(arg) == uppercaseValueName)    )
     {
       //find option.
       //look for the next argument as the value

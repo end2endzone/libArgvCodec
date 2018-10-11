@@ -21,8 +21,6 @@ add_library(libargvcodec
   os.h
   Rules.txt
   TODO.txt
-  utils.cpp
-  utils.h
 )
 
 # Force CMAKE_DEBUG_POSTFIX for executables

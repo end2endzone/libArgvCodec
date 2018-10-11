@@ -1,6 +1,6 @@
 #include "TestValidator.h"
 #include "Validator.h"
-#include "utils.h"
+#include "rapidassist/strings.h"
 
 using namespace libargvcodec;
 using namespace libargvcodec::validation;
