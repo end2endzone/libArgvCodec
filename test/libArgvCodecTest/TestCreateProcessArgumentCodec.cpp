@@ -1,6 +1,6 @@
 #include "TestCreateProcessArgumentCodec.h"
-#include "CmdPromptArgumentCodec.h"
-#include "CreateProcessArgumentCodec.h"
+#include "libargvcodec/CmdPromptArgumentCodec.h"
+#include "libargvcodec/CreateProcessArgumentCodec.h"
 #include "ArgumentLister.h"
 #include "utils.h"
 #include "gTestHelper.h"

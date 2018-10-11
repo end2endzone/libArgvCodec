@@ -2,7 +2,7 @@
 
 #include "libargvcodecvalidator.h"
 #include "ValidationRule.h"
-#include "macros.h"
+#include "libargvcodec/macros.h"
 #include <vector>
 
 namespace libargvcodec

@@ -1,5 +1,3 @@
-#include "targetver.h"
-
 #include "Validator.h"
 #include "ValidationRuleSorter.h"
 #include "utils.h"

@@ -4,8 +4,10 @@
 // that uses this DLL. This way any other project whose source files include this file see 
 // LIBARGVCODECVALIDATOR_API functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
-#ifdef LIBARGVCODECVALIDATOR_EXPORTS
-#define LIBARGVCODECVALIDATOR_API __declspec(dllexport)
-#else
-#define LIBARGVCODECVALIDATOR_API __declspec(dllimport)
-#endif
+//#ifdef LIBARGVCODECVALIDATOR_EXPORTS
+//#define LIBARGVCODECVALIDATOR_API __declspec(dllexport)
+//#else
+//#define LIBARGVCODECVALIDATOR_API __declspec(dllimport)
+//#endif
+
+#define LIBARGVCODECVALIDATOR_API

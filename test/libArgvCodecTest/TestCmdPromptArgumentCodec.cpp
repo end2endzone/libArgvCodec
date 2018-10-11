@@ -1,5 +1,5 @@
 #include "TestCmdPromptArgumentCodec.h"
-#include "CmdPromptArgumentCodec.h"
+#include "libargvcodec/CmdPromptArgumentCodec.h"
 #include "ArgumentLister.h"
 #include "utils.h"
 #include "TestUtils.h"

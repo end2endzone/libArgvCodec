@@ -1,5 +1,3 @@
-#include "targetver.h"
-
 #include "ValidationRule.h"
 
 namespace libargvcodec
