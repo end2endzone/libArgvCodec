@@ -3,7 +3,8 @@
 #include "ArgumentLister.h"
 #include "rapidassist/strings.h"
 #include "TestUtils.h"
-#include "gTestHelper.h"
+#include "rapidassist/gtesthelp.h"
+#include "rapidassist/filesystem.h"
 
 using namespace libargvcodec;
 
@@ -21,8 +22,8 @@ TEST_F(TestCmdPromptArgumentCodec, testDecodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
-  gTestHelper::StringVector cmdLines;
-  ASSERT_TRUE( gTestHelper::getInstance().getTextFileContent(inputFile, cmdLines) );
+  ra::strings::StringVector cmdLines;
+  ASSERT_TRUE( ra::gtesthelp::getTextFileContent(inputFile, cmdLines) );
   ASSERT_TRUE( cmdLines.size() > 0 );
 
   printf("\n");
@@ -79,7 +80,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
   static const int MAX_ID_LENGTH = 3;
   int fileId = 1;
   std::string inputFile = getSequencedFile(inputFilePrefix, fileId, inputFilePostfix, MAX_ID_LENGTH);
-  bool fileFound = gTestHelper::getInstance().fileExists( inputFile.c_str() );
+  bool fileFound = ra::filesystem::fileExists( inputFile.c_str() );
   while(fileFound)
   {
     testFiles.push_back(inputFile);
@@ -87,7 +88,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
     //prepare for next loop
     fileId++;
     inputFile = getSequencedFile(inputFilePrefix, fileId, inputFilePostfix, MAX_ID_LENGTH);
-    fileFound = gTestHelper::getInstance().fileExists( inputFile.c_str() );
+    fileFound = ra::filesystem::fileExists( inputFile.c_str() );
   }
   ASSERT_TRUE( testFiles.size() > 0 );
 
@@ -99,8 +100,8 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
     const std::string & testFile = testFiles[i];
 
     //arrange
-    gTestHelper::StringVector expectedArgs;
-    ASSERT_TRUE( gTestHelper::getInstance().getTextFileContent(testFile.c_str(), expectedArgs) );
+    ra::strings::StringVector expectedArgs;
+    ASSERT_TRUE( ra::gtesthelp::getTextFileContent(testFile.c_str(), expectedArgs) );
     printf("Testing %d/%d, %s\n", i+1, testFiles.size(), testFile.c_str());
 
     //insert fake .exe name
@@ -151,8 +152,8 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine2)
 {
   const char * inputFile = "shellCommandLines.txt";
 
-  gTestHelper::StringVector testCmdLines;
-  ASSERT_TRUE( gTestHelper::getInstance().getTextFileContent(inputFile, testCmdLines) );
+  ra::strings::StringVector testCmdLines;
+  ASSERT_TRUE( ra::gtesthelp::getTextFileContent(inputFile, testCmdLines) );
   ASSERT_TRUE( testCmdLines.size() > 0 );
 
   printf("\n");

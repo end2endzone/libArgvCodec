@@ -3,7 +3,7 @@
 #include "libargvcodec/CreateProcessArgumentCodec.h"
 #include "ArgumentLister.h"
 #include "rapidassist/strings.h"
-#include "gTestHelper.h"
+#include "rapidassist/gtesthelp.h"
 
 using namespace libargvcodec;
 
@@ -21,8 +21,8 @@ TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
-  gTestHelper::StringVector cmdLines;
-  ASSERT_TRUE( gTestHelper::getInstance().getTextFileContent(inputFile, cmdLines) );
+  ra::strings::StringVector cmdLines;
+  ASSERT_TRUE( ra::gtesthelp::getTextFileContent(inputFile, cmdLines) );
   ASSERT_TRUE( cmdLines.size() > 0 );
 
   printf("\n");
@@ -73,8 +73,8 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeCommandLine)
 {
   const char * inputFile = "shellCommandLines.txt";
 
-  gTestHelper::StringVector testCmdLines;
-  ASSERT_TRUE( gTestHelper::getInstance().getTextFileContent(inputFile, testCmdLines) );
+  ra::strings::StringVector testCmdLines;
+  ASSERT_TRUE( ra::gtesthelp::getTextFileContent(inputFile, testCmdLines) );
   ASSERT_TRUE( testCmdLines.size() > 0 );
 
   printf("\n");

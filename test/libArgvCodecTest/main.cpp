@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #include <gtest/gtest.h>
-#include "gtesthelper.h"
+#include "rapidassist/gtesthelp.h"
 
 #include "ArgumentLister.h"
 
@@ -24,17 +24,16 @@ int main(int argc, char* argv[])
   initExecStubs();
 
   //init google test
-  gTestHelper & hlp = gTestHelper::getInstance();
-  if (hlp.isProcessorX86())
+  if (ra::gtesthelp::isProcessorX86())
   {
-    if (hlp.isDebugCode())
+    if (ra::gtesthelp::isDebugCode())
       ::testing::GTEST_FLAG(output) = "xml:libargvcodectest.x86.debug.xml";
     else
       ::testing::GTEST_FLAG(output) = "xml:libargvcodectest.x86.release.xml";
   }
-  else if (hlp.isProcessorX64())
+  else if (ra::gtesthelp::isProcessorX64())
   {
-    if (hlp.isDebugCode())
+    if (ra::gtesthelp::isDebugCode())
       ::testing::GTEST_FLAG(output) = "xml:libargvcodectest.x64.debug.xml";
     else
       ::testing::GTEST_FLAG(output) = "xml:libargvcodectest.x64.release.xml";

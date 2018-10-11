@@ -4,8 +4,6 @@ add_executable(libargvcodec_unittest
   ${LIBARGVCODEC_CONFIG_HEADER}
   ArgumentLister.cpp
   ArgumentLister.h
-  gtesthelper.cpp
-  gtesthelper.h
   main.cpp
   shellCommandLines.old.txt
   shellCommandLines.txt
