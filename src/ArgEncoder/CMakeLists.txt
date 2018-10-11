@@ -8,7 +8,6 @@ add_executable(argencoder
 # Force CMAKE_DEBUG_POSTFIX for executables
 set_target_properties(argencoder PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 
-target_include_directories(argencoder PRIVATE rapidassist libargvcodec libpromptconsole)
 add_dependencies(argencoder libargvcodec libpromptconsole)
 target_link_libraries(argencoder PRIVATE rapidassist libargvcodec libpromptconsole )
 
