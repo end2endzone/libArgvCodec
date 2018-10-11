@@ -117,7 +117,6 @@ endif()
 set( LIBARGVCODEC_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 include_directories(${LIBARGVCODEC_INCLUDE_DIR}   # public header files, for source code.
                     ${CMAKE_BINARY_DIR}/include   # for ${LIBARGVCODEC_VERSION_HEADER} and ${LIBARGVCODEC_CONFIG_HEADER} generated files.
-                    ${CMAKE_SOURCE_DIR}/src/libPromptConsole
 )
 
 ##############################################################################################################################################
@@ -130,7 +129,6 @@ find_package(rapidassist 0.5.0 REQUIRED)
 # Subprojects
 ##############################################################################################################################################
 
-add_subdirectory(src/libPromptConsole)
 add_subdirectory(src/libArgvCodec)
 add_subdirectory(src/ArgEncoder)
 add_subdirectory(src/ShowArgs)

@@ -8,9 +8,9 @@ add_executable(showargs
 # Force CMAKE_DEBUG_POSTFIX for executables
 set_target_properties(showargs PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 
-target_include_directories(showargs PRIVATE rapidassist libargvcodec libpromptconsole)
-add_dependencies(showargs libargvcodec libpromptconsole)
-target_link_libraries(showargs PRIVATE rapidassist libargvcodec libpromptconsole )
+target_include_directories(showargs PRIVATE rapidassist libargvcodec)
+add_dependencies(showargs libargvcodec)
+target_link_libraries(showargs PRIVATE rapidassist libargvcodec )
 
 install(TARGETS showargs
         EXPORT libargvcodec-targets

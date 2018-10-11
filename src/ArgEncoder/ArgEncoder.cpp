@@ -10,7 +10,7 @@
 #include "libargvcodec/CmdPromptArgumentCodec.h"
 #include "libargvcodec/CreateProcessArgumentCodec.h"
 
-#include "libPromptConsole.h"
+#include "rapidassist/console.h"
 
 using namespace libargvcodec;
 using namespace std;
@@ -80,7 +80,7 @@ int main(int argc, _TCHAR* argv[])
 
   //is this application that spawned a console?
   //if so, then we ask the user to press a key before it goes away
-  if (hasConsoleOwnership())
+  if (ra::console::hasConsoleOwnership())
   {
     cout << "Press a key to terminate application..." << endl;
     _getch();
