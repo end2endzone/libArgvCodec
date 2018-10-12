@@ -1,6 +1,5 @@
 add_library(libargvcodecvalidator STATIC
   AdvancedSort.h
-  dllmain.cpp
   ValidationRule.cpp
   ValidationRule.h
   ValidationRuleList.cpp

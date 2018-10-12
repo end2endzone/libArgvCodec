@@ -14,7 +14,6 @@ add_library(libargvcodec
   ArgumentList.cpp
   CmdPromptArgumentCodec.cpp
   CreateProcessArgumentCodec.cpp
-  dllmain.cpp
   os.cpp
   os.h
 )
