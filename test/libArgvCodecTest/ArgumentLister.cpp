@@ -2,6 +2,8 @@
 #include "libargvcodec/CmdPromptArgumentCodec.h"
 #include "rapidassist/strings.h"
 
+#include <cstdlib> //for system()
+
 //CreateProcess() unit test support
 #ifdef _WIN32
 
