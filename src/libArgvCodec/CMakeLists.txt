@@ -14,8 +14,6 @@ add_library(libargvcodec
   ArgumentList.cpp
   CmdPromptArgumentCodec.cpp
   CreateProcessArgumentCodec.cpp
-  os.cpp
-  os.h
 )
 
 # Force CMAKE_DEBUG_POSTFIX for executables

@@ -1,6 +1,6 @@
 #include "libargvcodec/CmdPromptArgumentCodec.h"
 #include "rapidassist/strings.h"
-#include "os.h"
+#include "rapidassist/process.h"
 
 namespace libargvcodec
 {
@@ -256,7 +256,7 @@ ArgumentList CmdPromptArgumentCodec::decodeCommandLine(const char * iValue)
   if (success)
   {
     //insert local .exe path
-    args.insert( args.begin(), getLocalExePath() );
+    args.insert( args.begin(), ra::process::getCurrentProcessPath() );
 
     arglist.init(args);
   }

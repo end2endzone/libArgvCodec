@@ -1,6 +1,5 @@
 #include "libargvcodec/ArgumentList.h"
 #include "rapidassist/strings.h"
-#include "os.h"
 #include <assert.h>
 #include <vector>
 #include <algorithm>
