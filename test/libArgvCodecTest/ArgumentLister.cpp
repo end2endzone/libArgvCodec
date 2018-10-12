@@ -1,7 +1,16 @@
 #include "ArgumentLister.h"
 #include "libargvcodec/CmdPromptArgumentCodec.h"
 #include "rapidassist/strings.h"
+
+//CreateProcess() unit test support
+#ifdef _WIN32
+
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
+#endif /* WIN32_LEAN_AND_MEAN */
 #include <Windows.h>
+
+#endif
 
 using namespace libargvcodec;
 
@@ -198,6 +207,9 @@ bool createProcessDecodeCommandLineArguments(const char * iCmdLine, ArgumentList
 {
   oArguments.clear();
 
+#ifndef _WIN32
+  return true; // CreateProcess() API is not available.
+#else
   //build a command line to list arguments
   std::string loggerExecPath = getLoggerExecFilePath();
   
@@ -265,6 +277,7 @@ bool createProcessDecodeCommandLineArguments(const char * iCmdLine, ArgumentList
 
   fclose(f);
   return true;
+#endif //ifndef _WIN32
 }
 
 std::string createProcessDecodeArgument(const char * iValue)

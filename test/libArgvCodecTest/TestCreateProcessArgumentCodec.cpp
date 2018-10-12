@@ -19,6 +19,7 @@ void TestCreateProcessArgumentCodec::TearDown()
 
 TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
 {
+#ifdef _WIN32 //requires CreateProcess() API
   const char * inputFile = "TestShellCommandLines.txt";
 
   ra::strings::StringVector cmdLines;
@@ -67,10 +68,12 @@ TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
     }
     printf("  success\n");
   }
+#endif
 }
 
 TEST_F(TestCreateProcessArgumentCodec, testEncodeCommandLine)
 {
+#ifdef _WIN32 //requires CreateProcess() API
   const char * inputFile = "TestShellCommandLines.txt";
 
   ra::strings::StringVector testCmdLines;
@@ -130,10 +133,13 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeCommandLine)
     }
     printf("  success\n");
   }
+#endif
 }
 
 void prepareTestCreateProcessEncodeArgument(const char * iRawArguementValue, std::string & oEscapedArgument, std::string & oCreateProcessArgumentValue)
 {
+#ifdef _WIN32 //requires CreateProcess() API
+
   //arrange
   ArgumentList::StringList expectedArgs;
   expectedArgs.push_back("foo.exe");
@@ -153,10 +159,14 @@ void prepareTestCreateProcessEncodeArgument(const char * iRawArguementValue, std
   printf("    foo.exe %s\n", oEscapedArgument.c_str());
   printf("  Validating with CreateProcess() api...\n");
   printf("    argv[1]=%s\n", oCreateProcessArgumentValue.c_str());
+
+#endif
 }
 
 TEST_F(TestCreateProcessArgumentCodec, testEncodeArgument)
 {
+#ifdef _WIN32 //requires CreateProcess() API
+
   printf("\n");
 
   //-----------------------------------------------------------------------------------
@@ -221,5 +231,5 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeArgument)
   }
   //-----------------------------------------------------------------------------------
 
-
+#endif
 }
