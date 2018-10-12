@@ -129,6 +129,11 @@ find_package(rapidassist 0.5.0 REQUIRED)
 # Subprojects
 ##############################################################################################################################################
 
+if (BUILD_SHARED_LIBS)
+  set(LIBARGVCODEC_EXPORT_HEADER_FILENAME "export.h")
+  set(LIBARGVCODEC_EXPORT_HEADER ${CMAKE_BINARY_DIR}/include/libargvcodec/${LIBARGVCODEC_EXPORT_HEADER_FILENAME})
+endif()
+
 add_subdirectory(src/libArgvCodec)
 add_subdirectory(src/ArgEncoder)
 add_subdirectory(src/ShowArgs)
@@ -144,8 +149,6 @@ endif()
 ##############################################################################################################################################
 
 if (BUILD_SHARED_LIBS)
-  set(LIBARGVCODEC_EXPORT_HEADER_FILENAME "export.h")
-  set(LIBARGVCODEC_EXPORT_HEADER ${CMAKE_BINARY_DIR}/include/libargvcodec/${LIBARGVCODEC_EXPORT_HEADER_FILENAME})
   message("Generating ${LIBARGVCODEC_EXPORT_HEADER_FILENAME} for shared library...")
   include (GenerateExportHeader) 
   GENERATE_EXPORT_HEADER(libargvcodec 

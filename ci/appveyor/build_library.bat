@@ -22,14 +22,14 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 echo ============================================================================
 echo Compiling...
 echo ============================================================================
-cmake --build . --config Release
+cmake --build . --config %Configuration%
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.
 
 echo ============================================================================
 echo Installing into %INSTALL_LOCATION%
 echo ============================================================================
-cmake --build . --config Release --target INSTALL
+cmake --build . --config %Configuration% --target INSTALL
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.
 
