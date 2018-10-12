@@ -20,7 +20,7 @@ void TestCmdPromptArgumentCodec::TearDown()
 
 TEST_F(TestCmdPromptArgumentCodec, testDecodeCommandLine)
 {
-  const char * inputFile = "shellCommandLines.txt";
+  const char * inputFile = "TestShellCommandLines.txt";
 
   ra::strings::StringVector cmdLines;
   ASSERT_TRUE( ra::gtesthelp::getTextFileContent(inputFile, cmdLines) );
@@ -150,7 +150,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
 
 TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine2)
 {
-  const char * inputFile = "shellCommandLines.txt";
+  const char * inputFile = "TestShellCommandLines.txt";
 
   ra::strings::StringVector testCmdLines;
   ASSERT_TRUE( ra::gtesthelp::getTextFileContent(inputFile, testCmdLines) );

@@ -19,7 +19,7 @@ void TestCreateProcessArgumentCodec::TearDown()
 
 TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
 {
-  const char * inputFile = "shellCommandLines.txt";
+  const char * inputFile = "TestShellCommandLines.txt";
 
   ra::strings::StringVector cmdLines;
   ASSERT_TRUE( ra::gtesthelp::getTextFileContent(inputFile, cmdLines) );
@@ -71,7 +71,7 @@ TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
 
 TEST_F(TestCreateProcessArgumentCodec, testEncodeCommandLine)
 {
-  const char * inputFile = "shellCommandLines.txt";
+  const char * inputFile = "TestShellCommandLines.txt";
 
   ra::strings::StringVector testCmdLines;
   ASSERT_TRUE( ra::gtesthelp::getTextFileContent(inputFile, testCmdLines) );
