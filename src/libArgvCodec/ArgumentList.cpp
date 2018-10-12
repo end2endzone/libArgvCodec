@@ -44,7 +44,7 @@ void ArgumentList::init(const StringList & iArguments)
   rebuildArgv();
 }
 
-char * ArgumentList::getArgument(int iIndex) const
+const char * ArgumentList::getArgument(int iIndex) const
 {
   if (!isValid(iIndex))
     return ""; //out of bounds
