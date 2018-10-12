@@ -33,6 +33,13 @@ cmake --build . --config %Configuration% --target INSTALL
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.
 
+echo ============================================================================
+echo Creating install package
+echo ============================================================================
+cmake --build . --config %Configuration% --target PACKAGE
+if %errorlevel% neq 0 exit /b %errorlevel%
+echo.
+
 ::Delete all temporary environment variable created
 set GTEST_ROOT=
 set rapidassist_DIR=

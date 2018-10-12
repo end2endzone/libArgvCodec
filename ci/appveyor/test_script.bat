@@ -6,7 +6,7 @@ echo =======================================================================
 cd /d %~dp0
 cd ..\..
 cd build\bin\Release
-numbertowords_unittest.exe
+libargvcodec_unittest.exe
 
 ::reset error in case of test case fail
 exit /b 0
