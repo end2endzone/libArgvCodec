@@ -16,7 +16,7 @@
 namespace libargvcodec
 {
 
-  class LIBARGVCODEC_API ArgumentList
+  class LIBARGVCODEC_EXPORT ArgumentList
   {
   public:
     typedef std::vector<std::string> StringList;

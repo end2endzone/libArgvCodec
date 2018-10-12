@@ -6,7 +6,7 @@
 namespace libargvcodec
 {
 
-  class LIBARGVCODEC_API CmdPromptArgumentCodec : public virtual IArgumentEncoder,
+  class LIBARGVCODEC_EXPORT CmdPromptArgumentCodec : public virtual IArgumentEncoder,
     public virtual IArgumentDecoder
   {
   public:

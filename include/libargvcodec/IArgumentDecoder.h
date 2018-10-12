@@ -6,7 +6,7 @@
 namespace libargvcodec
 {
 
-  class LIBARGVCODEC_API IArgumentDecoder
+  class LIBARGVCODEC_EXPORT IArgumentDecoder
   {
   public:
 

@@ -8,8 +8,8 @@
 #   include "export.h"
 #endif
 
-#ifndef LIBARGVCODEC_API
-#   define LIBARGVCODEC_API
+#ifndef LIBARGVCODEC_EXPORT
+#   define LIBARGVCODEC_EXPORT
 #endif
 
 #endif //LIBARGVCODEC_CONFIG_H

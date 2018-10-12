@@ -7,7 +7,7 @@
 namespace libargvcodec
 {
 
-  class LIBARGVCODEC_API CreateProcessArgumentCodec : public CmdPromptArgumentCodec
+  class LIBARGVCODEC_EXPORT CreateProcessArgumentCodec : public CmdPromptArgumentCodec
   {
   public:
     CreateProcessArgumentCodec();
