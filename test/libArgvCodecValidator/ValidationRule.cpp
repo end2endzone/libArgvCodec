@@ -1,4 +1,5 @@
 #include "ValidationRule.h"
+#include <cstring> //for memset()
 
 namespace libargvcodec
 {

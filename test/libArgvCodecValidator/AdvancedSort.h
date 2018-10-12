@@ -1,5 +1,10 @@
-#pragma once
+#ifndef ADVANCEDSORT_H
+#define ADVANCEDSORT_H
+
 #include <vector>
+#include <string> //for std::string()
+#include <cstddef> //for size_t
+#include <stdint.h> //for int64_t
 
 namespace advancedsort
 {
@@ -140,7 +145,9 @@ namespace advancedsort
         {
           const char * tmpValue1 = (const char *)iAttr1.valuePtr;
           const char * tmpValue2 = (const char *)iAttr2.valuePtr;
-          return compareT<std::string>(&std::string(tmpValue1), &std::string(tmpValue2), iAttr1.assending);
+          std::string tmpValueStr1 = tmpValue1;
+          std::string tmpValueStr2 = tmpValue2;
+          return compareT<std::string>(&tmpValueStr1, &tmpValueStr2, iAttr1.assending);
         }
         break;
       case SORT_DATA_TYPE_STD_STR:
@@ -150,28 +157,28 @@ namespace advancedsort
         return compareT<bool>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
         break;
       case SORT_DATA_TYPE_SINT8:
-        return compareT<char>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
+        return compareT<int8_t>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
         break;
       case SORT_DATA_TYPE_UINT8:
-        return compareT<unsigned char>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
+        return compareT<uint8_t>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
         break;
       case SORT_DATA_TYPE_SINT16:
-        return compareT<short>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
+        return compareT<int16_t>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
         break;
       case SORT_DATA_TYPE_UINT16:
-        return compareT<unsigned short>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
+        return compareT<uint16_t>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
         break;
       case SORT_DATA_TYPE_SINT32:
-        return compareT<int>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
+        return compareT<int32_t>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
         break;
       case SORT_DATA_TYPE_UINT32:
-        return compareT<unsigned int>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
+        return compareT<uint32_t>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
         break;
       case SORT_DATA_TYPE_SINT64:
-        return compareT<__int64>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
+        return compareT<int64_t>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
         break;
       case SORT_DATA_TYPE_UINT64:
-        return compareT<unsigned __int64>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
+        return compareT<uint64_t>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
         break;
       case SORT_DATA_TYPE_FLOAT32:
         return compareT<float>(iAttr1.valuePtr, iAttr2.valuePtr, iAttr1.assending);
@@ -186,3 +193,5 @@ namespace advancedsort
   }; 
 
 };
+
+#endif //ADVANCEDSORT_H
