@@ -206,7 +206,7 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${LIBARGVCODEC_INSTAL
 install(FILES ${LIBARGVCODEC_EXPORT_HEADER}
               ${LIBARGVCODEC_VERSION_HEADER}
               ${LIBARGVCODEC_CONFIG_HEADER}
-              DESTINATION ${LIBARGVCODEC_INSTALL_INCLUDE_DIR})
+              DESTINATION ${LIBARGVCODEC_INSTALL_INCLUDE_DIR}/libargvcodec)
 install(EXPORT libargvcodec-targets DESTINATION ${LIBARGVCODEC_INSTALL_CMAKE_DIR})
 
 ##############################################################################################################################################

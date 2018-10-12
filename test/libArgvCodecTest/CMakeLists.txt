@@ -57,3 +57,8 @@ install(TARGETS libargvcodec_unittest
         LIBRARY DESTINATION ${LIBARGVCODEC_INSTALL_LIB_DIR}
         RUNTIME DESTINATION ${LIBARGVCODEC_INSTALL_BIN_DIR}
 )
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/shellCommandLines.txt       
+              ${CMAKE_CURRENT_SOURCE_DIR}/TestEncodeCommandLine001.txt
+              ${CMAKE_CURRENT_SOURCE_DIR}/TestEncodeCommandLine002.txt
+        DESTINATION ${LIBARGVCODEC_INSTALL_BIN_DIR}
+)
