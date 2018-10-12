@@ -1,4 +1,5 @@
-#pragma once
+#ifndef IARGUMENTDECODER_H
+#define IARGUMENTDECODER_H
 
 #include "libargvcodec/config.h"
 #include "ArgumentList.h"
@@ -28,3 +29,5 @@ namespace libargvcodec
   };
 
 }; //namespace libargvcodec
+
+#endif //IARGUMENTDECODER_H

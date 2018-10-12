@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ARGUMENTLIST_H
+#define ARGUMENTLIST_H
 
 #include "libargvcodec/config.h"
 #include <string>
@@ -28,7 +29,7 @@ namespace libargvcodec
     void init(int argc, char** argv);
     void init(const StringList & iArguments);
 
-    char * getArgument(int iIndex) const;
+    const char * getArgument(int iIndex) const;
 
     int getArgc() const;
     char** getArgv() const;
@@ -251,3 +252,5 @@ namespace libargvcodec
   };
 
 }; //namespace libargvcodec
+
+#endif //ARGUMENTLIST_H

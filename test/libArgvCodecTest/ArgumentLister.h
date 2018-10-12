@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ARGUMENTLISTER_H
+#define ARGUMENTLISTER_H
 
 #include "libargvcodec/ArgumentList.h"
 
@@ -27,3 +28,5 @@ std::string systemDecodeArgument(const char * iValue);
 bool systemDecodeCommandLineArguments(const char * iCmdLine, ArgumentList::StringList & oArguments);
 std::string createProcessDecodeArgument(const char * iValue);
 bool createProcessDecodeCommandLineArguments(const char * iCmdLine, ArgumentList::StringList & oArguments);
+
+#endif //ARGUMENTLISTER_H

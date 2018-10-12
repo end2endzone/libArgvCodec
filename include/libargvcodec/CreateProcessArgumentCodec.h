@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CREATEPROCESSARGUMENTCODEC_H
+#define CREATEPROCESSARGUMENTCODEC_H
 
 #include "IArgumentEncoder.h"
 #include "IArgumentDecoder.h"
@@ -29,3 +30,5 @@ namespace libargvcodec
   };
 
 }; //namespace libargvcodec
+
+#endif //CREATEPROCESSARGUMENTCODEC_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CMDPROMPTARGUMENTCODEC_H
+#define CMDPROMPTARGUMENTCODEC_H
 
 #include "IArgumentEncoder.h"
 #include "IArgumentDecoder.h"
@@ -39,3 +40,5 @@ namespace libargvcodec
   };
 
 }; //namespace libargvcodec
+
+#endif //CMDPROMPTARGUMENTCODEC_H
