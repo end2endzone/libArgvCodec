@@ -23,7 +23,10 @@ ArgumentList::ArgumentList(const ArgumentList & iArgumentManager) :
 
 ArgumentList::~ArgumentList()
 {
-  SAFE_DELETE_ARRAY(mArgv);
+  //safe delete the array
+  if (mArgv)
+    delete[] mArgv;
+  mArgv = NULL;
 }
 
 void ArgumentList::init(int argc, char** argv)
@@ -125,7 +128,10 @@ bool ArgumentList::operator != (const ArgumentList & iArgumentManager) const
 
 void ArgumentList::rebuildArgv()
 {
-  SAFE_DELETE_ARRAY(mArgv);
+  //safe delete the array
+  if (mArgv)
+    delete[] mArgv;
+  mArgv = NULL;
 
   //argv size is 1 element bigger than argc (the number of arguments)
   //the last element of argv must be an empty string (NULL character)

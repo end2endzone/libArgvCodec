@@ -1,9 +1,17 @@
 #pragma once
 
 #include "libargvcodec.h"
-#include "Macros.h"
 #include <string>
 #include <vector>
+
+//Private macros
+#ifdef _MSC_VER
+#   define SAFE_WARNING_DISABLE(value) __pragma( warning(push) ) __pragma( warning(disable: value))
+#   define SAFE_WARNING_RESTORE() __pragma( warning(pop) )
+#else
+#   define SAFE_WARNING_DISABLE(value) ;
+#   define SAFE_WARNING_RESTORE() ;
+#endif
 
 namespace libargvcodec
 {
