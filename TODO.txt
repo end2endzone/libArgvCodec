@@ -2,8 +2,6 @@
 - Fix the issue with `include\libargvcodec\libargvcodec.h` and `test\libArgvCodecValidator\libargvcodecvalidator.h`.
 - Replace `installer` content by NSIS feeded by CMake's project properties.
 - Think about getting content of `Macros.h` file. Copy the defines to every place it is used.
-- Do we really need `test\libArgvCodecTest\shellCommandLines.old.txt` ?
-- Create post build actions.
 
 - Add support for validating arguments againts an argument list specification. This will allow users to specify the argument format/names/meaning and ask the manager to validate the given arguments against this specification. If will also provide a custom error message for invalid/missing arguments.
 - Code cleanup: Delete libargvcodec.TODO.txt and Rules.txt
