@@ -4,7 +4,6 @@ set(LIBARGVCODEC_HEADER_FILES ""
   ${LIBARGVCODEC_INCLUDE_DIR}/libargvcodec/CreateProcessArgumentCodec.h
   ${LIBARGVCODEC_INCLUDE_DIR}/libargvcodec/IArgumentDecoder.h
   ${LIBARGVCODEC_INCLUDE_DIR}/libargvcodec/IArgumentEncoder.h
-  ${LIBARGVCODEC_INCLUDE_DIR}/libargvcodec/libargvcodec.h
 )
 
 add_library(libargvcodec

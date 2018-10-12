@@ -1,6 +1,5 @@
 #pragma once
 
-#include "libargvcodecvalidator.h"
 #include <string>
 
 //Private macros
@@ -17,7 +16,7 @@ namespace libargvcodec
 namespace validation
 {
 
-  class LIBARGVCODECVALIDATOR_API ValidationRule
+  class ValidationRule
   {
   public:
     struct FLAGS
@@ -56,7 +55,7 @@ namespace validation
     void set(const char * iName, const char * iDescription, const FLAGS & iFlags);
 
     //Basic flags
-    class LIBARGVCODECVALIDATOR_API FlagFactory
+    class FlagFactory
     {
     public:
       static FLAGS optionalFlag();

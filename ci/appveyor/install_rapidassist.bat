@@ -30,13 +30,13 @@ mkdir build >NUL 2>NUL
 cd build
 cmake -DCMAKE_INSTALL_PREFIX=%rapidassist_DIR% ..
 if %errorlevel% neq 0 exit /b %errorlevel%
-cmake --build . --config Release
+cmake --build . --config Debug
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.
 
 echo ============================================================================
 echo Installing into %GTEST_ROOT%
 echo ============================================================================
-cmake --build . --config Release --target INSTALL
+cmake --build . --config Debug --target INSTALL
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.

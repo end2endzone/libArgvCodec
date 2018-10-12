@@ -1,6 +1,5 @@
 #pragma once
 
-#include "libargvcodecvalidator.h"
 #include "ValidationRule.h"
 #include <vector>
 
@@ -9,7 +8,7 @@ namespace libargvcodec
 namespace validation
 {
 
-  class LIBARGVCODECVALIDATOR_API ValidationRuleList
+  class ValidationRuleList
   {
   public:
     ValidationRuleList();

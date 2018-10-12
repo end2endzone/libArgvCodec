@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libargvcodec.h"
+#include "libargvcodec/config.h"
 #include "ArgumentList.h"
 
 namespace libargvcodec

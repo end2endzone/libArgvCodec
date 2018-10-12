@@ -1,6 +1,5 @@
 #pragma once
 
-#include "libargvcodecvalidator.h"
 #include "AdvancedSort.h"
 #include "ValidationRuleList.h"
 
@@ -9,7 +8,7 @@ namespace libargvcodec
 namespace validation
 {
 
-  class LIBARGVCODECVALIDATOR_API ValidationRuleSorter : public advancedsort::SortFunctionT<ValidationRule*>
+  class ValidationRuleSorter : public advancedsort::SortFunctionT<ValidationRule*>
   {
   public:
     typedef ValidationRule * VALIDATION_RULE_PTR;

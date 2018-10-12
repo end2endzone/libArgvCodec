@@ -4,4 +4,12 @@
 
 @LIBARGVCODEC_BUILD_TYPE_CPP_DEFINE@
 
+#ifdef LIBARGVCODEC_BUILT_AS_SHARED
+#   include "export.h"
+#endif
+
+#ifndef LIBARGVCODEC_API
+#   define LIBARGVCODEC_API
+#endif
+
 #endif //LIBARGVCODEC_CONFIG_H
