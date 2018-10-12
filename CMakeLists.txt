@@ -72,7 +72,7 @@ file(READ ${CMAKE_SOURCE_DIR}/LICENSE.h LICENSE)
 # version.h file
 set(LIBARGVCODEC_VERSION_HEADER ${CMAKE_BINARY_DIR}/include/libargvcodec/version.h)
 message("Generating ${LIBARGVCODEC_VERSION_HEADER}...")
-configure_file( ${CMAKE_SOURCE_DIR}/src/libargvcodec/version.h.in ${LIBARGVCODEC_VERSION_HEADER} )
+configure_file( ${CMAKE_SOURCE_DIR}/src/libArgvCodec/version.h.in ${LIBARGVCODEC_VERSION_HEADER} )
 
 # config.h file
 set(LIBARGVCODEC_CONFIG_HEADER ${CMAKE_BINARY_DIR}/include/libargvcodec/config.h)
@@ -82,7 +82,7 @@ if (BUILD_SHARED_LIBS)
 else()
   set(LIBARGVCODEC_BUILD_TYPE_CPP_DEFINE "#define LIBARGVCODEC_BUILT_AS_STATIC")
 endif()
-configure_file( ${CMAKE_SOURCE_DIR}/src/libargvcodec/config.h.in ${LIBARGVCODEC_CONFIG_HEADER} )
+configure_file( ${CMAKE_SOURCE_DIR}/src/libArgvCodec/config.h.in ${LIBARGVCODEC_CONFIG_HEADER} )
 set(LIBARGVCODEC_BUILD_TYPE_CPP_DEFINE)
 
 # Define installation directories
