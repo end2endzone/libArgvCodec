@@ -2,9 +2,7 @@
 //
 
 #include <stdio.h>
-#include <tchar.h>
 #include <iostream>
-#include <conio.h>
 
 #include "rapidassist/console.h"
 
@@ -23,7 +21,7 @@ int main(int argc, char* argv[])
   if (ra::console::hasConsoleOwnership())
   {
     cout << "Press a key to terminate application..." << endl;
-    _getch();
+    getchar();
   }
 
 	return 0;

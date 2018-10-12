@@ -2,9 +2,7 @@
 //
 
 #include <stdio.h>
-#include <tchar.h>
 #include <iostream>
-#include <conio.h>
 
 #include "libargvcodec/ArgumentList.h"
 #include "libargvcodec/CmdPromptArgumentCodec.h"
@@ -21,7 +19,7 @@ void printHeader()
   cout << endl;
 }
 
-int main(int argc, _TCHAR* argv[])
+int main(int argc, char* argv[])
 {
   printHeader();
 
@@ -83,7 +81,7 @@ int main(int argc, _TCHAR* argv[])
   if (ra::console::hasConsoleOwnership())
   {
     cout << "Press a key to terminate application..." << endl;
-    _getch();
+    getchar();
   }
 
 	return 0;

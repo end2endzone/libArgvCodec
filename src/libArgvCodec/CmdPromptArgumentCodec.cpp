@@ -2,6 +2,8 @@
 #include "rapidassist/strings.h"
 #include "rapidassist/process.h"
 
+#include <cstring> //for strncmp()
+
 namespace libargvcodec
 {
 
