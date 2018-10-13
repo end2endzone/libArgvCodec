@@ -1,4 +1,5 @@
 #include "TestUtils.h"
+#include <cstdio> //for sprintf()
 
 std::string getSequencedFile(const char * iPrefix, int iValue, const char * iPostfix, int iValueLength)
 {
