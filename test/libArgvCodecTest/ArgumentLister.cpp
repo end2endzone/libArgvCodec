@@ -79,7 +79,7 @@ void duplicateExec(const char * iDestinationPath)
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "copy /v \"%s\" \"%s\" >NUL 2>NUL", localExec.c_str(), iDestinationPath);
-  system(buffer);
+  int returncode = system(buffer);
 
   printf("done\n");
 }
@@ -171,7 +171,9 @@ bool systemDecodeCommandLineArguments(const char * iCmdLine, ArgumentList::Strin
   cmdLine.append(iCmdLine);
 
   //run command line
-  system(cmdLine.c_str());
+  int returncode = system(cmdLine.c_str());
+  if (returncode)
+    return false;
 
   std::string logPath = getLogFilePath();
   FILE * f = fopen(logPath.c_str(), "r");

@@ -32,7 +32,7 @@ TEST_F(TestCmdPromptArgumentCodec, testDecodeCommandLine)
   {
     //arrange
     const std::string cmdLine = cmdLines[i];
-    printf("Testing %d/%d: foo.exe %s\n", i+1, cmdLines.size(), cmdLine.c_str());
+    printf("Testing %d/%d: foo.exe %s\n", i+1, (int)cmdLines.size(), (int)cmdLine.c_str());
 
     //compute the expected list of arguments
     ArgumentList::StringList expectedArgs;
@@ -48,7 +48,7 @@ TEST_F(TestCmdPromptArgumentCodec, testDecodeCommandLine)
     for(size_t i=1; i<expectedArgs.size(); i++) //skip first argument since executable names may differ
     {
       const char * expectedArg = expectedArgs[i].c_str();
-      printf("   argv[%d]=%s\n", i, expectedArg);
+      printf("   argv[%d]=%s\n", (int)i, expectedArg);
     }
     printf("  Actuals:\n");
     for(int i=1; i<actualArgs.getArgc(); i++) //skip first argument since executable names may differ
@@ -102,7 +102,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
     //arrange
     ra::strings::StringVector expectedArgs;
     ASSERT_TRUE( ra::gtesthelp::getTextFileContent(testFile.c_str(), expectedArgs) );
-    printf("Testing %d/%d, %s\n", i+1, testFiles.size(), testFile.c_str());
+    printf("Testing %d/%d, %s\n", i+1, (int)testFiles.size(), testFile.c_str());
 
     //insert fake .exe name
     expectedArgs.insert(expectedArgs.begin(), "foo.exe");
@@ -124,13 +124,13 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
     for(size_t j=1; j<expectedArgs.size(); j++)
     {
       const std::string & arg = expectedArgs[j];
-      printf("    argv[%d]=%s\n", j, arg.c_str() );
+      printf("    argv[%d]=%s\n", (int)j, arg.c_str() );
     }
     printf("  Actuals:\n");
     for(size_t j=1; j<actualArgs.size(); j++)
     {
       const std::string & arg = actualArgs[j];
-      printf("    argv[%d]=%s\n", j, arg.c_str() );
+      printf("    argv[%d]=%s\n", (int)j, arg.c_str() );
     }
 
     //assert
@@ -163,7 +163,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine2)
   {
     //arrange
     const std::string testCmdLine = testCmdLines[i];
-    printf("Testing %d/%d\n", i+1, testCmdLines.size());
+    printf("Testing %d/%d\n", (int)(i+1), testCmdLines.size());
 
     //compute the expected list of arguments
     ArgumentList::StringList expectedArgs;
@@ -188,14 +188,14 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine2)
     for(size_t j=1; j<expectedArgs.size(); j++)
     {
       const std::string & arg = expectedArgs[j];
-      printf("    argv[%d]=%s\n", j, arg.c_str() );
+      printf("    argv[%d]=%s\n", (int)j, arg.c_str() );
     }
     printf("  Actuals:\n");
     printf("    cmdline=%s\n", cmdLine.c_str());
     for(size_t j=1; j<actualArgs.size(); j++)
     {
       const std::string & arg = actualArgs[j];
-      printf("    argv[%d]=%s\n", j, arg.c_str() );
+      printf("    argv[%d]=%s\n", (int)j, arg.c_str() );
     }
 
     //assert
