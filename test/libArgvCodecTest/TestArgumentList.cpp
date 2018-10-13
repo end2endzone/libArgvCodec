@@ -3,6 +3,8 @@
 #include "ArgumentLister.h"
 #include "rapidassist/strings.h"
 
+#include <string.h> //for strdup()
+
 using namespace libargvcodec;
 
 #define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
@@ -47,6 +49,17 @@ bool isIdentical(ArgumentList & m, int expectedArgc, char ** expectedArgv)
   return true;
 }
 
+//string memory management
+typedef std::vector<char*> DynamicStringList;
+DynamicStringList gStrings;
+
+//register a new string for the current test
+char * mkstr(const char * value)
+{
+  char * _copy = strdup(value);
+  gStrings.push_back(_copy);
+  return _copy;
+}
 
 void TestArgumentList::SetUp()
 {
@@ -54,11 +67,18 @@ void TestArgumentList::SetUp()
 
 void TestArgumentList::TearDown()
 {
+  //clear all strings created in the test
+  for(size_t i=0; i<gStrings.size(); i++)
+  {
+    char * value = gStrings[i];
+    free(value);
+  }
+  gStrings.clear();
 }
 
 TEST_F(TestArgumentList, testInitArgcArgv)
 {
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -76,7 +96,7 @@ TEST_F(TestArgumentList, testInitArgcArgv)
 
 TEST_F(TestArgumentList, testGetArgument)
 {
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -118,7 +138,7 @@ TEST_F(TestArgumentList, testInitVector)
 
 TEST_F(TestArgumentList, testInsertEndAbsolutePos)
 {
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -143,7 +163,7 @@ TEST_F(TestArgumentList, testInsertEndAbsolutePos)
 
 TEST_F(TestArgumentList, testInsertOutOfBound)
 {
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -166,7 +186,7 @@ TEST_F(TestArgumentList, testInsertOutOfBound)
 
 TEST_F(TestArgumentList, testInsertFirst)
 {
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -191,7 +211,7 @@ TEST_F(TestArgumentList, testInsertFirst)
 
 TEST_F(TestArgumentList, testInsertMiddle)
 {
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -217,10 +237,10 @@ TEST_F(TestArgumentList, testInsertMiddle)
 TEST_F(TestArgumentList, testRemoveEnd)
 {
   //arrange
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  char* expectedArgv[] = {"test.exe", "/p", "-logfile=log.txt", NULL};
+  char* expectedArgv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), NULL};
   int expectedArgc = sizeof(expectedArgv)/sizeof(expectedArgv[0]) - 1;
 
   ArgumentList m;
@@ -236,10 +256,10 @@ TEST_F(TestArgumentList, testRemoveEnd)
 TEST_F(TestArgumentList, testRemoveFirst)
 {
   //arrange
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  char* expectedArgv[] = {"/p", "-logfile=log.txt", "count=5", NULL};
+  char* expectedArgv[] = {mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int expectedArgc = sizeof(expectedArgv)/sizeof(expectedArgv[0]) - 1;
 
   ArgumentList m;
@@ -255,10 +275,10 @@ TEST_F(TestArgumentList, testRemoveFirst)
 TEST_F(TestArgumentList, testRemoveMiddle)
 {
   //arrange
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  char* expectedArgv[] = {"test.exe", "/p", "count=5", NULL};
+  char* expectedArgv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("count=5"), NULL};
   int expectedArgc = sizeof(expectedArgv)/sizeof(expectedArgv[0]) - 1;
 
   ArgumentList m;
@@ -274,7 +294,7 @@ TEST_F(TestArgumentList, testRemoveMiddle)
 TEST_F(TestArgumentList, testRemoveOutOfBounds)
 {
   //arrange
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -287,7 +307,7 @@ TEST_F(TestArgumentList, testRemoveOutOfBounds)
 TEST_F(TestArgumentList, testRemoveAll)
 {
   //arrange
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   char* expectedArgv[] = {NULL};
@@ -310,10 +330,10 @@ TEST_F(TestArgumentList, testRemoveAll)
 TEST_F(TestArgumentList, testReplaceEnd)
 {
   //arrange
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  char* expectedArgv[] = {"test.exe", "/p", "-logfile=log.txt", "count=1", NULL};
+  char* expectedArgv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=1"), NULL};
   int expectedArgc = sizeof(expectedArgv)/sizeof(expectedArgv[0]) - 1;
 
   ArgumentList m;
@@ -329,10 +349,10 @@ TEST_F(TestArgumentList, testReplaceEnd)
 TEST_F(TestArgumentList, testReplaceFirst)
 {
   //arrange
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  char* expectedArgv[] = {"good.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* expectedArgv[] = {mkstr("good.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int expectedArgc = sizeof(expectedArgv)/sizeof(expectedArgv[0]) - 1;
 
   ArgumentList m;
@@ -348,10 +368,10 @@ TEST_F(TestArgumentList, testReplaceFirst)
 TEST_F(TestArgumentList, testReplaceMiddle)
 {
   //arrange
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
-  char* expectedArgv[] = {"test.exe", "/p", "/q", "count=5", NULL};
+  char* expectedArgv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("/q"), mkstr("count=5"), NULL};
   int expectedArgc = sizeof(expectedArgv)/sizeof(expectedArgv[0]) - 1;
 
   ArgumentList m;
@@ -367,7 +387,7 @@ TEST_F(TestArgumentList, testReplaceMiddle)
 TEST_F(TestArgumentList, testReplaceOutOfBounds)
 {
   //arrange
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -380,7 +400,7 @@ TEST_F(TestArgumentList, testReplaceOutOfBounds)
 TEST_F(TestArgumentList, testFindIndex)
 {
   //arrange
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -404,7 +424,7 @@ TEST_F(TestArgumentList, testFindIndex)
 TEST_F(TestArgumentList, testFindOption)
 {
   //arrange
-  char* argv[] = {"test.exe", "/p", "-logfile=log.txt", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -434,7 +454,7 @@ TEST_F(TestArgumentList, testFindOption)
 TEST_F(TestArgumentList, testExtractOption)
 {
   //arrange
-  char* argv[] = {"test.exe", "/p=7", "/p", "-logfile=log.txt", "--help", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p=7"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("--help"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -472,7 +492,7 @@ TEST_F(TestArgumentList, testExtractOption)
 TEST_F(TestArgumentList, testExtractValue)
 {
   //arrange
-  char* argv[] = {"test.exe", "/p=7", "/p", "-logfile=log.txt", "--help", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p=7"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("--help"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -533,7 +553,7 @@ TEST_F(TestArgumentList, testExtractValue)
 TEST_F(TestArgumentList, testExtractNextValue)
 {
   //arrange
-  char* argv[] = {"test.exe", "/name", "foo", "/repeat", "5", "/inputfile", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/name"), mkstr("foo"), mkstr("/repeat"), mkstr("5"), mkstr("/inputfile"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -563,7 +583,7 @@ TEST_F(TestArgumentList, testCopyCtor)
 {
   ArgumentList a;
 
-  char * argv[] = {"a", "b", "c", "d", "e"};
+  char * argv[] = {mkstr("a"), mkstr("b"), mkstr("c"), mkstr("d"), mkstr("e")};
   const int argc = sizeof(argv)/sizeof(argv[0]);
 
   a.init(argc, argv);
@@ -579,7 +599,7 @@ TEST_F(TestArgumentList, testOperatorEqual) //operator ==
   ArgumentList a;
   ArgumentList b;
 
-  char * argv[] = {"a", "b", "c", "d", "e"};
+  char * argv[] = {mkstr("a"), mkstr("b"), mkstr("c"), mkstr("d"), mkstr("e")};
   const int argc = sizeof(argv)/sizeof(argv[0]);
 
   a.init(argc, argv);
@@ -621,7 +641,7 @@ TEST_F(TestArgumentList, testAssignmentOperator) //operator =
 {
   ArgumentList a;
 
-  char * argv[] = {"a", "b", "c", "d", "e"};
+  char * argv[] = {mkstr("a"), mkstr("b"), mkstr("c"), mkstr("d"), mkstr("e")};
   const int argc = sizeof(argv)/sizeof(argv[0]);
 
   a.init(argc, argv);
@@ -636,7 +656,7 @@ TEST_F(TestArgumentList, testAssignmentOperator) //operator =
 TEST_F(TestArgumentList, testFindNextValue)
 {
   //arrange
-  char* argv[] = {"test.exe", "/name", "foo", "/repeat", "5", "/inputfile", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/name"), mkstr("foo"), mkstr("/repeat"), mkstr("5"), mkstr("/inputfile"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -670,7 +690,7 @@ TEST_F(TestArgumentList, testFindNextValue)
 TEST_F(TestArgumentList, testWrongPrefixes)
 {
   //prepare
-  char* argv[] = {"test.exe", "/p=7", "/p", "-logfile=log.txt", "--help", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p=7"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("--help"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -707,7 +727,7 @@ TEST_F(TestArgumentList, testWrongPrefixes)
 TEST_F(TestArgumentList, testEqualize)
 {
   //prepare
-  char* argv[] = {"test.exe", "/p=7", "/p", "-logfile=log.txt", "--help", "count=5", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/p=7"), mkstr("/p"), mkstr("-logfile=log.txt"), mkstr("--help"), mkstr("count=5"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
