@@ -32,7 +32,7 @@ TEST_F(TestCmdPromptArgumentCodec, testDecodeCommandLine)
   {
     //arrange
     const std::string cmdLine = cmdLines[i];
-    printf("Testing %d/%d: foo.exe %s\n", i+1, (int)cmdLines.size(), (int)cmdLine.c_str());
+    printf("Testing %d/%d: foo.exe %s\n", (int)(i+1), (int)cmdLines.size(), cmdLine.c_str());
 
     //compute the expected list of arguments
     ArgumentList::StringList expectedArgs;
