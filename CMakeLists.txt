@@ -97,7 +97,6 @@ set(LIBARGVCODEC_INSTALL_CMAKE_DIR    ${LIBARGVCODEC_INSTALL_LIB_DIR}) # CMake f
 
 # Build options
 option(LIBARGVCODEC_BUILD_TEST "Build all libArgvCodec's unit tests" OFF)
-option(LIBARGVCODEC_BUILD_SAMPLES "Build all samples projects" OFF)
 option(LIBARGVCODEC_BUILD_DOC "Build documentation" OFF)
 
 # Force a debug postfix if none specified.
