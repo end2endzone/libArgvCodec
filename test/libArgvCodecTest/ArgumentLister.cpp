@@ -17,8 +17,6 @@
 
 using namespace libargvcodec;
 
-//#define __linux__
-
 std::string getExePath()
 {
   std::string path = ra::process::getCurrentProcessPath();
