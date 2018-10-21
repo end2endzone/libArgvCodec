@@ -218,7 +218,7 @@ set(CPACK_PACKAGE_VERSION ${LIBARGVCODEC_VERSION})
 set(CPACK_PACKAGE_VERSION_MAJOR "${LIBARGVCODEC_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${LIBARGVCODEC_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${LIBARGVCODEC_VERSION_PATCH}")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "libArgvCodec - libArgvCodec is a windows/linux implementation of many arduino functions to allow an arduino library developer to unit test code outside of the arduino platform.")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "libArgvCodec - libArgvCodec is a c++ library which properly encode and decode command line arguments. It allows one to properly escape string values to use as command line parameters.")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
 
