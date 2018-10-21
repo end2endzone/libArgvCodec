@@ -210,10 +210,14 @@ bool systemDecodeCommandLineArguments(const char * iCmdLine, ArgumentList::Strin
     //Endding the quoted command line string
     cmdLine.append("\"");
 
+    printf("Forcing terminated quoted string.\n");
+
     //and try again
     returncode = system(cmdLine.c_str());
     if (returncode)
       return false;
+
+    printf("ok\n");
   }
 #endif
 
