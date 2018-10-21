@@ -1,6 +1,7 @@
 #include "ArgumentLister.h"
 #include "libargvcodec/CmdPromptArgumentCodec.h"
 #include "rapidassist/strings.h"
+#include "rapidassist/process.h"
 
 #include <cstdlib> //for system()
 
@@ -16,26 +17,33 @@
 
 using namespace libargvcodec;
 
+//#define __linux__
+
 std::string getExePath()
 {
-  CmdPromptArgumentCodec c;
-
-  ArgumentList tmp = c.decodeCommandLine("");
-  const char * arg0 = tmp.getArgument(0);
-  return std::string(arg0);
+  std::string path = ra::process::getCurrentProcessPath();
+  return path;
 }
 
 bool isPrinterExec()
 {
   std::string localExec = getExePath();
+#ifdef __linux__
+  bool found = (localExec.find(".printer") != std::string::npos);
+#elif WIN32
   bool found = (localExec.find(".printer.exe") != std::string::npos);
+#endif
   return found;
 }
 
 bool isLoggerExec()
 {
   std::string localExec = getExePath();
+#ifdef __linux__
+  bool found = (localExec.find(".logger") != std::string::npos);
+#elif WIN32
   bool found = (localExec.find(".logger.exe") != std::string::npos);
+#endif
   return found;
 }
 
@@ -47,7 +55,11 @@ std::string getPrinterExecFilePath()
     return localExec;
 
   std::string printerExec = localExec;
+#ifdef __linux__
+  printerExec.append(".printer");
+#elif WIN32
   ra::strings::replace(printerExec, ".exe", ".printer.exe");
+#endif
   return printerExec;
 }
 
@@ -59,14 +71,22 @@ std::string getLoggerExecFilePath()
     return localExec;
 
   std::string loggerExec = localExec;
+#ifdef __linux__
+  loggerExec.append(".logger");
+#elif WIN32
   ra::strings::replace(loggerExec, ".exe", ".logger.exe");
+#endif
   return loggerExec;
 }
 
 std::string getLogFilePath()
 {
   std::string logPath = getLoggerExecFilePath();
+#ifdef __linux__
+  logPath.append(".log");
+#elif WIN32
   ra::strings::replace(logPath, ".exe", ".log");
+#endif
   return logPath;
 }
 
@@ -78,8 +98,15 @@ void duplicateExec(const char * iDestinationPath)
   
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
+#ifdef __linux__
+  sprintf(buffer, "cp \"%s\" \"%s\" >/dev/null 2>/dev/null", localExec.c_str(), iDestinationPath);
+  int returncode = system(buffer);
+  sprintf(buffer, "chmod 755 \"%s\" >/dev/null 2>/dev/null", iDestinationPath);
+  returncode = system(buffer);
+#elif WIN32
   sprintf(buffer, "copy /v \"%s\" \"%s\" >NUL 2>NUL", localExec.c_str(), iDestinationPath);
   int returncode = system(buffer);
+#endif
 
   printf("done\n");
 }
@@ -172,8 +199,23 @@ bool systemDecodeCommandLineArguments(const char * iCmdLine, ArgumentList::Strin
 
   //run command line
   int returncode = system(cmdLine.c_str());
+#ifdef _WIN32
   if (returncode)
     return false;
+#elif __linux__
+  if (returncode)
+  {
+    //Verify for the following error: "sh: 1: Syntax error: Unterminated quoted string"
+    //These tests should be ignored since Linux bash does not support unterminated quoted string.
+    //Endding the quoted command line string
+    cmdLine.append("\"");
+
+    //and try again
+    returncode = system(cmdLine.c_str());
+    if (returncode)
+      return false;
+  }
+#endif
 
   std::string logPath = getLogFilePath();
   FILE * f = fopen(logPath.c_str(), "r");
