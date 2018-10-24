@@ -1,6 +1,7 @@
 Changes for 1.2.0:
 
 * New Feature: Added CMake support.
+* New Feature: Converted documentation to xmldoc format.
 
 Changes for 1.1.104:
 
