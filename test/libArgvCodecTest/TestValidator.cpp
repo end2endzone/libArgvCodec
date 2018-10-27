@@ -1,4 +1,5 @@
 #include "TestValidator.h"
+#include "TestUtils.h"
 #include "Validator.h"
 #include "rapidassist/strings.h"
 
@@ -92,7 +93,7 @@ void TestValidator::TearDown()
 
 TEST_F(TestValidator, testValidatorWithOrphan)
 {
-  char* argv[] = {"test.exe", "/x", "/y", "/z", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/x"), mkstr("/y"), mkstr("/z"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -119,7 +120,7 @@ TEST_F(TestValidator, testValidatorWithOrphan)
 
 TEST_F(TestValidator, testValidatorWithoutOrphan)
 {
-  char* argv[] = {"test.exe", "/x", "/y", "/z", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/x"), mkstr("/y"), mkstr("/z"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -182,7 +183,7 @@ TEST_F(TestValidator, testSortNextValueFirst)
 
 TEST_F(TestValidator, testMissingMandatoryArgument)
 {
-  char* argv[] = {"test.exe", "/a", "/b", "/c", "/x", "/y", "/z", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/a"), mkstr("/b"), mkstr("/c"), mkstr("/x"), mkstr("/y"), mkstr("/z"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;
@@ -208,7 +209,7 @@ TEST_F(TestValidator, testMissingMandatoryArgument)
 
 TEST_F(TestValidator, testMissingOptionalArgument)
 {
-  char* argv[] = {"test.exe", "/a", "/b", "/c", "/x", "/y", "/z", NULL};
+  char* argv[] = {mkstr("test.exe"), mkstr("/a"), mkstr("/b"), mkstr("/c"), mkstr("/x"), mkstr("/y"), mkstr("/z"), NULL};
   int argc = sizeof(argv)/sizeof(argv[0]) - 1;
 
   ArgumentList m;

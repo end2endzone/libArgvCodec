@@ -1,6 +1,31 @@
 #include "TestUtils.h"
 #include <cstdio> //for sprintf()
 
+DynamicStringList gStrings;
+
+//register a new string for the current test
+char * mkstr(const char * value)
+{
+#ifdef _WIN32
+  char * _copy = _strdup(value);
+#else
+  char * _copy = _strdup(value);
+#endif
+  gStrings.push_back(_copy);
+  return _copy;
+}
+
+void clearDynamicStrings()
+{
+  //clear all strings created in the test
+  for(size_t i=0; i<gStrings.size(); i++)
+  {
+    char * value = gStrings[i];
+    free(value);
+  }
+  gStrings.clear();
+}
+
 std::string getSequencedFile(const char * iPrefix, int iValue, const char * iPostfix, int iValueLength)
 {
   static const int BUFFER_SIZE = 1024;

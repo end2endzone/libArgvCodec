@@ -1,4 +1,5 @@
 #include "TestArgumentList.h"
+#include "TestUtils.h"
 #include "libargvcodec/ArgumentList.h"
 #include "ArgumentLister.h"
 #include "rapidassist/strings.h"
@@ -49,31 +50,13 @@ bool isIdentical(ArgumentList & m, int expectedArgc, char ** expectedArgv)
   return true;
 }
 
-//string memory management
-typedef std::vector<char*> DynamicStringList;
-DynamicStringList gStrings;
-
-//register a new string for the current test
-char * mkstr(const char * value)
-{
-  char * _copy = strdup(value);
-  gStrings.push_back(_copy);
-  return _copy;
-}
-
 void TestArgumentList::SetUp()
 {
 }
 
 void TestArgumentList::TearDown()
 {
-  //clear all strings created in the test
-  for(size_t i=0; i<gStrings.size(); i++)
-  {
-    char * value = gStrings[i];
-    free(value);
-  }
-  gStrings.clear();
+  clearDynamicStrings();
 }
 
 TEST_F(TestArgumentList, testInitArgcArgv)
