@@ -1,5 +1,6 @@
 #include "TestUtils.h"
 #include <cstdio> //for sprintf()
+#include <string.h> //for strdup()
 
 DynamicStringList gStrings;
 
@@ -9,7 +10,7 @@ char * mkstr(const char * value)
 #ifdef _WIN32
   char * _copy = _strdup(value);
 #else
-  char * _copy = _strdup(value);
+  char * _copy = strdup(value);
 #endif
   gStrings.push_back(_copy);
   return _copy;
