@@ -2,6 +2,9 @@ Changes for 1.2.0:
 
 * New Feature: Added CMake support.
 * New Feature: Converted documentation to xmldoc format.
+* New Feature: Code cleanup for CmdPromptArgumentCodec class.
+* New Feature: Disabled Windows command prompt and CreateProcess() tests on Linux.
+* Fixed issue #1: Memory corruption while running unit tests.
 
 Changes for 1.1.104:
 

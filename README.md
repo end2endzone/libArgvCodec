@@ -30,7 +30,7 @@ The purpose of the library is not to handle *Argument Parsing* and *Argument Val
 
 However, few of them are actually developed to help a user passing arguments from one application to another. The libArgvCodec library includes arguments and command line encoder and decoder (codecs) that are designed for this particular purpose.
 
-Transferring local variable values to another application through command line arguments is not something that occurs pretty often but if you ever have to deal with this situation, the libArgvCodec library can help you avoid typical encoding pitfalls.
+Transferring local variable values to another application through command line arguments is not something that occurs pretty often but if you ever have to deal with this situation, this library can help you avoid typical encoding pitfalls.
 
 
 
@@ -39,7 +39,7 @@ Transferring local variable values to another application through command line a
 
 The main features of the library are:
 
-* Supports `int argc, char* argv[]` argument parsing.
+* Supports `int argc, char* argv[]` argument initialization.
 * Supports case sensitive and case insensitive searches within lists of arguments.
 * Quickly identify unknown arguments.
 * Supports any type of argument prefixes like: slashes, single dash, double dash, etc.
@@ -49,7 +49,7 @@ The main features of the library are:
 * Bulletproof application againts command line injection attacks.
 
 Limitations:
-* The library can be compiled in Linux. However, the current encoders/decoders does not support Linux command line parameters.
+* The library can be compiled in Linux. However, the current encoders/decoders does not support Linux terminal parameters.
 
 
 
@@ -108,60 +108,75 @@ The following section shows multiple examples of using libArgvCodec.
 
 ### Encoding values into a command line ###
 
-The following code example ask for multiple string values (arguments) and uses `CmdPromptArgumentCodec` and `CreateProcessArgumentCodec` classes to encore the values into the resulting command line:
+The following code example ask for multiple string values (arguments) and uses `CmdPromptArgumentCodec` and `CreateProcessArgumentCodec` classes to encode the values into the resulting command line:
 
 ```cpp
-int numArguments = 0;
-cout << "Enter the number of arguments to encode: ";
-cin >> numArguments;
-cout << endl;
+#include <stdio.h>
+#include <iostream>
 
-//capture the remaining ENTER key
-std::string tmp;
-std::getline(std::cin, tmp);
+#include "libargvcodec/ArgumentList.h"
+#include "libargvcodec/CmdPromptArgumentCodec.h"
+#include "libargvcodec/CreateProcessArgumentCodec.h"
 
-//validate
-if (numArguments < 0)
+using namespace libargvcodec;
+using namespace std;
+
+int main(int argc, char* argv[])
 {
-  cout << "invalid number of arguments" << endl;
-  return 1;
-}
-else if (numArguments == 0)
-{
-  //nothing to do
-  return 0;
-}
-
-//build the list
-ArgumentList arglist;
-arglist.insert("foo.exe");
-
-for(int i=0; i<numArguments; i++)
-{
-  cout << "Enter the value of argument #" << i+1 << ": ";
-
-  std::string value;
-  std::getline(std::cin, value);
-
-  arglist.insert(value.c_str());
-}
-cout << "done." << endl;
-cout << endl;
-
-//Encode
-{
-  CmdPromptArgumentCodec codec;
-  std::string cmdLine = codec.encodeCommandLine(arglist);
-  cout << "The encoded command line for the command prompt is the following:" << endl;
-  cout << cmdLine << endl;
+  int numArguments = 0;
+  cout << "Enter the number of arguments to encode: ";
+  cin >> numArguments;
   cout << endl;
-}
-{
-  CreateProcessArgumentCodec codec;
-  std::string cmdLine = codec.encodeCommandLine(arglist);
-  cout << "The encoded command line for CreatePaocess() api is the following:" << endl;
-  cout << cmdLine << endl;
+
+  //capture the remaining ENTER key
+  std::string tmp;
+  std::getline(std::cin, tmp);
+
+  //validate user input
+  if (numArguments < 0)
+  {
+    cout << "invalid number of arguments" << endl;
+    return 1;
+  }
+  else if (numArguments == 0)
+  {
+    //nothing to do
+    return 0;
+  }
+
+  //build the list of arguments
+  ArgumentList arglist;
+  arglist.insert("foo.exe"); //argv[0] is always the path to the current process
+
+  for(int i=0; i<numArguments; i++)
+  {
+    cout << "Enter the value of argument #" << i+1 << ": ";
+
+    std::string value;
+    std::getline(std::cin, value);
+
+    arglist.insert(value.c_str());
+  }
+  cout << "done." << endl;
   cout << endl;
+
+  //Encode
+  {
+    CmdPromptArgumentCodec codec;
+    std::string cmdLine = codec.encodeCommandLine(arglist);
+    cout << "The encoded command line for the Command Prompt is the following:" << endl;
+    cout << cmdLine << endl;
+    cout << endl;
+  }
+  {
+    CreateProcessArgumentCodec codec;
+    std::string cmdLine = codec.encodeCommandLine(arglist);
+    cout << "The encoded command line for CreateProcess() api is the following:" << endl;
+    cout << cmdLine << endl;
+    cout << endl;
+  }
+
+	return 0;
 }
 ```
 

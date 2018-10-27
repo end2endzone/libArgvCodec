@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
   std::string tmp;
   std::getline(std::cin, tmp);
 
-  //validate
+  //validate user input
   if (numArguments < 0)
   {
     cout << "invalid number of arguments" << endl;
@@ -45,9 +45,9 @@ int main(int argc, char* argv[])
     return 0;
   }
 
-  //build the list
+  //build the list of arguments
   ArgumentList arglist;
-  arglist.insert("foo.exe");
+  arglist.insert("foo.exe"); //argv[0] is always the path to the current process
 
   for(int i=0; i<numArguments; i++)
   {
