@@ -322,23 +322,13 @@ bool CmdPromptArgumentCodec::strStart(const char * iStr, const char * iToken)
 {
   if (iStr == NULL || iToken == NULL)
     return false;
-
-  size_t seqLen   = strlen(iToken);
-  size_t valueLen = strlen(iStr);
-
-  if (valueLen < seqLen)
-  {
-    //value smaller than sequence,
-    //unable to find sequence in value
-    return false;
-  }
-  bool match = (strncmp(iStr, iToken, seqLen) == 0);
+  bool match = (strncmp(iStr, iToken, strlen(iToken)) == 0);
   return match;
 }
 
-bool CmdPromptArgumentCodec::strStart(const char * iValue, size_t iValueOffset, const char * iSequenceExpr)
+bool CmdPromptArgumentCodec::strStart(const char * iStr, size_t iOffset, const char * iToken)
 {
-  return strStart( &iValue[iValueOffset], iSequenceExpr );
+  return strStart( &iStr[iOffset], iToken );
 }
 
 bool CmdPromptArgumentCodec::matchesBackSlashDblQuoteSequence(const char * iValue, size_t iValueOffset, size_t & oNumBlackSlash, size_t & oSequenceLength, bool iInString, bool iInCaretString)
@@ -353,7 +343,7 @@ bool CmdPromptArgumentCodec::matchesBackSlashDblQuoteSequence(const char * iValu
   bool acceptCaretCharacters = (supportsShellCharacters() && (iInCaretString || !iInString) );
   char c = iValue[iValueOffset+oSequenceLength];
 
-  while( c == '\\' || (acceptCaretCharacters && /*c == '^'*/strStart(iValue, iValueOffset+oSequenceLength, "^\\")) ) //allow accepting sequences in the following format:    ^"a\^\^\\"b"
+  while( c == '\\' || (acceptCaretCharacters && /*c == '^'*/ strStart(iValue, iValueOffset+oSequenceLength, "^\\")) ) //allow accepting sequences in the following format:    ^"a\^\^\\"b"
   {
     if (c != '\\')
     {

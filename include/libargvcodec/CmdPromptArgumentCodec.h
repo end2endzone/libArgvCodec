@@ -56,8 +56,8 @@ namespace libargvcodec
     char getSafeCharacter(const char * iValue, size_t iIndex);
 
     /// <summary>Verify if a given string starts by the expected value.</summary>
-    /// <param name="iValue">The value of the given string.</param>
-    /// <param name="iSequenceExpr">The value of the expected string.</param>
+    /// <param name="iStr">The value of the given string.</param>
+    /// <param name="iToken">The value of the expected string.</param>
     /// <returns>Returns true if the given string starts by the expected value. Returns false otherwise.</returns>
     bool strStart(const char * iStr, const char * iToken);
 
@@ -66,7 +66,7 @@ namespace libargvcodec
     /// <param name="iValueOffset">The offset within iValue.</param>
     /// <param name="iSequenceExpr">The value of the expected string.</param>
     /// <returns>Returns true if the given string starts by the expected value. Returns false otherwise.</returns>
-    bool strStart(const char * iValue, size_t iValueOffset, const char * iSequenceExpr);
+    bool strStart(const char * iStr, size_t iOffset, const char * iToken);
 
     bool matchesBackSlashDblQuoteSequence(const char * iValue, size_t iValueOffset, size_t & oNumBlackSlash, size_t & oSkipLength, bool iInString, bool iInCaretString);
 
