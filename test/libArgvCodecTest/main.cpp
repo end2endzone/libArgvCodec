@@ -42,6 +42,11 @@ int main(int argc, char* argv[])
   ::testing::GTEST_FLAG(filter) = "*";
   ::testing::InitGoogleTest(&argc, argv);
 
+  //Disable Windows tests on Linux
+#ifdef __linux__
+  ::testing::GTEST_FLAG(filter) = ra::gtesthelp::mergeFilter("", "TestCmdPromptArgumentCodec.*:TestCreateProcessArgumentCodec.*", ::testing::GTEST_FLAG(filter).c_str());
+#endif
+
   int wResult = RUN_ALL_TESTS(); //Find and run all tests
   return wResult; // returns 0 if all the tests are successful, or 1 otherwise
 }

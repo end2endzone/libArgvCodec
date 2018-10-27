@@ -20,6 +20,7 @@ void TestCmdPromptArgumentCodec::TearDown()
 
 TEST_F(TestCmdPromptArgumentCodec, testDecodeCommandLine)
 {
+#ifdef _WIN32
   const char * inputFile = "TestShellCommandLines.txt";
 
   ra::strings::StringVector cmdLines;
@@ -70,10 +71,12 @@ TEST_F(TestCmdPromptArgumentCodec, testDecodeCommandLine)
       ASSERT_CSTR_EQ(expectedArg, actualArg) << message.c_str();
     }
   }
+#endif
 }
 
 TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
 {
+#ifdef _WIN32
   const char * inputFilePrefix = "TestEncodeCommandLine";
   const char * inputFilePostfix = ".txt";
   
@@ -150,10 +153,12 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
 
     //next test file
   }
+#endif
 }
 
 TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine2)
 {
+#ifdef _WIN32
   const char * inputFile = "TestShellCommandLines.txt";
 
   ra::strings::StringVector testCmdLines;
@@ -215,10 +220,12 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine2)
       ASSERT_CSTR_EQ(expectedArg, actualArg) << message.c_str();
     }
   }
+#endif
 }
 
 void prepareTestCmdPromptEncodeArgument(const char * iRawArguementValue, std::string & oEscapedArgument, std::string & oSystemArgumentValue)
 {
+#ifdef _WIN32
   //arrange
   ArgumentList::StringList expectedArgs;
   expectedArgs.push_back("foo.exe");
@@ -238,10 +245,12 @@ void prepareTestCmdPromptEncodeArgument(const char * iRawArguementValue, std::st
   printf("    foo.exe %s\n", oEscapedArgument.c_str());
   printf("  Validating with system's cmd.exe...\n");
   printf("    argv[1]=%s\n", oSystemArgumentValue.c_str());
+#endif
 }
 
 TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
 {
+#ifdef _WIN32
   printf("\n");
 
   //-----------------------------------------------------------------------------------
@@ -306,5 +315,5 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
   }
   //-----------------------------------------------------------------------------------
 
-
+#endif
 }
