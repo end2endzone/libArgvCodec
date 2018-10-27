@@ -12,6 +12,8 @@ namespace validation
   {
   public:
     typedef ValidationRule * VALIDATION_RULE_PTR;
+    ValidationRuleSorter();
+    ValidationRuleSorter(const ValidationRuleSorter & copy);
     virtual ~ValidationRuleSorter();
     advancedsort::SortAttributeList getSortAttributes(const VALIDATION_RULE_PTR & iObject);
 

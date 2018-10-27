@@ -5,6 +5,14 @@ namespace libargvcodec
 namespace validation
 {
 
+ValidationRuleSorter::ValidationRuleSorter()
+{
+}
+
+ValidationRuleSorter::ValidationRuleSorter(const ValidationRuleSorter & copy)
+{
+}
+
 ValidationRuleSorter::~ValidationRuleSorter()
 {
   //free bools
