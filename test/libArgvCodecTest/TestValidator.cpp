@@ -89,6 +89,7 @@ void TestValidator::SetUp()
 
 void TestValidator::TearDown()
 {
+  clearDynamicStrings();
 }
 
 TEST_F(TestValidator, testValidatorWithOrphan)
