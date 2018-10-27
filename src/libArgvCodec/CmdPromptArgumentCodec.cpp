@@ -320,8 +320,11 @@ char CmdPromptArgumentCodec::getSafeCharacter(const char * iValue, size_t iIndex
 
 bool CmdPromptArgumentCodec::matchesSequence(const char * iValue, const char * iSequenceExpr)
 {
-  size_t seqLen   = std::string(iSequenceExpr).size();
-  size_t valueLen = std::string(iValue).size();
+  if (iValue == NULL || iSequenceExpr == NULL)
+    return false;
+
+  size_t seqLen   = strlen(iSequenceExpr);
+  size_t valueLen = strlen(iValue);
 
   if (valueLen < seqLen)
   {
