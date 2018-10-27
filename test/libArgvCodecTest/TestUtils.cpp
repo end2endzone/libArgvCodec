@@ -1,6 +1,7 @@
 #include "TestUtils.h"
 #include <cstdio> //for sprintf()
 #include <string.h> //for strdup()
+#include <cstdlib> //for free()
 
 DynamicStringList gStrings;
 

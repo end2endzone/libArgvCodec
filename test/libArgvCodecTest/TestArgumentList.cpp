@@ -4,8 +4,6 @@
 #include "ArgumentLister.h"
 #include "rapidassist/strings.h"
 
-#include <string.h> //for strdup()
-
 using namespace libargvcodec;
 
 #define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
