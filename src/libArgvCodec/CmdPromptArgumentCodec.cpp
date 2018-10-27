@@ -318,13 +318,13 @@ char CmdPromptArgumentCodec::getSafeCharacter(const char * iValue, size_t iIndex
   return iValue[iIndex];
 }
 
-bool CmdPromptArgumentCodec::matchesSequence(const char * iValue, const char * iSequenceExpr)
+bool CmdPromptArgumentCodec::strStart(const char * iStr, const char * iToken)
 {
-  if (iValue == NULL || iSequenceExpr == NULL)
+  if (iStr == NULL || iToken == NULL)
     return false;
 
-  size_t seqLen   = strlen(iSequenceExpr);
-  size_t valueLen = strlen(iValue);
+  size_t seqLen   = strlen(iToken);
+  size_t valueLen = strlen(iStr);
 
   if (valueLen < seqLen)
   {
@@ -332,13 +332,13 @@ bool CmdPromptArgumentCodec::matchesSequence(const char * iValue, const char * i
     //unable to find sequence in value
     return false;
   }
-  bool match = (strncmp(iValue, iSequenceExpr, seqLen) == 0);
+  bool match = (strncmp(iStr, iToken, seqLen) == 0);
   return match;
 }
 
-bool CmdPromptArgumentCodec::matchesSequence(const char * iValue, size_t iValueOffset, const char * iSequenceExpr)
+bool CmdPromptArgumentCodec::strStart(const char * iValue, size_t iValueOffset, const char * iSequenceExpr)
 {
-  return matchesSequence( &iValue[iValueOffset], iSequenceExpr );
+  return strStart( &iValue[iValueOffset], iSequenceExpr );
 }
 
 bool CmdPromptArgumentCodec::matchesBackSlashDblQuoteSequence(const char * iValue, size_t iValueOffset, size_t & oNumBlackSlash, size_t & oSequenceLength, bool iInString, bool iInCaretString)
@@ -353,7 +353,7 @@ bool CmdPromptArgumentCodec::matchesBackSlashDblQuoteSequence(const char * iValu
   bool acceptCaretCharacters = (supportsShellCharacters() && (iInCaretString || !iInString) );
   char c = iValue[iValueOffset+oSequenceLength];
 
-  while( c == '\\' || (acceptCaretCharacters && /*c == '^'*/matchesSequence(iValue, iValueOffset+oSequenceLength, "^\\")) ) //allow accepting sequences in the following format:    ^"a\^\^\\"b"
+  while( c == '\\' || (acceptCaretCharacters && /*c == '^'*/strStart(iValue, iValueOffset+oSequenceLength, "^\\")) ) //allow accepting sequences in the following format:    ^"a\^\^\\"b"
   {
     if (c != '\\')
     {
@@ -370,7 +370,7 @@ bool CmdPromptArgumentCodec::matchesBackSlashDblQuoteSequence(const char * iValu
   }
 
   bool validString      = (oNumBlackSlash > 0 && iValue[iValueOffset+oSequenceLength] == '\"');
-  bool validCaretString = (oNumBlackSlash > 0 && supportsShellCharacters() && (iInCaretString || !iInString) && matchesSequence(&iValue[iValueOffset+oSequenceLength], "^\"") );
+  bool validCaretString = (oNumBlackSlash > 0 && supportsShellCharacters() && (iInCaretString || !iInString) && strStart(&iValue[iValueOffset+oSequenceLength], "^\"") );
   bool valid = validString || validCaretString;
 
   //Compute skip offset
@@ -454,7 +454,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
     size_t numBackSlashes = 0;
     size_t backslashSequenceLength = 0;
 
-    if ( supportsShellCharacters() && !inString && !inCaretString && matchesSequence(iCmdLine, i, "^\""))
+    if ( supportsShellCharacters() && !inString && !inCaretString && strStart(iCmdLine, i, "^\""))
     {
       //Rule 4.
       //new caret-string
@@ -489,7 +489,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
 
       i=i+1; //skip next character
     }
-    else if ( supportsShellCharacters() && !inString && inCaretString && matchesSequence(iCmdLine, i, "^\""))
+    else if ( supportsShellCharacters() && !inString && inCaretString && strStart(iCmdLine, i, "^\""))
     {
       //Rule 4.
       //end caret-string
@@ -518,7 +518,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
       //Remember what was found
       codes.push_back(Plain);
     }
-    else if (supportsShellCharacters() && c == '^' && (!inString || !inCaretString) && matchesSequence(iCmdLine, i, "^^") )
+    else if (supportsShellCharacters() && c == '^' && (!inString || !inCaretString) && strStart(iCmdLine, i, "^^") )
     {
       //Rule 5.2.
       accumulator.push_back(c);
@@ -570,7 +570,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
         codes.push_back(StringStart);
       }
     }
-    else if ( inCaretString && !inString && matchesSequence(iCmdLine, i, "\\\"") )
+    else if ( inCaretString && !inString && strStart(iCmdLine, i, "\\\"") )
     {
       //Rule 9.1 (exception)
       //   \" sequence in caret-string should be read as [close caret-string] and [open string] and plain " character.
@@ -587,7 +587,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
       //Remember what was found
       codes.push_back(CaretStringEnd);
     }
-    else if ( supportsShellCharacters() && (inCaretString || !inString) && matchesSequence(iCmdLine, i, "\\^\"") )
+    else if ( supportsShellCharacters() && (inCaretString || !inString) && strStart(iCmdLine, i, "\\^\"") )
     {
       //Rule 2.1.
       // for \^" character sequence inside a caret-string or outside a string
@@ -600,7 +600,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
 
       i=i+2; //skip next character
     }
-    else if ( matchesSequence(iCmdLine, i, "\\\"") )
+    else if ( strStart(iCmdLine, i, "\\\"") )
     {
       //Rule 2.
       // for \" character sequence outside/inside a string or caret-string
@@ -630,7 +630,7 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
 
       i=i+backslashSequenceLength-1; //skip escaped \ characters (but not the last \ if odd backslashes are found) but not the " character
     }
-    else if ( (inString || inCaretString) && matchesSequence(iCmdLine, i, "\"\"") )
+    else if ( (inString || inCaretString) && strStart(iCmdLine, i, "\"\"") )
     {
       //Rule 2.
       // for "" character sequence inside a string or caret-string

@@ -59,14 +59,14 @@ namespace libargvcodec
     /// <param name="iValue">The value of the given string.</param>
     /// <param name="iSequenceExpr">The value of the expected string.</param>
     /// <returns>Returns true if the given string starts by the expected value. Returns false otherwise.</returns>
-    bool matchesSequence(const char * iValue, const char * iSequenceExpr);
+    bool strStart(const char * iStr, const char * iToken);
 
     /// <summary>Verify if a given string at offset iValueOffset, starts by the expected value.</summary>
     /// <param name="iValue">The value of the given string.</param>
     /// <param name="iValueOffset">The offset within iValue.</param>
     /// <param name="iSequenceExpr">The value of the expected string.</param>
     /// <returns>Returns true if the given string starts by the expected value. Returns false otherwise.</returns>
-    bool matchesSequence(const char * iValue, size_t iValueOffset, const char * iSequenceExpr);
+    bool strStart(const char * iValue, size_t iValueOffset, const char * iSequenceExpr);
 
     bool matchesBackSlashDblQuoteSequence(const char * iValue, size_t iValueOffset, size_t & oNumBlackSlash, size_t & oSkipLength, bool iInString, bool iInCaretString);
 
