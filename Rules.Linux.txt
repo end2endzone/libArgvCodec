@@ -1,0 +1,54 @@
+
+https://www.shellscript.sh/escape.html
+https://stackoverflow.com/questions/33157494/escaping-special-characters-in-unix-shell
+
+./showargs this is multiple arguments.
+./showargs this "is three" arguments.
+./showargs this 'is also three' arguments.
+./showargs "this 'is a single quote string' in a double quote string."
+./showargs 'this "is a double quote string" in a single quote string.'
+
+./showargs "single quote ' in double quote string."
+./showargs 'double quote " in single quote string.'
+
+./showargs "12\\3=4"
+./showargs "12\\\3=4"
+./showargs "12\\\\3=4"
+./showargs "12\\\\\3=4"
+./showargs 12\\3=4
+
+./showargs "5 is > than 3"
+./showargs "7 is < than 9"
+./showargs '5 is > than 3'
+./showargs '7 is < than 9'
+
+./showargs true || false
+./showargs "true || false"
+./showargs "true" "||" "false"
+
+./showargs dog && false
+./showargs false && dog
+./showargs true && false
+./showargs "true && false"
+./showargs "true" "&&" "false"
+
+./showargs foo | echo bar
+./showargs foo \| echo bar
+./showargs foo "|" echo bar
+./showargs foo '|' echo bar
+
+./showargs *
+./showargs \*
+./showargs "*"
+
+./showargs "Peter owes me $20"
+./showargs "Peter owes me \$20"
+
+./showargs "this `is a string` with backticks".
+./showargs this \`is a string\` with backticks.
+./showargs this `echo is another command result` inside a command.
+
+./showargs "this "is multiple" words"" concatenated into single string."
+./showargs "this is the left part"" and this is the right part of a single string".
+./showargs "l e f t "'r i g h t'
+
