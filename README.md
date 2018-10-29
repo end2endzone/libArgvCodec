@@ -54,6 +54,13 @@ Limitations:
 
 
 
+# Rules #
+
+Please refer to file [Rules.Windows.md](Rules.Windows.md) for the list of rules implemented into the library for properly encoding arguments into a command line or parsing a command line.
+
+
+
+
 # Usage #
 
 The following instructions show how to use the library.

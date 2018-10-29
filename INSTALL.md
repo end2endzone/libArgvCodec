@@ -107,3 +107,9 @@ To run tests, navigate to the `build/bin` folder and run `libargvcodec_unittest`
 Test results are saved in junit format in file `libargvcodec_unittest.x86.debug.xml` or `libargvcodec_unittest.x86.release.xml` depending on the selected configuration.
 
 The latest test results are available at the beginning of the [README.md](README.md) file.
+
+
+
+## Test samples ##
+
+Please refer to file [Tests.Windows.md](Tests.Windows.md) for all the command line samples that were used as a baseline for creating unit tests for the Windows platform.
