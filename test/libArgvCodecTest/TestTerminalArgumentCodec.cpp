@@ -28,7 +28,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_STREQ(expected, actual);
+    ASSERT_EQ(expected, actual);
   }
   //-----------------------------------------------------------------------------------
   {
@@ -40,7 +40,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_STREQ(expected, actual);
+    ASSERT_EQ(expected, actual);
   }
   //-----------------------------------------------------------------------------------
   {
@@ -52,7 +52,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_STREQ(expected, actual);
+    ASSERT_EQ(expected, actual);
   }
   //-----------------------------------------------------------------------------------
   {
@@ -64,7 +64,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_STREQ(expected, actual);
+    ASSERT_EQ(expected, actual);
   }
   //-----------------------------------------------------------------------------------
   {
@@ -76,7 +76,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_STREQ(expected, actual);
+    ASSERT_EQ(expected, actual);
   }
   //-----------------------------------------------------------------------------------
   {
@@ -88,7 +88,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_STREQ(expected, actual);
+    ASSERT_EQ(expected, actual);
   }
   //-----------------------------------------------------------------------------------
   {
@@ -100,7 +100,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_STREQ(expected, actual);
+    ASSERT_EQ(expected, actual);
   }
   //-----------------------------------------------------------------------------------
   {
@@ -112,7 +112,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_STREQ(expected, actual);
+    ASSERT_EQ(expected, actual);
   }
   //-----------------------------------------------------------------------------------
   {
@@ -124,7 +124,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_STREQ(expected, actual);
+    ASSERT_EQ(expected, actual);
   }
   //-----------------------------------------------------------------------------------
   {
@@ -136,7 +136,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_STREQ(expected, actual);
+    ASSERT_EQ(expected, actual);
   }
   //-----------------------------------------------------------------------------------
   {
@@ -148,7 +148,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_STREQ(expected, actual);
+    ASSERT_EQ(expected, actual);
   }
   //-----------------------------------------------------------------------------------
   {
@@ -160,7 +160,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_STREQ(expected, actual);
+    ASSERT_EQ(expected, actual);
   }
   //-----------------------------------------------------------------------------------
   {
@@ -172,7 +172,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_STREQ(expected, actual);
+    ASSERT_EQ(expected, actual);
   }
 }
 

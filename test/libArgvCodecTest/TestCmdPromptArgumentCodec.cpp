@@ -8,8 +8,6 @@
 
 using namespace libargvcodec;
 
-#define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
-
 void TestCmdPromptArgumentCodec::SetUp()
 {
 }
@@ -68,7 +66,7 @@ TEST_F(TestCmdPromptArgumentCodec, testDecodeCommandLine)
     {
       const char * expectedArg = expectedArgs[i].c_str();
       const char * actualArg = actualArgs.getArgv()[i];
-      ASSERT_CSTR_EQ(expectedArg, actualArg) << message.c_str();
+      ASSERT_STREQ(expectedArg, actualArg) << message.c_str();
     }
   }
 #endif
@@ -148,7 +146,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
     {
       const char * expectedArg = expectedArgs[j].c_str();
       const char * actualArg = actualArgs[j].c_str();
-      ASSERT_CSTR_EQ(expectedArg, actualArg) << message.c_str();
+      ASSERT_STREQ(expectedArg, actualArg) << message.c_str();
     }
 
     //next test file
@@ -217,7 +215,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine2)
     {
       const char * expectedArg = expectedArgs[j].c_str();
       const char * actualArg = actualArgs[j].c_str();
-      ASSERT_CSTR_EQ(expectedArg, actualArg) << message.c_str();
+      ASSERT_STREQ(expectedArg, actualArg) << message.c_str();
     }
   }
 #endif
@@ -262,7 +260,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
     prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_STREQ(systemArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
@@ -274,7 +272,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
     prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_STREQ(systemArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
@@ -286,7 +284,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
     prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_STREQ(systemArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
@@ -298,7 +296,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
     prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_STREQ(systemArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
@@ -310,7 +308,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
     prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_STREQ(systemArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------

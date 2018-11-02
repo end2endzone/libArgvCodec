@@ -7,8 +7,6 @@
 
 using namespace libargvcodec;
 
-#define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
-
 void TestCreateProcessArgumentCodec::SetUp()
 {
 }
@@ -67,7 +65,7 @@ TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
     {
       const char * expectedArg = expectedArgs[i].c_str();
       const char * actualArg = actualArgs.getArgv()[i];
-      ASSERT_CSTR_EQ(expectedArg, actualArg) << message;
+      ASSERT_STREQ(expectedArg, actualArg) << message;
     }
   }
 #endif
@@ -134,7 +132,7 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeCommandLine)
     {
       const char * expectedArg = expectedArgs[j].c_str();
       const char * actualArg = actualArgs[j].c_str();
-      ASSERT_CSTR_EQ(expectedArg, actualArg) << message;
+      ASSERT_STREQ(expectedArg, actualArg) << message;
     }
   }
 #endif
@@ -182,7 +180,7 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeArgument)
     prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(createProcessArgumentValue.c_str(), argumentValue);
+    ASSERT_STREQ(createProcessArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
@@ -194,7 +192,7 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeArgument)
     prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(createProcessArgumentValue.c_str(), argumentValue);
+    ASSERT_STREQ(createProcessArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
@@ -206,7 +204,7 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeArgument)
     prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(createProcessArgumentValue.c_str(), argumentValue);
+    ASSERT_STREQ(createProcessArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
@@ -218,7 +216,7 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeArgument)
     prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(createProcessArgumentValue.c_str(), argumentValue);
+    ASSERT_STREQ(createProcessArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
@@ -230,7 +228,7 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeArgument)
     prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_CSTR_EQ(createProcessArgumentValue.c_str(), argumentValue);
+    ASSERT_STREQ(createProcessArgumentValue.c_str(), argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------

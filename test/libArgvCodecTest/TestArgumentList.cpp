@@ -2,11 +2,8 @@
 #include "TestUtils.h"
 #include "libargvcodec/ArgumentList.h"
 #include "ArgumentLister.h"
-#include "rapidassist/strings.h"
 
 using namespace libargvcodec;
-
-#define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
 
 void setDefaultOptionPrefix(ArgumentList & m)
 {
@@ -68,10 +65,10 @@ TEST_F(TestArgumentList, testInitArgcArgv)
   char** argv2 = m.getArgv();
 
   ASSERT_EQ(argc, argc2);
-  ASSERT_CSTR_EQ(argv[0], argv2[0]);
-  ASSERT_CSTR_EQ(argv[1], argv2[1]);
-  ASSERT_CSTR_EQ(argv[2], argv2[2]);
-  ASSERT_CSTR_EQ(argv[3], argv2[3]);
+  ASSERT_STREQ(argv[0], argv2[0]);
+  ASSERT_STREQ(argv[1], argv2[1]);
+  ASSERT_STREQ(argv[2], argv2[2]);
+  ASSERT_STREQ(argv[3], argv2[3]);
   ASSERT_EQ(argv[4], argv2[4]);
 }
 
@@ -86,13 +83,13 @@ TEST_F(TestArgumentList, testGetArgument)
   char** argv2 = m.getArgv();
 
   ASSERT_EQ(argc, argc2);
-  ASSERT_CSTR_EQ(argv[0], m.getArgument(0));
-  ASSERT_CSTR_EQ(argv[1], m.getArgument(1));
-  ASSERT_CSTR_EQ(argv[2], m.getArgument(2));
-  ASSERT_CSTR_EQ(argv[3], m.getArgument(3));
-  ASSERT_CSTR_EQ("", m.getArgument(4)); //out of bounds
-  ASSERT_CSTR_EQ("", m.getArgument(5)); //out of bounds
-  ASSERT_CSTR_EQ("", m.getArgument(6)); //out of bounds
+  ASSERT_STREQ(argv[0], m.getArgument(0));
+  ASSERT_STREQ(argv[1], m.getArgument(1));
+  ASSERT_STREQ(argv[2], m.getArgument(2));
+  ASSERT_STREQ(argv[3], m.getArgument(3));
+  ASSERT_STREQ("", m.getArgument(4)); //out of bounds
+  ASSERT_STREQ("", m.getArgument(5)); //out of bounds
+  ASSERT_STREQ("", m.getArgument(6)); //out of bounds
 }
 
 TEST_F(TestArgumentList, testInitVector)
@@ -132,14 +129,14 @@ TEST_F(TestArgumentList, testInsertEndAbsolutePos)
   char** argv2 = m.getArgv();
 
   ASSERT_EQ(argc+1, argc2);
-  ASSERT_CSTR_EQ(argv[0], m.getArgument(0));
-  ASSERT_CSTR_EQ(argv[1], m.getArgument(1));
-  ASSERT_CSTR_EQ(argv[2], m.getArgument(2));
-  ASSERT_CSTR_EQ(argv[3], m.getArgument(3));
-  ASSERT_CSTR_EQ(newArg.c_str(), m.getArgument(4));
-  ASSERT_CSTR_EQ("", m.getArgument(5));
-  ASSERT_CSTR_EQ("", m.getArgument(6));
-  ASSERT_CSTR_EQ("", m.getArgument(7));
+  ASSERT_STREQ(argv[0], m.getArgument(0));
+  ASSERT_STREQ(argv[1], m.getArgument(1));
+  ASSERT_STREQ(argv[2], m.getArgument(2));
+  ASSERT_STREQ(argv[3], m.getArgument(3));
+  ASSERT_STREQ(newArg.c_str(), m.getArgument(4));
+  ASSERT_STREQ("", m.getArgument(5));
+  ASSERT_STREQ("", m.getArgument(6));
+  ASSERT_STREQ("", m.getArgument(7));
 }
 
 TEST_F(TestArgumentList, testInsertOutOfBound)
@@ -158,10 +155,10 @@ TEST_F(TestArgumentList, testInsertOutOfBound)
 
   //no change in content
   ASSERT_EQ(argc, argc2);
-  ASSERT_CSTR_EQ(argv[0], argv2[0]);
-  ASSERT_CSTR_EQ(argv[1], argv2[1]);
-  ASSERT_CSTR_EQ(argv[2], argv2[2]);
-  ASSERT_CSTR_EQ(argv[3], argv2[3]);
+  ASSERT_STREQ(argv[0], argv2[0]);
+  ASSERT_STREQ(argv[1], argv2[1]);
+  ASSERT_STREQ(argv[2], argv2[2]);
+  ASSERT_STREQ(argv[3], argv2[3]);
   ASSERT_EQ(argv[4], argv2[4]);
 }
 
@@ -180,14 +177,14 @@ TEST_F(TestArgumentList, testInsertFirst)
   char** argv2 = m.getArgv();
 
   ASSERT_EQ(argc+1, argc2);
-  ASSERT_CSTR_EQ(newArg.c_str(), m.getArgument(0));
-  ASSERT_CSTR_EQ(argv[0], m.getArgument(1));
-  ASSERT_CSTR_EQ(argv[1], m.getArgument(2));
-  ASSERT_CSTR_EQ(argv[2], m.getArgument(3));
-  ASSERT_CSTR_EQ(argv[3], m.getArgument(4));
-  ASSERT_CSTR_EQ("", m.getArgument(5));
-  ASSERT_CSTR_EQ("", m.getArgument(6));
-  ASSERT_CSTR_EQ("", m.getArgument(7));
+  ASSERT_STREQ(newArg.c_str(), m.getArgument(0));
+  ASSERT_STREQ(argv[0], m.getArgument(1));
+  ASSERT_STREQ(argv[1], m.getArgument(2));
+  ASSERT_STREQ(argv[2], m.getArgument(3));
+  ASSERT_STREQ(argv[3], m.getArgument(4));
+  ASSERT_STREQ("", m.getArgument(5));
+  ASSERT_STREQ("", m.getArgument(6));
+  ASSERT_STREQ("", m.getArgument(7));
 }
 
 TEST_F(TestArgumentList, testInsertMiddle)
@@ -205,14 +202,14 @@ TEST_F(TestArgumentList, testInsertMiddle)
   char** argv2 = m.getArgv();
 
   ASSERT_EQ(argc+1, argc2);
-  ASSERT_CSTR_EQ(argv[0], m.getArgument(0));
-  ASSERT_CSTR_EQ(argv[1], m.getArgument(1));
-  ASSERT_CSTR_EQ(newArg.c_str(), m.getArgument(2));
-  ASSERT_CSTR_EQ(argv[2], m.getArgument(3));
-  ASSERT_CSTR_EQ(argv[3], m.getArgument(4));
-  ASSERT_CSTR_EQ("", m.getArgument(5));
-  ASSERT_CSTR_EQ("", m.getArgument(6));
-  ASSERT_CSTR_EQ("", m.getArgument(7));
+  ASSERT_STREQ(argv[0], m.getArgument(0));
+  ASSERT_STREQ(argv[1], m.getArgument(1));
+  ASSERT_STREQ(newArg.c_str(), m.getArgument(2));
+  ASSERT_STREQ(argv[2], m.getArgument(3));
+  ASSERT_STREQ(argv[3], m.getArgument(4));
+  ASSERT_STREQ("", m.getArgument(5));
+  ASSERT_STREQ("", m.getArgument(6));
+  ASSERT_STREQ("", m.getArgument(7));
 }
 
 TEST_F(TestArgumentList, testRemoveEnd)
