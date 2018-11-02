@@ -1,6 +1,6 @@
 Changes for 1.2.0:
 
-* New Feature: 
+* New Feature: Created TerminalArgumentCodec class to encode/decode arguments on Linux.
 
 Changes for 1.1.0:
 
