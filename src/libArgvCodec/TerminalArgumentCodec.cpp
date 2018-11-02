@@ -131,7 +131,7 @@ std::string TerminalArgumentCodec::encodeArgument(const char * iValue)
   }
 
   //Rule 4.
-  //relace \ by \\ 
+  //relace \ characters by \\ characters
   ra::strings::replace(escapedArg, "\\", "\\\\");
 
   //Rule 5.2
