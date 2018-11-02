@@ -4,6 +4,7 @@ set(LIBARGVCODEC_HEADER_FILES ""
   ${LIBARGVCODEC_INCLUDE_DIR}/libargvcodec/CreateProcessArgumentCodec.h
   ${LIBARGVCODEC_INCLUDE_DIR}/libargvcodec/IArgumentDecoder.h
   ${LIBARGVCODEC_INCLUDE_DIR}/libargvcodec/IArgumentEncoder.h
+  ${LIBARGVCODEC_INCLUDE_DIR}/libargvcodec/TerminalArgumentCodec.h
 )
 
 add_library(libargvcodec
@@ -14,6 +15,7 @@ add_library(libargvcodec
   ArgumentList.cpp
   CmdPromptArgumentCodec.cpp
   CreateProcessArgumentCodec.cpp
+  TerminalArgumentCodec.cpp
 )
 
 # Force CMAKE_DEBUG_POSTFIX for executables

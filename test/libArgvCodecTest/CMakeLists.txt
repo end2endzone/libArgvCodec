@@ -14,6 +14,8 @@ add_executable(libargvcodec_unittest
   TestCreateProcessArgumentCodec.h
   TestEncodeCommandLine001.txt
   TestEncodeCommandLine002.txt
+  TestTerminalArgumentCodec.cpp
+  TestTerminalArgumentCodec.h
   TestUtils.cpp
   TestUtils.h
   TestValidator.cpp
