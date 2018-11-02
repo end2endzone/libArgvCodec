@@ -18,7 +18,6 @@ This section explains how to compile and build the software and how to get a dev
 
 
 
-
 ## Prerequisites ##
 
 
@@ -47,7 +46,6 @@ These are the base requirements to build and use libArgvCodec:
 
 
 
-
 ## Build steps ##
 
 The libArgvCodec library uses the CMake build system to generate a platform-specific build environment. CMake reads the CMakeLists.txt files that you'll find throughout the directories, checks for installed dependencies and then generates files for the selected build system.
@@ -63,33 +61,34 @@ cd build
 cmake ..
 ```
 
-If you do want to specify a specific location, where libargvcodec should be installed, you can provide an extra option to cmake at this step `-DCMAKE_INSTALL_PREFIX=c:\projects\install\libargvcodec`.
+If you do want to specify a custom directory where libargvcodec should be installed, you can provide an extra option to CMake at this step using the following argument `-DCMAKE_INSTALL_PREFIX=c:\projects\install\libargvcodec`.
 
-If you do not specify this, cmake will install that library into its default location, which differs from system to system. On Windows it is `C:\Program Files (x86)\${PROJECT_NAME}` which expands to `C:\Program Files (x86)\libArgvCodec` and for this admin rights are needed. The same applies for Linux. CMake default installation folder is `/usr/local` which requires admin rights (sudo).
+If you do not specify a custom install directory, CMake will install libargvcodec binaries into its default location, which differs from system to system. On Windows it is `C:\Program Files (x86)\${PROJECT_NAME}` which expands to `C:\Program Files (x86)\libArgvCodec` and for this administrator rights are needed. The same applies for Linux. CMake default installation folder is `/usr/local` which requires administrator rights (sudo).
 
-If you choose to install your libraries into a separate folder, cmake doesn't know where to search for libargvcodec, when you try to build another project, [win32Arduino](https://github.com/end2endzone/win32Arduino) for example.
-So do not forget, to tell cmake where to search for this with the environment variable on windows for example `set CMAKE_PREFIX_PATH=c:\projects\install`. CMake will then look at this location for already installed libraries.
+If you installed your library dependencies into a different directory, CMake will not be able to find your dependencies automatically. You must tell CMake where to look when searching for them when you try to build your project. You can tell CMake where to search the dependenciesfor this with the `CMAKE_PREFIX_PATH` environment variable. On Windows, you can enter the command `set CMAKE_PREFIX_PATH=c:\projects\install`. CMake will then look at this location for already installed libraries.
 
 3) Build the source code:
    1) On Windows, run `cmake --build . --config Release` or open `libArgvCodec.sln` with Visual Studio.
    2) On Linux, run `make` command.
 
 
+
 ## Build options ##
 
 The following table shows the available build option supported:
 
-| Name | Type | Default | Usage |
-|------|------|:-------:|-------|
-| CMAKE_INSTALL_PREFIX    | STRING | See CMake documentation | Defines the installation folder of the library.           |
-| BUILD_SHARED_LIBS       | BOOL   | OFF                     | Enable/disable the generation of shared library makefiles |
-| LIBARGVCODEC_BUILD_TEST | BOOL   | OFF                     | Enable/disable the generation of unit tests target. |
-| LIBARGVCODEC_BUILD_DOC  | BOOL   | OFF                     | Enable/disable the generation of API documentation target. |
+| Name                    | Type   |         Default         | Usage                                                      |
+|-------------------------|--------|:-----------------------:|------------------------------------------------------------|
+| CMAKE_INSTALL_PREFIX    | STRING | See CMake documentation | Defines the installation folder of the library.            |
+| BUILD_SHARED_LIBS       | BOOL   |           OFF           | Enable/disable the generation of shared library makefiles  |
+| LIBARGVCODEC_BUILD_TEST | BOOL   |           OFF           | Enable/disable the generation of unit tests target.        |
+| LIBARGVCODEC_BUILD_DOC  | BOOL   |           OFF           | Enable/disable the generation of API documentation target. |
 
 To enable a build option, run the following command at the cmake configuration time:
 ```cmake
 cmake -D<BUILD-OPTION-NAME>=ON ..
 ```
+
 
 
 
@@ -112,4 +111,4 @@ The latest test results are available at the beginning of the [README.md](README
 
 ## Test samples ##
 
-Please refer to file [Tests.Windows.md](Tests.Windows.md) for all the command line samples that were used as a baseline for creating unit tests for the Windows platform.
+Please refer to file [Tests.Windows.md](Tests.Windows.md) for all the command line samples that was used as a baseline for creating unit tests for the Windows platform.
