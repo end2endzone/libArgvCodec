@@ -78,7 +78,7 @@ Note: The character sequence `\^"` can also be visible outside a string.
 
 | Command Line | argv[1] | argv[2] | argv[3] |
 |--------------|---------|---------|---------|
-| a ^< b       | a       | &lt;    | b       |
+| a ^< b       | a       | <       | b       |
 | ^"a ^< b^" c | a < b   | c       |         |
 
 For examples, the following command line examples are malformed and produces error:

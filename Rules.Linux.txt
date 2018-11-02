@@ -10,6 +10,10 @@ https://stackoverflow.com/questions/33157494/escaping-special-characters-in-unix
 
 ./showargs "single quote ' in double quote string."
 ./showargs 'double quote " in single quote string.'
+./showargs "double quote \" in double quote string."
+./showargs 'single quote \' in single quote string.'
+./showargs """"
+./showargs ''''
 
 ./showargs "12\\3=4"
 ./showargs "12\\\3=4"
@@ -25,12 +29,14 @@ https://stackoverflow.com/questions/33157494/escaping-special-characters-in-unix
 ./showargs true || false
 ./showargs "true || false"
 ./showargs "true" "||" "false"
+./showargs \true || \false
 
 ./showargs dog && false
 ./showargs false && dog
 ./showargs true && false
 ./showargs "true && false"
 ./showargs "true" "&&" "false"
+./showargs The true meaning
 
 ./showargs foo | echo bar
 ./showargs foo \| echo bar
@@ -52,3 +58,7 @@ https://stackoverflow.com/questions/33157494/escaping-special-characters-in-unix
 ./showargs "this is the left part"" and this is the right part of a single string".
 ./showargs "l e f t "'r i g h t'
 
+./showargs "||"
+./showargs \|\|
+./showargs "&&"
+./showargs \&\&
