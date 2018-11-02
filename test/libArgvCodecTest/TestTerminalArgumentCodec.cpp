@@ -8,8 +8,6 @@
 
 using namespace libargvcodec;
 
-#define ASSERT_CSTR_EQ(val1, val2) ASSERT_EQ(std::string(val1), std::string(val2))
-
 void TestTerminalArgumentCodec::SetUp()
 {
 }
@@ -30,7 +28,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_CSTR_EQ(expected.c_str(), actual.c_str());
+    ASSERT_STREQ(expected.c_str(), actual.c_str());
   }
   //-----------------------------------------------------------------------------------
   {
@@ -42,7 +40,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_CSTR_EQ(expected.c_str(), actual.c_str());
+    ASSERT_STREQ(expected.c_str(), actual.c_str());
   }
   //-----------------------------------------------------------------------------------
   {
@@ -54,7 +52,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_CSTR_EQ(expected.c_str(), actual.c_str());
+    ASSERT_STREQ(expected.c_str(), actual.c_str());
   }
   //-----------------------------------------------------------------------------------
   {
@@ -66,7 +64,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_CSTR_EQ(expected.c_str(), actual.c_str());
+    ASSERT_STREQ(expected.c_str(), actual.c_str());
   }
   //-----------------------------------------------------------------------------------
   {
@@ -78,7 +76,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_CSTR_EQ(expected.c_str(), actual.c_str());
+    ASSERT_STREQ(expected.c_str(), actual.c_str());
   }
   //-----------------------------------------------------------------------------------
   {
@@ -90,7 +88,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_CSTR_EQ(expected.c_str(), actual.c_str());
+    ASSERT_STREQ(expected.c_str(), actual.c_str());
   }
   //-----------------------------------------------------------------------------------
   {
@@ -102,7 +100,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_CSTR_EQ(expected.c_str(), actual.c_str());
+    ASSERT_STREQ(expected.c_str(), actual.c_str());
   }
   //-----------------------------------------------------------------------------------
   {
@@ -114,7 +112,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_CSTR_EQ(expected.c_str(), actual.c_str());
+    ASSERT_STREQ(expected.c_str(), actual.c_str());
   }
   //-----------------------------------------------------------------------------------
   {
@@ -126,7 +124,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_CSTR_EQ(expected.c_str(), actual.c_str());
+    ASSERT_STREQ(expected.c_str(), actual.c_str());
   }
   //-----------------------------------------------------------------------------------
   {
@@ -138,7 +136,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_CSTR_EQ(expected.c_str(), actual.c_str());
+    ASSERT_STREQ(expected.c_str(), actual.c_str());
   }
   //-----------------------------------------------------------------------------------
   {
@@ -150,7 +148,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_CSTR_EQ(expected.c_str(), actual.c_str());
+    ASSERT_STREQ(expected.c_str(), actual.c_str());
   }
   //-----------------------------------------------------------------------------------
   {
@@ -162,7 +160,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_CSTR_EQ(expected.c_str(), actual.c_str());
+    ASSERT_STREQ(expected.c_str(), actual.c_str());
   }
   //-----------------------------------------------------------------------------------
   {
@@ -174,7 +172,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     std::string actual = codec.encodeArgument(value.c_str());
 
     //assert
-    ASSERT_CSTR_EQ(expected.c_str(), actual.c_str());
+    ASSERT_STREQ(expected.c_str(), actual.c_str());
   }
 }
 
