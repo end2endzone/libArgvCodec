@@ -139,7 +139,6 @@ add_subdirectory(src/ShowArgs)
 
 # unit tests
 if(LIBARGVCODEC_BUILD_TEST)
-  add_subdirectory(test/libArgvCodecValidator)
   add_subdirectory(test/libArgvCodecTest)
 endif()
 

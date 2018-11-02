@@ -18,8 +18,6 @@ add_executable(libargvcodec_unittest
   TestTerminalArgumentCodec.h
   TestUtils.cpp
   TestUtils.h
-  TestValidator.cpp
-  TestValidator.h
 )
 
 # Unit test projects requires to link with pthread if also linking with gtest
@@ -32,11 +30,10 @@ set_target_properties(libargvcodec_unittest PROPERTIES DEBUG_POSTFIX ${CMAKE_DEB
 
 target_include_directories(libargvcodec_unittest 
   PRIVATE
-    ${CMAKE_SOURCE_DIR}/test/libArgvCodecValidator  # for Validator.h
     ${GTEST_INCLUDE_DIR}
 )
 add_dependencies(libargvcodec_unittest libargvcodec)
-target_link_libraries(libargvcodec_unittest PRIVATE libargvcodecvalidator rapidassist libargvcodec ${PTHREAD_LIBRARIES} ${GTEST_LIBRARIES} )
+target_link_libraries(libargvcodec_unittest PRIVATE rapidassist libargvcodec ${PTHREAD_LIBRARIES} ${GTEST_LIBRARIES} )
 
 # Copy test files to $(ProjectDir) and $(OutDir)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TestShellCommandLines.txt         ${CMAKE_CURRENT_BINARY_DIR}/TestShellCommandLines.txt         COPYONLY)
