@@ -253,62 +253,62 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
 
   //-----------------------------------------------------------------------------------
   {
-    const char * argumentValue      = "malicious argument\"&whoami";
+    const std::string argumentValue      = "malicious argument\"&whoami";
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCmdPromptEncodeArgument(argumentValue.c_str(), actualEscapedArg, systemArgumentValue);
 
     //assert
-    ASSERT_STREQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_EQ(systemArgumentValue, argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
-    const char * argumentValue      = "\\\"hello\\\"";
+    const std::string argumentValue      = "\\\"hello\\\"";
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCmdPromptEncodeArgument(argumentValue.c_str(), actualEscapedArg, systemArgumentValue);
 
     //assert
-    ASSERT_STREQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_EQ(systemArgumentValue, argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
-    const char * argumentValue      = "\\\"hello\\ world";
+    const std::string argumentValue      = "\\\"hello\\ world";
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCmdPromptEncodeArgument(argumentValue.c_str(), actualEscapedArg, systemArgumentValue);
 
     //assert
-    ASSERT_STREQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_EQ(systemArgumentValue, argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
-    const char * argumentValue      = "test&whoami";
+    const std::string argumentValue      = "test&whoami";
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCmdPromptEncodeArgument(argumentValue.c_str(), actualEscapedArg, systemArgumentValue);
 
     //assert
-    ASSERT_STREQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_EQ(systemArgumentValue, argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
-    const char * argumentValue      = "test\\\"&whoami";
+    const std::string argumentValue      = "test\\\"&whoami";
     std::string    actualEscapedArg;
     std::string systemArgumentValue;
 
-    prepareTestCmdPromptEncodeArgument(argumentValue, actualEscapedArg, systemArgumentValue);
+    prepareTestCmdPromptEncodeArgument(argumentValue.c_str(), actualEscapedArg, systemArgumentValue);
 
     //assert
-    ASSERT_STREQ(systemArgumentValue.c_str(), argumentValue);
+    ASSERT_EQ(systemArgumentValue, argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------

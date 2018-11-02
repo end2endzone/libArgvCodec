@@ -173,62 +173,62 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeArgument)
 
   //-----------------------------------------------------------------------------------
   {
-    const char * argumentValue      = "malicious argument\"&whoami";
+    const std::string argumentValue      = "malicious argument\"&whoami";
     std::string    actualEscapedArg;
     std::string createProcessArgumentValue;
 
-    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue.c_str(), actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_STREQ(createProcessArgumentValue.c_str(), argumentValue);
+    ASSERT_EQ(createProcessArgumentValue, argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
-    const char * argumentValue      = "\\\"hello\\\"";
+    const std::string argumentValue      = "\\\"hello\\\"";
     std::string    actualEscapedArg;
     std::string createProcessArgumentValue;
 
-    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue.c_str(), actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_STREQ(createProcessArgumentValue.c_str(), argumentValue);
+    ASSERT_EQ(createProcessArgumentValue, argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
-    const char * argumentValue      = "\\\"hello\\ world";
+    const std::string argumentValue      = "\\\"hello\\ world";
     std::string    actualEscapedArg;
     std::string createProcessArgumentValue;
 
-    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue.c_str(), actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_STREQ(createProcessArgumentValue.c_str(), argumentValue);
+    ASSERT_EQ(createProcessArgumentValue, argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
-    const char * argumentValue      = "test&whoami";
+    const std::string argumentValue      = "test&whoami";
     std::string    actualEscapedArg;
     std::string createProcessArgumentValue;
 
-    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue.c_str(), actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_STREQ(createProcessArgumentValue.c_str(), argumentValue);
+    ASSERT_EQ(createProcessArgumentValue, argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
   {
-    const char * argumentValue      = "test\\\"&whoami";
+    const std::string argumentValue      = "test\\\"&whoami";
     std::string    actualEscapedArg;
     std::string createProcessArgumentValue;
 
-    prepareTestCreateProcessEncodeArgument(argumentValue, actualEscapedArg, createProcessArgumentValue);
+    prepareTestCreateProcessEncodeArgument(argumentValue.c_str(), actualEscapedArg, createProcessArgumentValue);
 
     //assert
-    ASSERT_STREQ(createProcessArgumentValue.c_str(), argumentValue);
+    ASSERT_EQ(createProcessArgumentValue, argumentValue);
     printf("good!\n");
   }
   //-----------------------------------------------------------------------------------
