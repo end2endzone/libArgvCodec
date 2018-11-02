@@ -1,4 +1,4 @@
-Changes for 1.2.0:
+Changes for 1.1.0:
 
 * New Feature: Added CMake support.
 * New Feature: Converted documentation to xmldoc format.
@@ -6,6 +6,6 @@ Changes for 1.2.0:
 * New Feature: Disabled Windows command prompt and CreateProcess() tests on Linux.
 * Fixed issue #1: Memory corruption while running unit tests.
 
-Changes for 1.1.104:
+Changes for 1.0.104:
 
 * First public release.
