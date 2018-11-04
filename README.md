@@ -54,14 +54,19 @@ The main features of the library are:
 
 # Rules #
 
-Please refer to file [Rules.Windows.md](Rules.Windows.md) for the list of rules implemented into the library for properly encoding arguments into a command line or parsing a command line.
+The list of rules implemented into the library for properly *encoding arguments into a command line* or *splitting a command line into individuals arguments* is documented in the following files:
+
+* [Rules for Windows](Rules.Windows.md)
+* [Rules for Linux](Rules.Linux.md)
+
+Please refer to these files for implementation details.
 
 
 
 
 # Usage #
 
-The following instructions show how to use the library with multiple source code examples of using libArgvCodec.
+The following instructions show how to use the library with multiple source code examples:
 
 
 
@@ -173,6 +178,11 @@ The library supports arguments encapsulation into the `ArgumentList` class. The 
 The `ArgumentList` class supports functions for searching through the arguments which can be used for basic argument validation.:
 
 ```cpp
+#include <stdio.h>
+#include <iostream>
+
+#include "libargvcodec/ArgumentList.h"
+
 int main(int argc, char **argv)
 {
   //The ArgumentList class encapsulates a list of arguments.
@@ -216,6 +226,11 @@ int main(int argc, char **argv)
 To quickly identify unknown arguments, the `ArgumentList` class supports extract methods (one for each find method). Extract method removes the argument from the `ArgumentList` once a known argument is identified. Once all know arguments are removed from the list, the remaining ones are considered unknown.
 
 ```cpp
+#include <stdio.h>
+#include <iostream>
+
+#include "libargvcodec/ArgumentList.h"
+
 int main(int argc, char **argv)
 {
   //This initialize the instance with a copy of all the parameters.
