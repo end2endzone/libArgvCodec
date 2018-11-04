@@ -77,12 +77,13 @@ If you installed your library dependencies into a different directory, CMake wil
 
 The following table shows the available build option supported:
 
-| Name                    | Type   |         Default         | Usage                                                      |
-|-------------------------|--------|:-----------------------:|------------------------------------------------------------|
-| CMAKE_INSTALL_PREFIX    | STRING | See CMake documentation | Defines the installation folder of the library.            |
-| BUILD_SHARED_LIBS       | BOOL   |           OFF           | Enable/disable the generation of shared library makefiles  |
-| LIBARGVCODEC_BUILD_TEST | BOOL   |           OFF           | Enable/disable the generation of unit tests target.        |
-| LIBARGVCODEC_BUILD_DOC  | BOOL   |           OFF           | Enable/disable the generation of API documentation target. |
+| Name                       | Type   |         Default         | Usage                                                      |
+|----------------------------|--------|:-----------------------:|------------------------------------------------------------|
+| CMAKE_INSTALL_PREFIX       | STRING | See CMake documentation | Defines the installation folder of the library.            |
+| BUILD_SHARED_LIBS          | BOOL   |           OFF           | Enable/disable the generation of shared library makefiles  |
+| LIBARGVCODEC_BUILD_TEST    | BOOL   |           OFF           | Enable/disable the generation of unit tests target.        |
+| LIBARGVCODEC_BUILD_DOC     | BOOL   |           OFF           | Enable/disable the generation of API documentation target. |
+| LIBARGVCODEC_BUILD_SAMPLES | BOOL   | OFF                     | Enable/disable the generation of samples target.           |
 
 To enable a build option, run the following command at the cmake configuration time:
 ```cmake

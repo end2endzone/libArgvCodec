@@ -98,6 +98,7 @@ set(LIBARGVCODEC_INSTALL_CMAKE_DIR    ${LIBARGVCODEC_INSTALL_LIB_DIR}) # CMake f
 # Build options
 option(LIBARGVCODEC_BUILD_TEST "Build all libArgvCodec's unit tests" OFF)
 option(LIBARGVCODEC_BUILD_DOC "Build documentation" OFF)
+option(LIBARGVCODEC_BUILD_SAMPLES "Build libArgvCodec samples" OFF)
 
 # Force a debug postfix if none specified.
 # This allows publishing both release and debug binaries to the same location
@@ -140,6 +141,11 @@ add_subdirectory(src/ShowArgs)
 # unit tests
 if(LIBARGVCODEC_BUILD_TEST)
   add_subdirectory(test/libArgvCodecTest)
+endif()
+
+# samples
+if(LIBARGVCODEC_BUILD_SAMPLES)
+  add_subdirectory(samples)
 endif()
 
 ##############################################################################################################################################
