@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 
   //build the list of arguments
   ArgumentList arglist;
-  arglist.insert("foo.exe"); //argv[0] is always the path to the current process
+  arglist.insert("foo.exe"); //argv[0] is always the path of the current process
 
   for(int i=0; i<numArguments; i++)
   {
