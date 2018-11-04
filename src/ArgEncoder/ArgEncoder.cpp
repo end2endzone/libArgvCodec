@@ -8,6 +8,7 @@
 #include "libargvcodec/ArgumentList.h"
 #include "libargvcodec/CmdPromptArgumentCodec.h"
 #include "libargvcodec/CreateProcessArgumentCodec.h"
+#include "libargvcodec/TerminalArgumentCodec.h"
 
 #include "rapidassist/console.h"
 
@@ -65,14 +66,21 @@ int main(int argc, char* argv[])
   {
     CmdPromptArgumentCodec codec;
     std::string cmdLine = codec.encodeCommandLine(arglist);
-    cout << "The encoded command line for the Command Prompt is the following:" << endl;
+    cout << "The encoded command line for the Windows Command Prompt is the following:" << endl;
     cout << cmdLine << endl;
     cout << endl;
   }
   {
     CreateProcessArgumentCodec codec;
     std::string cmdLine = codec.encodeCommandLine(arglist);
-    cout << "The encoded command line for CreateProcess() api is the following:" << endl;
+    cout << "The encoded command line for Windows CreateProcess() api is the following:" << endl;
+    cout << cmdLine << endl;
+    cout << endl;
+  }
+  {
+    TerminalArgumentCodec codec;
+    std::string cmdLine = codec.encodeCommandLine(arglist);
+    cout << "The encoded command line for the Linux Terminal is the following:" << endl;
     cout << cmdLine << endl;
     cout << endl;
   }
