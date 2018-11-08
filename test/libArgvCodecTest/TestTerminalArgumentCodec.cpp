@@ -476,6 +476,7 @@ std::string getShowArgsExecutablePath()
 
 TEST_F(TestTerminalArgumentCodec, testSystem)
 {
+#ifdef __linux__
   std::string test_file = ra::gtesthelp::getTestQualifiedName() + ".txt";
   ASSERT_TRUE( ra::filesystem::fileExists(test_file.c_str()) );
 
@@ -588,4 +589,5 @@ TEST_F(TestTerminalArgumentCodec, testSystem)
   }
 
   //all the file is now processed.
+#endif //__linux__
 }

@@ -47,6 +47,11 @@ int main(int argc, char* argv[])
   ::testing::GTEST_FLAG(filter) = ra::gtesthelp::mergeFilter("", "TestCmdPromptArgumentCodec.*:TestCreateProcessArgumentCodec.*", ::testing::GTEST_FLAG(filter).c_str());
 #endif
 
+  //Disable Linux tests on Windows
+#ifdef _WIN32
+  ::testing::GTEST_FLAG(filter) = ra::gtesthelp::mergeFilter("", "TestTerminalArgumentCodec.testSystem", ::testing::GTEST_FLAG(filter).c_str());
+#endif
+
   int wResult = RUN_ALL_TESTS(); //Find and run all tests
   return wResult; // returns 0 if all the tests are successful, or 1 otherwise
 }
