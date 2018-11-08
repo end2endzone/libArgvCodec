@@ -16,6 +16,7 @@ add_executable(libargvcodec_unittest
   TestEncodeCommandLine002.txt
   TestTerminalArgumentCodec.cpp
   TestTerminalArgumentCodec.h
+  TestTerminalArgumentCodec.testSystem.txt
   TestUtils.cpp
   TestUtils.h
 )
@@ -39,6 +40,7 @@ target_link_libraries(libargvcodec_unittest PRIVATE rapidassist libargvcodec ${P
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TestShellCommandLines.txt         ${CMAKE_CURRENT_BINARY_DIR}/TestShellCommandLines.txt         COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TestEncodeCommandLine001.txt  ${CMAKE_CURRENT_BINARY_DIR}/TestEncodeCommandLine001.txt  COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TestEncodeCommandLine002.txt  ${CMAKE_CURRENT_BINARY_DIR}/TestEncodeCommandLine002.txt  COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TestTerminalArgumentCodec.testSystem.txt  ${CMAKE_CURRENT_BINARY_DIR}/TestTerminalArgumentCodec.testSystem.txt  COPYONLY)
 set(TEST_FILES_BINARY_DIR ${EXECUTABLE_OUTPUT_PATH})
 if(WIN32)
   set(TEST_FILES_BINARY_DIR ${TEST_FILES_BINARY_DIR}/${CMAKE_CFG_INTDIR})
@@ -48,6 +50,7 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/test/libArgvCodecTest/TestShellCommandLines.txt         ${TEST_FILES_BINARY_DIR}/TestShellCommandLines.txt
   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/test/libArgvCodecTest/TestEncodeCommandLine001.txt  ${TEST_FILES_BINARY_DIR}/TestEncodeCommandLine001.txt
   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/test/libArgvCodecTest/TestEncodeCommandLine002.txt  ${TEST_FILES_BINARY_DIR}/TestEncodeCommandLine002.txt
+  COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/test/libArgvCodecTest/TestTerminalArgumentCodec.testSystem.txt  ${TEST_FILES_BINARY_DIR}/TestTerminalArgumentCodec.testSystem.txt
 )
 
 install(TARGETS libargvcodec_unittest
@@ -59,5 +62,6 @@ install(TARGETS libargvcodec_unittest
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/TestShellCommandLines.txt       
               ${CMAKE_CURRENT_SOURCE_DIR}/TestEncodeCommandLine001.txt
               ${CMAKE_CURRENT_SOURCE_DIR}/TestEncodeCommandLine002.txt
+              ${CMAKE_CURRENT_SOURCE_DIR}/TestTerminalArgumentCodec.testSystem.txt
         DESTINATION ${LIBARGVCODEC_INSTALL_BIN_DIR}
 )
