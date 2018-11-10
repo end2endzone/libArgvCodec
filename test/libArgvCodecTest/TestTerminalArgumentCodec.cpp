@@ -119,7 +119,7 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
   {
     //Rule 5.3.
     const std::string value = "a * b";
-    const std::string expected = "\"a \\* b\"";
+    const std::string expected = "\"a * b\""; //    "a * b"
 
     libargvcodec::TerminalArgumentCodec codec;
     std::string actual = codec.encodeArgument(value.c_str());
@@ -144,30 +144,6 @@ TEST_F(TestTerminalArgumentCodec, testEncodeArgument)
     //Rule 5.3.
     const std::string value = "sum = $20";
     const std::string expected = "\"sum = \\$20\"";
-
-    libargvcodec::TerminalArgumentCodec codec;
-    std::string actual = codec.encodeArgument(value.c_str());
-
-    //assert
-    ASSERT_EQ(expected, actual);
-  }
-  //-----------------------------------------------------------------------------------
-  {
-    //Rule 5.4.
-    const std::string value = "tRuE";
-    const std::string expected = "\"tRuE\"";
-
-    libargvcodec::TerminalArgumentCodec codec;
-    std::string actual = codec.encodeArgument(value.c_str());
-
-    //assert
-    ASSERT_EQ(expected, actual);
-  }
-  //-----------------------------------------------------------------------------------
-  {
-    //Rule 5.4.
-    const std::string value = "fAlSe";
-    const std::string expected = "\"fAlSe\"";
 
     libargvcodec::TerminalArgumentCodec codec;
     std::string actual = codec.encodeArgument(value.c_str());
@@ -285,7 +261,7 @@ TEST_F(TestTerminalArgumentCodec, testDecodeCommandLine)
   //-----------------------------------------------------------------------------------
   {
     //Rule 2.
-    const std::string cmdline = "\"a b c\"'d e'";
+    const std::string cmdline = "\"a b c\"'d e'"; //  "a b c"'d e'
 
     libargvcodec::TerminalArgumentCodec codec;
     ArgumentList args = codec.decodeCommandLine(cmdline.c_str());
@@ -348,7 +324,7 @@ TEST_F(TestTerminalArgumentCodec, testDecodeCommandLine)
   //-----------------------------------------------------------------------------------
   {
     //Rule 3.
-    const std::string cmdline = "'a \\'b' c"; //   'a \'b' c
+    const std::string cmdline = "'a '\\''b' c"; //   'a '\''b' c
 
     libargvcodec::TerminalArgumentCodec codec;
     ArgumentList args = codec.decodeCommandLine(cmdline.c_str());
@@ -402,7 +378,7 @@ TEST_F(TestTerminalArgumentCodec, testDecodeCommandLine)
   //-----------------------------------------------------------------------------------
   {
     //Rule 3.
-    const std::string cmdline = "'McDonald\\'s I\\'m Lovin\\' It'"; //     'McDonald\'s I\'m Lovin\' It'
+    const std::string cmdline = "'McDonald'\\''s I'\\''m Lovin'\\'' It'"; //     'McDonald'\''s I'\''m Lovin'\'' It'
 
     libargvcodec::TerminalArgumentCodec codec;
     ArgumentList args = codec.decodeCommandLine(cmdline.c_str());

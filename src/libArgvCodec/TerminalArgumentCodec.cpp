@@ -7,8 +7,19 @@
 namespace libargvcodec
 {
 
-static std::string gBasicShellCharacters = "&|()<>!";
-static std::string gSpecialShellCharacters = "*$`";
+static std::string gBasicShellCharacters = "&|()<>*";
+static std::string gSpecialShellCharacters = "$`";
+
+bool isSpecialShellCharacter(const char c)
+{
+  for(size_t i=0; i<gSpecialShellCharacters.size(); i++)
+  {
+    if (c == gSpecialShellCharacters[i])
+      return true;
+  }
+
+  return false;
+}
 
 size_t countCharacters(const std::string & iStr, char c)
 {
@@ -51,15 +62,16 @@ TerminalArgumentCodec::~TerminalArgumentCodec()
 //IArgumentEncoder
 std::string TerminalArgumentCodec::encodeArgument(const char * iValue)
 {
-  std::string plainArgument;
-  if (iValue)
-    plainArgument = iValue;
+  static const std::string EMPTY_ARGUMENT = "\"\"";
+
+  if (iValue == NULL)
+    return EMPTY_ARGUMENT;
+
+  std::string plainArgument = iValue;
 
   //Rule 6. Deal with empty argument ASAP
   if (plainArgument == "")
-  {
-    return std::string("\"\"");
-  }
+    return EMPTY_ARGUMENT;
 
   //prettier optimizations...
   if (plainArgument == "||")
@@ -85,11 +97,7 @@ std::string TerminalArgumentCodec::encodeArgument(const char * iValue)
     isStringArgument = true;
   }
 
-  //Rule 5.4
-  isStringArgument = isStringArgument || (ra::strings::uppercase(plainArgument) == "TRUE");
-  isStringArgument = isStringArgument || (ra::strings::uppercase(plainArgument) == "FALSE");
-
-  //Define string type to know how to encode Rule 3.
+  //Define string type to know how to encode Rule 3. and 4.1.
   int numDoubleQuotes = countCharacters(plainArgument, '\"');
   int numSingleQuote  = countCharacters(plainArgument, '\'');
   char stringCharacter = '\0';
@@ -108,17 +116,21 @@ std::string TerminalArgumentCodec::encodeArgument(const char * iValue)
   {
     if (stringCharacter == '\"')
     {
+      //Inside a double-quotes string, double-quote  characters must be escaped with `\` to be properly interpreted.
       //relace " by \"
       ra::strings::replace(escapedArg, "\"", "\\\"");
 
-      //Inside a double-quotes string, single-quote characters must be interpreted literally and does not requires escaping.
+      //Inside a double-quotes string, single-quote  characters must be interpreted literally and does not requires escaping.
+      //nothing to do
     }
     else if (stringCharacter == '\'')
     {
-      //relace ' by \'
-      ra::strings::replace(escapedArg, "'", "\\'");
+      //Inside a single-quote  string, single-quote  characters **CAN NOT** be escaped with `\`. The single-quote string must be ended, joined with an escaped single-quote and reopened to be properly interpreted.
+      //relace ' by '\''
+      ra::strings::replace(escapedArg, "'", "'\\''");
 
       //Inside a single-quote string, double-quotes characters must be interpreted literally and does not requires escaping.
+      //nothing to do
     }
   }
   else
@@ -131,8 +143,25 @@ std::string TerminalArgumentCodec::encodeArgument(const char * iValue)
   }
 
   //Rule 4.
-  //relace \ characters by \\ characters
-  ra::strings::replace(escapedArg, "\\", "\\\\");
+  if (!isStringArgument)
+  {
+    //The character `\` must be escaped with `\\` when outside a string. Characters escaped with `\` are literal characters.
+    //relace \ characters by \\ characters
+    ra::strings::replace(escapedArg, "\\", "\\\\");
+  }
+  else if (isStringArgument && stringCharacter == '\"')
+  {
+    //Rule 4.1
+    //The character `\` does not requires escaping when inside a double-quotes string.
+    //However, two consecutives `\` characters in a double-quotes string must be interpreted as a literal `\` character.
+    //relace \ characters by \\ characters
+    ra::strings::replace(escapedArg, "\\", "\\\\");
+  }
+  else if (isStringArgument && stringCharacter == '\'')
+  {
+    //Rule 4.1
+    //The character `\` does not requires escaping when inside a single-quote string.
+  }
 
   //Rule 5.2
   if (!isStringArgument)
@@ -363,13 +392,13 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
         accumulator = "";
       }
     }
-    else if (c == '\\')
+    else if (c == '\\' && !inDoubleQuotesString && !inSingleQuoteString)
     {
-      //(escaped character).
-      //Rule 3.
-      //Rule 4.
+      //Rule 4.1
+      //The character `\` must be escaped with `\\` when outside a string. Characters escaped with `\` are literal characters.
+
       //Rule 5.2
-      //Rule 5.4
+      //The shell characters &,|,(,),<,> or * must be escapsed with `\` when outside a string.
 
       char next = getSafeCharacter(iCmdLine, i+1);
       if (next != '\0')
@@ -377,6 +406,44 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
         accumulator.push_back(next);
         i++; //skip next character
       }
+    }
+    else if (c == '\\' && inDoubleQuotesString && getSafeCharacter(iCmdLine, i+1) == '\"')
+    {
+      //Rule 3
+      //Double-quote  characters inside a double-quotes string,  must be escaped with `\` to be properly interpreted.
+
+      char next = getSafeCharacter(iCmdLine, i+1);
+      if (next != '\0')
+      {
+        accumulator.push_back(next);
+        i++; //skip next character
+      }
+    }
+    else if (c == '\\' && inDoubleQuotesString && getSafeCharacter(iCmdLine, i+1) == '\\')
+    {
+      //Rule 4.1
+      //However, two consecutives `\` characters in a double-quotes string must be interpreted as a literal `\` character.
+
+      accumulator.push_back(c);
+      i++; //skip next character
+    }
+    else if (c == '\\' && isSpecialShellCharacter(getSafeCharacter(iCmdLine, i+1)))
+    {
+      //Rule 5.3
+      //The shell characters $, and \` (backticks) are special shell characters and must **always** be escapsed with `\`. (inside or outside a string)
+
+      char next = getSafeCharacter(iCmdLine, i+1);
+      if (next != '\0')
+      {
+        accumulator.push_back(next);
+        i++; //skip next character
+      }
+    }
+    else if (c == '\\' && inSingleQuoteString)
+    {
+      //Rule 4.1
+      //The character `\` does not requires escaping when inside a single-quote string.
+      accumulator.push_back(c);
     }
     else
     {
