@@ -37,81 +37,81 @@ Double-quotes characters inside a single-quote  string,  must be interpreted lit
 Double-quote  characters inside a double-quotes string,  must be escaped with `\` to be properly interpreted.
 Single-quote  characters inside a single-quote  string,  **CAN NOT** be escaped with `\`. The single-quote string must be ended, joined with an escaped single-quote and reopened to be properly interpreted.
 
-| Command Line                        | argv[1]                  | argv[2] | argv[3] |
-|-------------------------------------|--------------------------|---------|---------|
-| a \"b c                             | a                        | "b      | c       |
-| "a \"b" c                           | a "b                     | c       |         |
-| a \'b c                             | a                        | 'b      | c       |
-| 'a '\''b' c                         | a 'b                     | c       |         |
-| "McDonald's I'm Lovin' It"          | McDonald's I'm Lovin' It |         |         |
-| 'McDonald'\''s I'\''m Lovin'\'' It' | McDonald's I'm Lovin' It |         |         |
-| 'Toys "R" Us'                       | Toys "R" Us              |         |         |
-| "Toys \"R\" Us"                     | Toys "R" Us              |         |         |
+| Command Line                                       | argv[1]                  | argv[2] | argv[3] |
+|----------------------------------------------------|--------------------------|---------|---------|
+| a &bsol;"b c                                       | a                        | "b      | c       |
+| "a &bsol;"b" c                                     | a "b                     | c       |         |
+| a &bsol;'b c                                       | a                        | 'b      | c       |
+| 'a '&bsol;''b' c                                   | a 'b                     | c       |         |
+| "McDonald's I'm Lovin' It"                         | McDonald's I'm Lovin' It |         |         |
+| 'McDonald'&bsol;''s I'&bsol;''m Lovin'&bsol;'' It' | McDonald's I'm Lovin' It |         |         |
+| 'Toys "R" Us'                                      | Toys "R" Us              |         |         |
+| "Toys &bsol;"R&bsol;" Us"                          | Toys "R" Us              |         |         |
 
 4. The character `\` must be escaped with `\\` when outside a string. Characters escaped with `\` are literal characters.
 
-| Command Line | argv[1] | argv[2] | argv[3] |
-|--------------|---------|---------|---------|
-| a\\b         | a\b     |         |         |
-| a\\\b        | a\b     |         |         |
-| a\\\\b       | a\\b    |         |         |
-| a\bc         | abc     |         |         |
+| Command Line               | argv[1]        | argv[2] | argv[3] |
+|----------------------------|----------------|---------|---------|
+| a&bsol;&bsol;b             | a&bsol;b       |         |         |
+| a&bsol;&bsol;&bsol;b       | a&bsol;b       |         |         |
+| a&bsol;&bsol;&bsol;&bsol;b | a&bsol;&bsol;b |         |         |
+| a&bsol;bc                  | abc            |         |         |
 
 4. 1. The character `\` does not requires escaping when inside a double-quotes string.
       However, two consecutives `\` characters in a double-quotes string must be interpreted as a literal `\` character.
       The character `\` does not requires escaping when inside a single-quote string.
 
-| Command Line | argv[1] | argv[2] | argv[3] |
-|--------------|---------|---------|---------|
-| "a\b\c"      | a\b\c   |         |         |
-| "a\\b"       | a\b     |         |         |
-| "a\\\b"      | a\\b    |         |         |
-| "a\\\\b"     | a\\b    |         |         |
-| "a\\\\\b"    | a\\\b   |         |         |
-| 'a\b\c'      | a\b\c   |         |         |
-| 'a\\b'       | a\\b    |         |         |
-| 'a\\\b'      | a\\\b   |         |         |
-| 'a\\\\b'     | a\\\\b  |         |         |
-| 'a\\\\\b'    | a\\\\\b |         |         |
+| Command Line                       | argv[1]                          | argv[2] | argv[3] |
+|------------------------------------|----------------------------------|---------|---------|
+| "a&bsol;b&bsol;c"                  | a&bsol;b&bsol;c                  |         |         |
+| "a&bsol;&bsol;b"                   | a&bsol;b                         |         |         |
+| "a&bsol;&bsol;&bsol;b"             | a&bsol;&bsol;b                   |         |         |
+| "a&bsol;&bsol;&bsol;&bsol;b"       | a&bsol;&bsol;b                   |         |         |
+| "a&bsol;&bsol;&bsol;&bsol;&bsol;b" | a&bsol;&bsol;&bsol;b             |         |         |
+| 'a&bsol;b&bsol;c'                  | a&bsol;b&bsol;c                  |         |         |
+| 'a&bsol;&bsol;b'                   | a&bsol;&bsol;b                   |         |         |
+| 'a&bsol;&bsol;&bsol;b'             | a&bsol;&bsol;&bsol;b             |         |         |
+| 'a&bsol;&bsol;&bsol;&bsol;b'       | a&bsol;&bsol;&bsol;&bsol;b       |         |         |
+| 'a&bsol;&bsol;&bsol;&bsol;&bsol;b' | a&bsol;&bsol;&bsol;&bsol;&bsol;b |         |         |
 
 5. The following characters are special shell characters:   &,|,(,),<,>,*
     1. The shell characters does not requires escaping when inside a string.
 
-| Command Line | argv[1] | argv[2] | argv[3] |
-|--------------|---------|---------|---------|
-| "a & b" c    | a & b   | c       |         |
-| "a \| b" c   | a \| b  | c       |         |
-| "a ( b" c    | a ( b   | c       |         |
-| "a ) b" c    | a ) b   | c       |         |
-| "a < b" c    | a < b   | c       |         |
-| "a > b" c    | a > b   | c       |         |
-| "a * b" c    | a * b   | c       |         |
-| 'a & b' c    | a & b   | c       |         |
-| 'a \| b' c   | a \| b  | c       |         |
-| 'a ( b' c    | a ( b   | c       |         |
-| 'a ) b' c    | a ) b   | c       |         |
-| 'a < b' c    | a < b   | c       |         |
-| 'a > b' c    | a > b   | c       |         |
-| 'a * b' c    | a * b   | c       |         |
+| Command Line   | argv[1]    | argv[2] | argv[3] |
+|----------------|------------|---------|---------|
+| "a & b" c      | a & b      | c       |         |
+| "a &vert; b" c | a &vert; b | c       |         |
+| "a ( b" c      | a ( b      | c       |         |
+| "a ) b" c      | a ) b      | c       |         |
+| "a < b" c      | a < b      | c       |         |
+| "a > b" c      | a > b      | c       |         |
+| "a * b" c      | a * b      | c       |         |
+| 'a & b' c      | a & b      | c       |         |
+| 'a &vert; b' c | a &vert; b | c       |         |
+| 'a ( b' c      | a ( b      | c       |         |
+| 'a ) b' c      | a ) b      | c       |         |
+| 'a < b' c      | a < b      | c       |         |
+| 'a > b' c      | a > b      | c       |         |
+| 'a * b' c      | a * b      | c       |         |
 
 5. 2. The shell characters &,|,(,),<,> or * must be escapsed with `\` when outside a string.
 
 | Command Line | argv[1] | argv[2] | argv[3] |
 |--------------|---------|---------|---------|
-| a \< b       | a       | <       | b       |
-| a \& b       | a       | &       | b       |
-| a \* b       | a       | *       | b       |
-| a\<b         | a<b     |         |         |
-| a\&b         | a&b     |         |         |
-| a\*b         | a*b     |         |         |
+| a &bsol;< b  | a       | <       | b       |
+| a &bsol;& b  | a       | &       | b       |
+| a &bsol;* b  | a       | *       | b       |
+| a&bsol;<b    | a<b     |         |         |
+| a&bsol;&b    | a&b     |         |         |
+| a&bsol;*b    | a*b     |         |         |
 
 5. 3. The shell characters $, and \` (backticks) are special shell characters and must **always** be escapsed with `\`. (inside or outside a string)
 
-| Command Line | argv[1]   | argv[2] | argv[3] |
-|--------------|-----------|---------|---------|
-| "a \$d b" c  | a $d b    | c       |         |
-| sum=\$42     | sum=$42   |         |         |
-| "sum = \$20" | sum = $20 |         |         |
+| Command Line      | argv[1]   | argv[2] | argv[3] |
+|-------------------|-----------|---------|---------|
+| "a &bsol;$d b" c  | a $d b    | c       |         |
+| sum=&bsol;$42     | sum=$42   |         |         |
+| "sum = &bsol;$20" | sum = $20 |         |         |
 
 6. Empty arguments must be specified with `""` and must be enclosed by argument delimiters or located at the start/end of the command line. Empty arguments can also be specified with `''`.
 
@@ -130,8 +130,8 @@ Single-quote  characters inside a single-quote  string,  **CAN NOT** be escaped 
 
 This section show multiple other examples which combines multiple rules toghetter.
 
-| Rules    | Command Line | argv[1] | argv[2] | argv[3] |
-|----------|--------------|---------|---------|---------|
-| 4.1, 5.1 | "a \* b" c   | a \* b  | c       |         |
-| 2, 3     | 'abc'\''def' | abc'def |         |         |
-| 3, 4.1   | "a\\\"b c"   | a\"b c  |         |         |
+| Rules    | Command Line              | argv[1]     | argv[2] | argv[3] |
+|----------|---------------------------|-------------|---------|---------|
+| 4.1, 5.1 | "a &bsol;* b" c           | a &bsol;* b | c       |         |
+| 2, 3     | 'abc'&bsol;''def'         | abc'def     |         |         |
+| 3, 4.1   | "a&bsol;&bsol;&bsol;"b c" | a&bsol;"b c |         |         |
