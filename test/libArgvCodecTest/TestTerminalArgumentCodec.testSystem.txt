@@ -337,9 +337,6 @@ bar
 "*"
 *
 --------------------------------------------------
-"Peter owes me $20"
-Peter owes me 0
---------------------------------------------------
 "Peter owes me \$20"
 Peter owes me $20
 --------------------------------------------------
@@ -351,10 +348,10 @@ string`
 with
 backticks.
 --------------------------------------------------
-"this "is multiple" words"" concatenated into single string."
+"this "is multiple" words"" concatenated "into "single string."
 this is
-multiple words
- concatenated into single string.
+multiple words concatenated into
+single string.
 --------------------------------------------------
 "this is the left part"" and this is the right part of a single string".
 this is the left part and this is the right part of a single string.
