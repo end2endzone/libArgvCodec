@@ -29,7 +29,7 @@ If a string is juxtaposed to another string or argument (not separated by a deli
 | 'a b c'                    | a b c      |         |         |         |
 | a' b' c                    | a b        | c       |         |         |
 | 'a 'b c                    | a b        | c       |         |         |
-| "a b c"'d e'               | a b c d e  |         |         |         |
+| "a b c"'d e'               | a b cd e   |         |         |         |
 
 3. Plain `"` or `'` characters must be escaped with `\` and does not starts/ends a string. (If not escaped, they act as rule #2).
 Single-quote  characters inside a double-quotes string,  must be interpreted literally and does not requires escaping.
@@ -74,12 +74,6 @@ Single-quote  characters inside a single-quote  string,  **CAN NOT** be escaped 
 | 'a\\\\b'     | a\\\\b  |         |         |
 | 'a\\\\\b'    | a\\\\\b |         |         |
 
-Combining this rule with rule 3, you can create combinations like the following:
-
-| Command Line | argv[1] | argv[2] | argv[3] |
-|--------------|---------|---------|---------|
-| "a\\\"b c"   | a\"b c  |         |         |
-
 5. The following characters are special shell characters:   &,|,(,),<,>,*
     1. The shell characters does not requires escaping when inside a string.
 
@@ -123,7 +117,7 @@ Combining this rule with rule 3, you can create combinations like the following:
 
 | Command Line | argv[1] | argv[2] | argv[3] |
 |--------------|---------|---------|---------|
-| a "" b       | a       | [empty] | c       |
+| a "" b       | a       | [empty] | b       |
 | "" a b       | [empty] | a       | b       |
 | a b ""       | a       | b       | [empty] |
 | a '' b       | a       | [empty] | b       |
@@ -131,3 +125,13 @@ Combining this rule with rule 3, you can create combinations like the following:
 | a b ''       | a       | b       | [empty] |
 
 7. All other characters must be read as plain text.
+
+## Combinations ##
+
+This section show multiple other examples which combines multiple rules toghetter.
+
+| Rules    | Command Line | argv[1] | argv[2] | argv[3] |
+|----------|--------------|---------|---------|---------|
+| 4.1, 5.1 | "a \* b" c   | a \* b  | c       |         |
+| 2, 3     | 'abc'\''def' | abc'def |         |         |
+| 3, 4.1   | "a\\\"b c"   | a\"b c  |         |         |
