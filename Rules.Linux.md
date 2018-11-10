@@ -99,7 +99,7 @@ Single-quote  characters inside a single-quote  string,  **CAN NOT** be escaped 
 | Command Line | argv[1] | argv[2] | argv[3] |
 |--------------|---------|---------|---------|
 | a \< b       | a       | <       | b       |
-| a \& b       | a       | &       | c       |
+| a \& b       | a       | &       | b       |
 | a \* b       | a       | *       | b       |
 | a\<b         | a<b     |         |         |
 | a\&b         | a&b     |         |         |
