@@ -311,8 +311,8 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
 
   bool inDoubleQuotesString = false;
   bool inSingleQuoteString = false;
-  bool isValidEmptyArgument = false;
   bool isJuxtaposedString = false;
+  size_t stringStartOffset = std::string::npos;
 
   for(size_t i=0; i<cmdLineStr.size(); i++)
   {
@@ -330,7 +330,7 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
 
       //Rule 6.1: Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start/or end of the command line.
       //Rule 6.2: Empty arguments can also be specified with `''`.
-      isValidEmptyArgument = (i == 0);
+      stringStartOffset = i;
     }
     else if (c == '\'' && !inDoubleQuotesString && !inSingleQuoteString)
     {
@@ -341,7 +341,7 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
 
       //Rule 6.1: Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start/or end of the command line.
       //Rule 6.2: Empty arguments can also be specified with `''`.
-      isValidEmptyArgument = (i == 0);
+      stringStartOffset = i;
     }
     else if (c == '\"' && inSingleQuoteString)
     {
@@ -364,8 +364,9 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
 
       //Rule 6.1: Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start/or end of the command line.
       //Rule 6.2: Empty arguments can also be specified with `''`.
-      isValidEmptyArgument = isValidEmptyArgument && accumulator.size() == 0 && isLastCharacter;
-      if (isValidEmptyArgument)
+      bool isEmptyString = (i == stringStartOffset+1);
+      bool isEmptyArgument = (isEmptyString && accumulator.empty());
+      if (isEmptyArgument)
       {
         //insert an empty argument
         oArguments.push_back("");
@@ -380,8 +381,9 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
 
       //Rule 6.1: Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start/or end of the command line.
       //Rule 6.2: Empty arguments can also be specified with `''`.
-      isValidEmptyArgument = isValidEmptyArgument && accumulator.size() == 0 && isLastCharacter;
-      if (isValidEmptyArgument)
+      bool isEmptyString = (i == stringStartOffset+1);
+      bool isEmptyArgument = (isEmptyString && accumulator.empty());
+      if (isEmptyArgument)
       {
         //insert an empty argument
         oArguments.push_back("");
