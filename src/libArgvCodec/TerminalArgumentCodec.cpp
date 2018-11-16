@@ -311,7 +311,8 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
 
   bool inDoubleQuotesString = false;
   bool inSingleQuoteString = false;
-  bool isJuxtaposedString = false;
+  bool isEmptyArgument = false; //true when the current string is detected as an empty string.
+
   size_t stringStartOffset = std::string::npos;
 
   for(size_t i=0; i<cmdLineStr.size(); i++)
@@ -319,7 +320,7 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
     const char c = iCmdLine[i];
     const char next = getSafeCharacter(iCmdLine, i+1);
 
-    bool isLastCharacter = !(i+1<cmdLineStr.size());
+    //bool isLastCharacter = !(i+1<cmdLineStr.size());
 
     if (c == '\"' && !inDoubleQuotesString && !inSingleQuoteString)
     {
@@ -327,6 +328,7 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
       //new double-quotes string
       inDoubleQuotesString = true;
       inSingleQuoteString = false;
+      isEmptyArgument = false;
 
       //Rule 6.1: Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start/or end of the command line.
       //Rule 6.2: Empty arguments can also be specified with `''`.
@@ -338,6 +340,7 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
       //new single-quote string
       inDoubleQuotesString = false;
       inSingleQuoteString = true;
+      isEmptyArgument = false;
 
       //Rule 6.1: Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start/or end of the command line.
       //Rule 6.2: Empty arguments can also be specified with `''`.
@@ -363,14 +366,7 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
       inSingleQuoteString = false;
 
       //Rule 6.1: Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start/or end of the command line.
-      //Rule 6.2: Empty arguments can also be specified with `''`.
-      bool isEmptyString = (i == stringStartOffset+1);
-      bool isEmptyArgument = (isEmptyString && accumulator.empty());
-      if (isEmptyArgument)
-      {
-        //insert an empty argument
-        oArguments.push_back("");
-      }
+      isEmptyArgument = (i == stringStartOffset+1);
     }
     else if (c == '\'' && inSingleQuoteString)
     {
@@ -379,15 +375,8 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
       inDoubleQuotesString = false;
       inSingleQuoteString = false;
 
-      //Rule 6.1: Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start/or end of the command line.
       //Rule 6.2: Empty arguments can also be specified with `''`.
-      bool isEmptyString = (i == stringStartOffset+1);
-      bool isEmptyArgument = (isEmptyString && accumulator.empty());
-      if (isEmptyArgument)
-      {
-        //insert an empty argument
-        oArguments.push_back("");
-      }
+      isEmptyArgument = (i == stringStartOffset+1);
     }
     else if (isArgumentSeparator(c) && !inDoubleQuotesString && !inSingleQuoteString)
     {
@@ -399,6 +388,13 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
       {
         oArguments.push_back(accumulator);
         accumulator = "";
+      }
+      else if (isEmptyArgument)
+      {
+        isEmptyArgument = false;
+
+        //flush an empty string as an argument
+        oArguments.push_back("");
       }
     }
     else if (c == '\\' && !inDoubleQuotesString && !inSingleQuoteString)
@@ -444,7 +440,7 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
     {
       //Rule 7: All other characters must be read as plain text.
       
-      //plain text character
+      //literal text character
       accumulator.push_back(c);
     }
 
@@ -456,6 +452,13 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
   {
     oArguments.push_back(accumulator);
     accumulator = "";
+  }
+  else if (isEmptyArgument)
+  {
+    isEmptyArgument = false;
+
+    //flush an empty string as an argument
+    oArguments.push_back("");
   }
 
   return true;
