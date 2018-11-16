@@ -98,7 +98,7 @@ For examples, the following command line examples are malformed and produces err
 | ^a^b ^c      | ab      | c       |         |
 | "^a^b" ^c    | ^a^b    | c       |         |
 
-6. Empty arguments must be specified with `""` and must be enclosed by argument delimiters or located at the start/end of the command line. Empty arguments can also be specified with `^"^"` or a combination of the two.
+6. Empty arguments must be specified with `""` and must be enclosed by argument delimiters or located at the start or the end of the command line. Empty arguments can also be specified with `^"^"` or a combination of the two.
 
 | Command Line | argv[1] | argv[2] | argv[3] |
 |--------------|---------|---------|---------|

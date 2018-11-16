@@ -119,7 +119,7 @@ The list of rules applies to the Terminal environment (bash) of the Linux platfo
 | "sum = &bsol;$20" | sum = $20 |         |         |
 
 6. Empty arguments:
-   1. Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start/or end of the command line.
+   1. Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start or the end of the command line.
    2. Empty arguments can also be specified with `''`.
 
 | Command Line | argv[1] | argv[2] | argv[3] |

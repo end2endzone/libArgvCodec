@@ -330,7 +330,7 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
       inSingleQuoteString = false;
       isEmptyArgument = false;
 
-      //Rule 6.1: Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start/or end of the command line.
+      //Rule 6.1: Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start or the end of the command line.
       //Rule 6.2: Empty arguments can also be specified with `''`.
       stringStartOffset = i;
     }
@@ -342,7 +342,7 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
       inSingleQuoteString = true;
       isEmptyArgument = false;
 
-      //Rule 6.1: Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start/or end of the command line.
+      //Rule 6.1: Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start or the end of the command line.
       //Rule 6.2: Empty arguments can also be specified with `''`.
       stringStartOffset = i;
     }
@@ -365,7 +365,7 @@ bool TerminalArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::St
       inDoubleQuotesString = false;
       inSingleQuoteString = false;
 
-      //Rule 6.1: Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start/or end of the command line.
+      //Rule 6.1: Empty arguments must be specified with `""` and must be surrounded by argument delimiters or located at the start or the end of the command line.
       isEmptyArgument = (i == stringStartOffset+1);
     }
     else if (c == '\'' && inSingleQuoteString)
