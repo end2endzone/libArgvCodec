@@ -476,7 +476,6 @@ std::string getShowArgsExecutablePath()
   return path;
 }
 
-#define __linux__
 bool getArgumentsFromSystem(const std::string & iCmdline, ra::strings::StringVector & oArguments)
 {
   //define a tmp file for testing
