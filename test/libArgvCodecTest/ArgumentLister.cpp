@@ -100,11 +100,17 @@ void duplicateExec(const char * iDestinationPath)
   sprintf(buffer, "cp \"%s\" \"%s\" >/dev/null 2>/dev/null", localExec.c_str(), iDestinationPath);
   int returncode = system(buffer);
   sprintf(buffer, "chmod 755 \"%s\" >/dev/null 2>/dev/null", iDestinationPath);
-  returncode = system(buffer);
+  return_code = system(buffer);
 #elif WIN32
   sprintf(buffer, "copy /v \"%s\" \"%s\" >NUL 2>NUL", localExec.c_str(), iDestinationPath);
-  int returncode = system(buffer);
+  int return_code = system(buffer);
 #endif
+
+  //print an error message if the command failed.
+  if (return_code != 0)
+  {
+    printf("Failed running command: %s\n", buffer);
+  }
 
   printf("done\n");
 }
@@ -175,6 +181,8 @@ std::string systemDecodeArgument(const char * iValue)
 {
   ArgumentList::StringList arguments;
   bool success = systemDecodeCommandLineArguments(iValue, arguments);
+  if (!success)
+    return "";
   if (arguments.size() != 2)
     return "";
 
@@ -332,6 +340,8 @@ std::string createProcessDecodeArgument(const char * iValue)
 {
   ArgumentList::StringList arguments;
   bool success = createProcessDecodeCommandLineArguments(iValue, arguments);
+  if (!success)
+    return "";
   if (arguments.size() != 2)
     return "";
 

@@ -80,7 +80,6 @@ TEST_F(TestArgumentList, testGetArgument)
   ArgumentList m;
   m.init(argc, argv);
   int argc2 = m.getArgc();
-  char** argv2 = m.getArgv();
 
   ASSERT_EQ(argc, argc2);
   ASSERT_STREQ(argv[0], m.getArgument(0));
@@ -126,7 +125,6 @@ TEST_F(TestArgumentList, testInsertEndAbsolutePos)
   ASSERT_TRUE( m.insert(4, newArg.c_str()) );
 
   int argc2 = m.getArgc();
-  char** argv2 = m.getArgv();
 
   ASSERT_EQ(argc+1, argc2);
   ASSERT_STREQ(argv[0], m.getArgument(0));
@@ -174,7 +172,6 @@ TEST_F(TestArgumentList, testInsertFirst)
   ASSERT_TRUE( m.insert(0, newArg.c_str()) );
 
   int argc2 = m.getArgc();
-  char** argv2 = m.getArgv();
 
   ASSERT_EQ(argc+1, argc2);
   ASSERT_STREQ(newArg.c_str(), m.getArgument(0));
@@ -199,7 +196,6 @@ TEST_F(TestArgumentList, testInsertMiddle)
   ASSERT_TRUE( m.insert(2, newArg.c_str()) );
 
   int argc2 = m.getArgc();
-  char** argv2 = m.getArgv();
 
   ASSERT_EQ(argc+1, argc2);
   ASSERT_STREQ(argv[0], m.getArgument(0));

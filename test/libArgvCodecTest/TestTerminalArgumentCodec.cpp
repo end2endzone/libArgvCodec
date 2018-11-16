@@ -295,7 +295,6 @@ TEST_F(TestTerminalArgumentCodec, testDecodeCommandLine)
     //assert
     ASSERT_EQ(2, args.getArgc());
     const char * arg1 = args.getArgument(1);
-    const char * arg2 = args.getArgument(2);
     ASSERT_STREQ(arg1, "a b cd e");
   }
   //-----------------------------------------------------------------------------------
@@ -543,6 +542,7 @@ bool getArgumentsFromSystem(const std::string & iCmdline, ra::strings::StringVec
     }
   }
 
+  oArguments = system_arguments;
   return true;
 }
 

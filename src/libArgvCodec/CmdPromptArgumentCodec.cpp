@@ -434,13 +434,12 @@ bool CmdPromptArgumentCodec::parseCmdLine(const char * iCmdLine, ArgumentList::S
   bool inString = false;
   bool inCaretString = false;
   bool isValidEmptyArgument = false;
-  bool isJuxtaposedString = false;
 
   for(size_t i=0; i<cmdLineStr.size(); i++)
   {
     char c = iCmdLine[i];
 
-    bool isLastCharacter = !(i+1<cmdLineStr.size());
+    //bool isLastCharacter = !(i+1<cmdLineStr.size());
     size_t numBackSlashes = 0;
     size_t backslashSequenceLength = 0;
 
