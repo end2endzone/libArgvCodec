@@ -468,84 +468,6 @@ bool isDashedLine(const std::string & iLine)
   return true;
 }
 
-std::string getShowArgsExecutablePath()
-{
-  std::string path = ra::process::getCurrentProcessPath();
-  int numTokenReplaced = ra::strings::replace(path, "libargvcodec_unittest", "showargs");
-  return path;
-}
-
-bool getArgumentsFromSystem(const std::string & iCmdline, ra::strings::StringVector & oArguments)
-{
-  //define a tmp file for testing
-  std::string tmp_file = ra::gtesthelp::getTestQualifiedName() + ".tmp";
-
-  //delete the tmp file if it already exists
-  if (ra::filesystem::fileExists(tmp_file.c_str()))
-  {
-    bool deleted = ra::filesystem::deleteFile(tmp_file.c_str());
-    if (!deleted)
-      return false;
-  }
-
-  //build command line
-  std::string cmdline;
-  cmdline = getShowArgsExecutablePath();
-  cmdline += " ";
-  cmdline += iCmdline;
-
-  //configure the showargs call to output to a file
-  cmdline += " >" + tmp_file;
-
-  //execute the command line
-  int return_code = system(cmdline.c_str());
-  if (return_code != 0)
-  {
-    printf("cmdline=%s\n", cmdline.c_str());
-    return false;
-  }
-
-  //expect the tmp file was created
-  if (!ra::filesystem::fileExists(tmp_file.c_str()))
-  {
-    return false;
-  }
-
-  //parse 'showargs' output
-  ra::strings::StringVector system_arguments;
-  bool readSuccess = ra::gtesthelp::getTextFileContent(tmp_file.c_str(), system_arguments);
-  if (!readSuccess)
-    return false;
-
-  //cleanup "argX: " line prefix.
-  for(size_t j=0; j<system_arguments.size(); j++)
-  {
-    std::string prefix = "arg" + ra::strings::toString(j) + ": ";
-    std::string & actual_argument = system_arguments[j];
-    int numTokenReplaced = ra::strings::replace(actual_argument, prefix.c_str(), "");
-  }
-
-  //remove arg[0] from the list
-  if (system_arguments.size() > 0)
-  {
-    system_arguments.erase(system_arguments.begin());
-  }
-
-  //delete the tmp file if it already exists
-  if (ra::filesystem::fileExists(tmp_file.c_str()))
-  {
-    bool deleted = ra::filesystem::deleteFile(tmp_file.c_str());
-    if (!deleted)
-    {
-      printf("Unable to delete file \"%s\".\n", tmp_file.c_str());
-      return false;
-    }
-  }
-
-  oArguments = system_arguments;
-  return true;
-}
-
 TEST_F(TestTerminalArgumentCodec, testSystem)
 {
   //The objective of this unit test is to validate the content of 
@@ -567,6 +489,15 @@ TEST_F(TestTerminalArgumentCodec, testSystem)
   ra::strings::StringVector commands;
   for(size_t i=0; i<content.size(); i++)
   {
+    //show progress for each 10% step
+    static int previous_progress_percent = 0;
+    int progress_percent = ((i+1)*100)/content.size();
+    if (progress_percent % 10 == 0 && progress_percent > previous_progress_percent)
+    {
+      previous_progress_percent = progress_percent;
+      printf("%d%%\n", progress_percent);
+    }
+
     const std::string & line = content[i];
     if (isDashedLine(line))
     {
@@ -578,16 +509,8 @@ TEST_F(TestTerminalArgumentCodec, testSystem)
         commands.erase(commands.begin());
         ra::strings::StringVector file_arguments = commands;
 
-        //compare againts TerminalArgumentCodec::decodeCommandLine()
-
-        //decode with TerminalArgumentCodec
-        ArgumentList codec_arguments = codec.decodeCommandLine(file_cmdline.c_str());
-
-        //remove arg[0] from the list
-        if (codec_arguments.getArgc() > 0)
-        {
-          codec_arguments.remove(0);
-        }
+        //compare againts codec
+        ra::strings::StringVector codec_arguments = toStringList(codec.decodeCommandLine(file_cmdline.c_str()));
 
         //build a meaningful error message
         std::string error_message;
@@ -598,20 +521,19 @@ TEST_F(TestTerminalArgumentCodec, testSystem)
           error_message += "  arg[" + ra::strings::toString(j) + "]: ";
           error_message += file_arguments[j] + "\n";
         }
-        error_message += "but decoding actually returned the following arguments:\n";
-        for(int j=0; j<codec_arguments.getArgc(); j++)
+        error_message += "but decoding the command line actually returned the following arguments:\n";
+        for(size_t j=0; j<codec_arguments.size(); j++)
         {
           error_message += "  arg[" + ra::strings::toString(j) + "]: ";
-          error_message += codec_arguments.getArgument(j);
-          error_message += "\n";
+          error_message += codec_arguments[j] + "\n";
         }
 
         //assert codec arguments are equals to file arguments
-        ASSERT_EQ(file_arguments.size(), (size_t)codec_arguments.getArgc()) << error_message;
+        ASSERT_EQ(file_arguments.size(), codec_arguments.size()) << error_message;
         for(size_t j=0; j<file_arguments.size(); j++)
         {
           const std::string & expected_argument = file_arguments[j];
-          const std::string & codec_argument   = codec_arguments.getArgument((int)j);
+          const std::string & codec_argument   = codec_arguments[j];
           ASSERT_EQ(expected_argument, codec_argument) << error_message;
         }
 
@@ -661,7 +583,7 @@ TEST_F(TestTerminalArgumentCodec, testSystem)
   //all the file is now processed.
 }
 
-TEST_F(TestTerminalArgumentCodec, DISABLED_testLinuxCommandLine)
+TEST_F(TestTerminalArgumentCodec, testLinuxCommandLine)
 {
   std::string test_file = "TestTerminalArgumentCodec.testSystem.txt";
   ASSERT_TRUE( ra::filesystem::fileExists(test_file.c_str()) );
