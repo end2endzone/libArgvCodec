@@ -471,11 +471,11 @@ bool isDashedLine(const std::string & iLine)
 TEST_F(TestTerminalArgumentCodec, testSystem)
 {
   //The objective of this unit test is to validate the content of 
-  //file 'TestTerminalArgumentCodec.testSystem.txt' against the following:
+  //file 'Test.CommandLines.Linux.txt' against the following:
   //  1) system() call on Linux system.
   //  2) TerminalArgumentCodec::decodeCommandLine() on all platforms
 
-  std::string test_file = ra::gtesthelp::getTestQualifiedName() + ".txt";
+  std::string test_file = "Test.CommandLines.Linux.txt";
   ASSERT_TRUE( ra::filesystem::fileExists(test_file.c_str()) );
 
   //load file in memory
@@ -585,7 +585,7 @@ TEST_F(TestTerminalArgumentCodec, testSystem)
 
 TEST_F(TestTerminalArgumentCodec, testLinuxCommandLine)
 {
-  std::string test_file = "TestTerminalArgumentCodec.testSystem.txt";
+  std::string test_file = "Test.CommandLines.Linux.txt";
   ASSERT_TRUE( ra::filesystem::fileExists(test_file.c_str()) );
 
   //load file in memory
