@@ -454,26 +454,10 @@ TEST_F(TestTerminalArgumentCodec, testDecodeCommandLine)
   }
 }
 
-bool isDashedLine(const std::string & iLine)
-{
-  if (iLine.size() < 10) //must be at least 10 dash characters long
-    return false;
-
-  for(size_t i=0; i<iLine.size(); i++)
-  {
-    if (iLine[i] != '-')
-      return false; //not a dash character
-  }
-
-  return true;
-}
-
 TEST_F(TestTerminalArgumentCodec, testSystem)
 {
-  //The objective of this unit test is to validate the content of 
-  //file 'Test.CommandLines.Linux.txt' against the following:
-  //  1) system() call on Linux system.
-  //  2) TerminalArgumentCodec::decodeCommandLine() on all platforms
+  //The objective of this unit test is to validate the content of file 'Test.CommandLines.Linux.txt' with TerminalArgumentCodec::decodeCommandLine() implementation.
+  //On Windows systems, the content of file 'Test.CommandLines.Linux.txt' is also validated with a system() call.
 
   std::string test_file = "Test.CommandLines.Linux.txt";
   ASSERT_TRUE( ra::filesystem::fileExists(test_file.c_str()) );

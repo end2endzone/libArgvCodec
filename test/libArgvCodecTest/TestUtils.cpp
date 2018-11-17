@@ -33,6 +33,20 @@ void clearDynamicStrings()
   gStrings.clear();
 }
 
+bool isDashedLine(const std::string & iLine)
+{
+  if (iLine.size() < 10) //must be at least 10 dash characters long
+    return false;
+
+  for(size_t i=0; i<iLine.size(); i++)
+  {
+    if (iLine[i] != '-')
+      return false; //not a dash character
+  }
+
+  return true;
+}
+
 std::string getSequencedFile(const char * iPrefix, int iValue, const char * iPostfix, int iValueLength)
 {
   static const int BUFFER_SIZE = 1024;

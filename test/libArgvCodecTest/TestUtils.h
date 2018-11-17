@@ -12,6 +12,7 @@
 typedef std::vector<char*> DynamicStringList;
 char * mkstr(const char * value);
 void clearDynamicStrings();
+bool isDashedLine(const std::string & iLine);
 
 std::string getSequencedFile(const char * iPrefix, int iValue, const char * iPostfix, int iValueLength);
 

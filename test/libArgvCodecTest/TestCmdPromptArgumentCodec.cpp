@@ -8,8 +8,6 @@
 
 using namespace libargvcodec;
 
-extern bool isDashedLine(const std::string & iLine);
-
 void TestCmdPromptArgumentCodec::SetUp()
 {
 }
@@ -264,7 +262,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
 
 TEST_F(TestCmdPromptArgumentCodec, testSystem)
 {
-  //The objective of this unit test is to validate the content of file 'Test.CommandLines.Windows.txt' with TerminalArgumentCodec::decodeCommandLine() implementation.
+  //The objective of this unit test is to validate the content of file 'Test.CommandLines.Windows.txt' with CmdPromptArgumentCodec::decodeCommandLine() implementation.
   //On Windows systems, the content of file 'Test.CommandLines.Windows.txt' is also validated with a system() call.
 
   std::string test_file = "Test.CommandLines.Windows.txt";
@@ -360,7 +358,7 @@ TEST_F(TestCmdPromptArgumentCodec, testSystem)
           const std::string & system_argument   = system_arguments[j];
           ASSERT_EQ(expected_argument, system_argument) << error_message;
         }
-#endif //__linux__
+#endif //_WIN32
       }
 
       //this command is completed
