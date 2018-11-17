@@ -100,69 +100,114 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
 
 TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine2)
 {
-#ifdef _WIN32
-  const char * inputFile = "TestShellCommandLines.txt";
+  std::string test_file = "Test.CommandLines.Windows.txt";
+  ASSERT_TRUE( ra::filesystem::fileExists(test_file.c_str()) );
 
-  ra::strings::StringVector testCmdLines;
-  ASSERT_TRUE( ra::gtesthelp::getTextFileContent(inputFile, testCmdLines) );
-  ASSERT_TRUE( testCmdLines.size() > 0 );
+  //load file in memory
+  ra::strings::StringVector content;
+  bool readSuccess = ra::gtesthelp::getTextFileContent(test_file.c_str(), content);
+  ASSERT_TRUE( readSuccess );
 
-  printf("\n");
+  libargvcodec::CmdPromptArgumentCodec codec;
 
-  //for each testCmdLines
-  for(size_t i=0; i<testCmdLines.size(); i++)
+  //process each command lines
+  ra::strings::StringVector commands;
+  for(size_t i=0; i<content.size(); i++)
   {
-    std::string message;
-
-    //arrange
-    const std::string testCmdLine = testCmdLines[i];
-    message.append( ra::strings::format("Testing %d/%d\n", (int)(i+1), testCmdLines.size()) );
-    printf("%s", message.c_str());
-
-    //compute the expected list of arguments
-    ArgumentList::StringList expectedArgs;
-    bool success = systemDecodeCommandLineArguments(testCmdLine.c_str(), expectedArgs);
-    ASSERT_TRUE(success) << message.c_str();
-
-    //build the list
-    ArgumentList arglist;
-    arglist.init(expectedArgs);
-
-    //act
-    CmdPromptArgumentCodec c;
-    std::string cmdLine = c.encodeCommandLine(arglist);
-
-    //compute the actual list of arguments
-    ArgumentList::StringList actualArgs;
-    success = systemDecodeCommandLineArguments(cmdLine.c_str(), actualArgs);
-    ASSERT_TRUE(success) << message.c_str();
-
-    //building debug message in case of test failure
-    message.append("  Expecting\n");
-    for(size_t j=1; j<expectedArgs.size(); j++)
+    //show progress for each 10% step
+    static int previous_progress_percent = 0;
+    int progress_percent = ((i+1)*100)/content.size();
+    if (progress_percent % 10 == 0 && progress_percent > previous_progress_percent)
     {
-      const std::string & arg = expectedArgs[j];
-      message.append( ra::strings::format("    argv[%d]=%s\n", (int)j, arg.c_str()) );
-    }
-    message.append("  Actuals:\n");
-    message.append( ra::strings::format("    cmdline=%s\n", cmdLine.c_str()) );
-    for(size_t j=1; j<actualArgs.size(); j++)
-    {
-      const std::string & arg = actualArgs[j];
-      message.append( ra::strings::format("    argv[%d]=%s\n", (int)j, arg.c_str()) );
+      previous_progress_percent = progress_percent;
+      printf("%d%%\n", progress_percent);
     }
 
-    //assert
-    ASSERT_EQ( expectedArgs.size(), actualArgs.size() ) << message.c_str();
-    //compare each argument
-    for(size_t j=1; j<expectedArgs.size(); j++) //skip first argument since executable names may differ
+    const std::string & line = content[i];
+    if (isDashedLine(line))
     {
-      const char * expectedArg = expectedArgs[j].c_str();
-      const char * actualArg = actualArgs[j].c_str();
-      ASSERT_STREQ(expectedArg, actualArg) << message.c_str();
+      //process current commands
+      if (commands.size() >= 2) //must be at least 2 lines long (a cmdline and at least 1 argument)
+      {
+        //get command line and arguments from the file:
+        std::string file_cmdline = commands[0];
+        commands.erase(commands.begin());
+        ra::strings::StringVector file_arguments = commands;
+
+        //add a fake executable
+#ifdef _WIN32
+        file_arguments.insert(file_arguments.begin(), "showargs.exe");
+#elif defined(__linux__)
+        file_arguments.insert(file_arguments.begin(), "./showargs");
+#endif
+
+        //build the list
+        ArgumentList arglist;
+        arglist.init(file_arguments);
+
+        //remove the fake executable
+        file_arguments.erase(file_arguments.begin());
+
+        //act
+        std::string actual_cmdLine = codec.encodeCommandLine(arglist);
+
+        //validate the returned command line with decodeCommandLine() api
+        ra::strings::StringVector actual_arguments = toStringList(codec.decodeCommandLine(actual_cmdLine.c_str()));
+
+        //build a meaningful error message
+        std::string error_message;
+        error_message += "The content of 'file_arguments' which is:\n";
+        for(size_t j=0; j<file_arguments.size(); j++)
+        {
+          error_message += "  arg[" + ra::strings::toString(j) + "]: ";
+          error_message += file_arguments[j] + "\n";
+        }
+        error_message += "does not match the content of 'actual_arguments' which is:\n";
+        for(size_t j=0; j<actual_arguments.size(); j++)
+        {
+          error_message += "  arg[" + ra::strings::toString(j) + "]: ";
+          error_message += actual_arguments[j] + "\n";
+        }
+
+        ASSERT_EQ(file_arguments, actual_arguments) << error_message;
+
+#ifdef _WIN32
+        //if on the right platform, use a system() call to get the list of arguments back
+        //and compare against the expected list
+
+        ra::strings::StringVector system_arguments;
+        bool system_ok = getArgumentsFromSystem(actual_cmdLine, system_arguments);
+        ASSERT_TRUE(system_ok);
+
+        //build a meaningful error message
+        error_message = "";
+        error_message += "The content of 'file_arguments' which is:\n";
+        for(size_t j=0; j<file_arguments.size(); j++)
+        {
+          error_message += "  arg[" + ra::strings::toString(j) + "]: ";
+          error_message += file_arguments[j] + "\n";
+        }
+        error_message += "does not match the content of 'system_arguments' which is:\n";
+        for(size_t j=0; j<system_arguments.size(); j++)
+        {
+          error_message += "  arg[" + ra::strings::toString(j) + "]: ";
+          error_message += system_arguments[j] + "\n";
+        }
+
+        ASSERT_EQ(file_arguments, system_arguments);
+#endif
+      }
+
+      //this command is completed
+      commands.clear();
+    }
+    else
+    {
+      commands.push_back(line); //that is a command line string or an argument string
     }
   }
-#endif
+
+  //all the file is now processed.
 }
 
 void prepareTestCmdPromptEncodeArgument(const char * iRawArguementValue, std::string & oEscapedArgument, std::string & oSystemArgumentValue)
