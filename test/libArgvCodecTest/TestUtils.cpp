@@ -200,3 +200,44 @@ ra::strings::StringVector toStringList(const libargvcodec::ArgumentList & argume
 
   return list;
 }
+
+std::string buildErrorString(const std::string & iVar1, const ra::strings::StringVector & iList1, const std::string & iVar2, const ra::strings::StringVector & iList2)
+{
+  std::string desc;
+
+  desc += "The content of '" + iVar1 + "' which is:\n";
+  for(size_t j=0; j<iList1.size(); j++)
+  {
+    desc += "  arg[" + ra::strings::toString(j) + "]: ";
+    desc += iList1[j] + "\n";
+  }
+  desc += "does not match the content of '" + iVar2 + "' which is:\n";
+  for(size_t j=0; j<iList2.size(); j++)
+  {
+    desc += "  arg[" + ra::strings::toString(j) + "]: ";
+    desc += iList2[j] + "\n";
+  }
+
+  return desc;
+}
+
+std::string buildErrorString(const std::string & iCmdLine, const ra::strings::StringVector & iExpectedArguments, const ra::strings::StringVector & iActualArguments)
+{
+  std::string desc;
+
+  desc += "The command line `" + iCmdLine + "`\n";
+  desc += "was expected to return the following arguments:\n";
+  for(size_t j=0; j<iExpectedArguments.size(); j++)
+  {
+    desc += "  arg[" + ra::strings::toString(j) + "]: ";
+    desc += iExpectedArguments[j] + "\n";
+  }
+  desc += "but actually returned the following arguments:\n";
+  for(size_t j=0; j<iActualArguments.size(); j++)
+  {
+    desc += "  arg[" + ra::strings::toString(j) + "]: ";
+    desc += iActualArguments[j] + "\n";
+  }
+
+  return desc;
+}

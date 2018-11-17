@@ -497,20 +497,7 @@ TEST_F(TestTerminalArgumentCodec, testSystem)
         ra::strings::StringVector codec_arguments = toStringList(codec.decodeCommandLine(file_cmdline.c_str()));
 
         //build a meaningful error message
-        std::string error_message;
-        error_message += "The command line `" + file_cmdline + "`\n";
-        error_message += "was expected to return the following arguments:\n";
-        for(size_t j=0; j<file_arguments.size(); j++)
-        {
-          error_message += "  arg[" + ra::strings::toString(j) + "]: ";
-          error_message += file_arguments[j] + "\n";
-        }
-        error_message += "but decoding the command line actually returned the following arguments:\n";
-        for(size_t j=0; j<codec_arguments.size(); j++)
-        {
-          error_message += "  arg[" + ra::strings::toString(j) + "]: ";
-          error_message += codec_arguments[j] + "\n";
-        }
+        std::string error_message = buildErrorString(file_cmdline, file_arguments, codec_arguments);
 
         //assert codec arguments are equals to file arguments
         ASSERT_EQ(file_arguments.size(), codec_arguments.size()) << error_message;
@@ -529,20 +516,7 @@ TEST_F(TestTerminalArgumentCodec, testSystem)
         ASSERT_TRUE( system_success );
 
         //build a meaningful error message
-        error_message = "";
-        error_message += "The command line `" + file_cmdline + "`\n";
-        error_message += "was expected to return the following arguments:\n";
-        for(size_t j=0; j<file_arguments.size(); j++)
-        {
-          error_message += "  arg[" + ra::strings::toString(j) + "]: ";
-          error_message += file_arguments[j] + "\n";
-        }
-        error_message += "but system() actually returned the following arguments:\n";
-        for(size_t j=0; j<system_arguments.size(); j++)
-        {
-          error_message += "  arg[" + ra::strings::toString(j) + "]: ";
-          error_message += system_arguments[j] + "\n";
-        }
+        error_message = buildErrorString(file_cmdline, file_arguments, system_arguments);
 
         //assert codec arguments are equals to file arguments
         ASSERT_EQ(file_arguments.size(), system_arguments.size()) << error_message;
@@ -599,37 +573,17 @@ TEST_F(TestTerminalArgumentCodec, testLinuxCommandLine)
         ra::strings::StringVector expected_arguments = commands;
 
         //decode with TerminalArgumentCodec
-        ArgumentList actual_arguments = codec.decodeCommandLine(cmdline.c_str());
-
-        //remove arg[0] from the list
-        if (actual_arguments.getArgc() > 0)
-        {
-          actual_arguments.remove(0);
-        }
+        ra::strings::StringVector actual_arguments = toStringList(codec.decodeCommandLine(cmdline.c_str()));
 
         //build a meaningful error message
-        std::string error_message;
-        error_message += "The command line `" + cmdline + "`\n";
-        error_message += "was expected to return the following arguments:\n";
-        for(size_t j=0; j<expected_arguments.size(); j++)
-        {
-          error_message += "  arg[" + ra::strings::toString(j) + "]: ";
-          error_message += expected_arguments[j] + "\n";
-        }
-        error_message += "but actually returned the following arguments:\n";
-        for(int j=0; j<actual_arguments.getArgc(); j++)
-        {
-          error_message += "  arg[" + ra::strings::toString(j) + "]: ";
-          error_message += actual_arguments.getArgument(j);
-          error_message += "\n";
-        }
+        std::string error_message = buildErrorString(cmdline, expected_arguments, actual_arguments);
 
         //assert actual arguments are equals to expected arguments
-        ASSERT_EQ((int)expected_arguments.size(), actual_arguments.getArgc()) << error_message;
+        ASSERT_EQ(expected_arguments.size(), actual_arguments.size()) << error_message;
         for(size_t j=0; j<expected_arguments.size(); j++)
         {
           const std::string & expected_argument = expected_arguments[j];
-          const std::string   actual_argument   = actual_arguments.getArgument((int)j);
+          const std::string & actual_argument   = actual_arguments[j];
           ASSERT_EQ(expected_argument, actual_argument) << error_message;
         }
       }
