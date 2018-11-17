@@ -5,7 +5,7 @@ add_executable(libargvcodec_unittest
   ArgumentLister.cpp
   ArgumentLister.h
   main.cpp
-  TestShellCommandLines.txt
+  Test.CommandLines.Windows.txt
   TestArgumentList.cpp
   TestArgumentList.h
   TestCmdPromptArgumentCodec.cpp
@@ -37,7 +37,7 @@ add_dependencies(libargvcodec_unittest libargvcodec)
 target_link_libraries(libargvcodec_unittest PRIVATE rapidassist libargvcodec ${PTHREAD_LIBRARIES} ${GTEST_LIBRARIES} )
 
 # Copy test files to $(ProjectDir) and $(OutDir)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TestShellCommandLines.txt         ${CMAKE_CURRENT_BINARY_DIR}/TestShellCommandLines.txt         COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Test.CommandLines.Windows.txt         ${CMAKE_CURRENT_BINARY_DIR}/Test.CommandLines.Windows.txt         COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TestEncodeCommandLine001.txt  ${CMAKE_CURRENT_BINARY_DIR}/TestEncodeCommandLine001.txt  COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TestEncodeCommandLine002.txt  ${CMAKE_CURRENT_BINARY_DIR}/TestEncodeCommandLine002.txt  COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Test.CommandLines.Linux.txt  ${CMAKE_CURRENT_BINARY_DIR}/Test.CommandLines.Linux.txt  COPYONLY)
@@ -47,7 +47,7 @@ if(WIN32)
 endif()
 add_custom_command(
   TARGET libargvcodec_unittest POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/test/libArgvCodecTest/TestShellCommandLines.txt         ${TEST_FILES_BINARY_DIR}/TestShellCommandLines.txt
+  COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/test/libArgvCodecTest/Test.CommandLines.Windows.txt         ${TEST_FILES_BINARY_DIR}/Test.CommandLines.Windows.txt
   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/test/libArgvCodecTest/TestEncodeCommandLine001.txt  ${TEST_FILES_BINARY_DIR}/TestEncodeCommandLine001.txt
   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/test/libArgvCodecTest/TestEncodeCommandLine002.txt  ${TEST_FILES_BINARY_DIR}/TestEncodeCommandLine002.txt
   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/test/libArgvCodecTest/Test.CommandLines.Linux.txt  ${TEST_FILES_BINARY_DIR}/Test.CommandLines.Linux.txt
@@ -59,7 +59,7 @@ install(TARGETS libargvcodec_unittest
         LIBRARY DESTINATION ${LIBARGVCODEC_INSTALL_LIB_DIR}
         RUNTIME DESTINATION ${LIBARGVCODEC_INSTALL_BIN_DIR}
 )
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/TestShellCommandLines.txt       
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/Test.CommandLines.Windows.txt       
               ${CMAKE_CURRENT_SOURCE_DIR}/TestEncodeCommandLine001.txt
               ${CMAKE_CURRENT_SOURCE_DIR}/TestEncodeCommandLine002.txt
               ${CMAKE_CURRENT_SOURCE_DIR}/Test.CommandLines.Linux.txt
