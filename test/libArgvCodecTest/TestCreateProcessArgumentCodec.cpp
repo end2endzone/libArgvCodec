@@ -2,8 +2,10 @@
 #include "libargvcodec/CmdPromptArgumentCodec.h"
 #include "libargvcodec/CreateProcessArgumentCodec.h"
 #include "ArgumentLister.h"
+#include "TestUtils.h"
 #include "rapidassist/strings.h"
 #include "rapidassist/gtesthelp.h"
+#include "rapidassist/filesystem.h"
 
 using namespace libargvcodec;
 
@@ -17,57 +19,102 @@ void TestCreateProcessArgumentCodec::TearDown()
 
 TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
 {
-#ifdef _WIN32 //requires CreateProcess() API
-  const char * inputFile = "TestShellCommandLines.txt";
+#ifndef _WIN32 //requires CreateProcess() API
+  return;
+#else
+  std::string test_file = "Test.CommandLines.Windows.txt";
+  ASSERT_TRUE( ra::filesystem::fileExists(test_file.c_str()) );
 
-  ra::strings::StringVector cmdLines;
-  ASSERT_TRUE( ra::gtesthelp::getTextFileContent(inputFile, cmdLines) );
-  ASSERT_TRUE( cmdLines.size() > 0 );
+  //load file in memory
+  ra::strings::StringVector content;
+  bool readSuccess = ra::gtesthelp::getTextFileContent(test_file.c_str(), content);
+  ASSERT_TRUE( readSuccess );
 
-  printf("\n");
+  libargvcodec::CreateProcessArgumentCodec codec;
 
-  for(size_t i=0; i<cmdLines.size(); i++)
+  //process each command lines
+  ra::strings::StringVector commands;
+  for(size_t i=0; i<content.size(); i++)
   {
-    std::string message;
-
-    //arrange
-    const std::string cmdLine = cmdLines[i];
-    message.append( ra::strings::format("Testing %d/%d: foo.exe %s\n", i+1, cmdLines.size(), cmdLine.c_str()) );
-    printf("%s", message.c_str());
-
-    //compute the expected list of arguments
-    ArgumentList::StringList expectedArgs;
-    bool success = createProcessDecodeCommandLineArguments(cmdLine.c_str(), expectedArgs);
-    ASSERT_TRUE(success) << message;
-
-    //act
-    CreateProcessArgumentCodec c;
-    ArgumentList actualArgs = c.decodeCommandLine(cmdLine.c_str());
-
-    //building debug message in case of test failure
-    message.append("  Expecting:\n");
-    for(size_t i=1; i<expectedArgs.size(); i++) //skip first argument since executable names may differ
+    //show progress for each 10% step
+    static int previous_progress_percent = 0;
+    int progress_percent = ((i+1)*100)/content.size();
+    if (progress_percent % 10 == 0 && progress_percent > previous_progress_percent)
     {
-      const char * expectedArg = expectedArgs[i].c_str();
-      message.append( ra::strings::format("   argv[%d]=%s\n", i, expectedArg) );
-    }
-    message.append("  Actuals:\n");
-    for(int i=1; i<actualArgs.getArgc(); i++) //skip first argument since executable names may differ
-    {
-      const char * actualArg = actualArgs.getArgv()[i];
-      message.append( ra::strings::format("   argv[%d]=%s\n", i, actualArg) );
+      previous_progress_percent = progress_percent;
+      printf("%d%%\n", progress_percent);
     }
 
-    //assert
-    ASSERT_EQ( (int)expectedArgs.size(), actualArgs.getArgc() ) << message;
-    //compare each argument
-    for(int i=1; i<actualArgs.getArgc(); i++) //skip first argument since executable names may differ
+    const std::string & line = content[i];
+    if (isDashedLine(line))
     {
-      const char * expectedArg = expectedArgs[i].c_str();
-      const char * actualArg = actualArgs.getArgv()[i];
-      ASSERT_STREQ(expectedArg, actualArg) << message;
+      //process current commands
+      if (commands.size() >= 2) //must be at least 2 lines long (a cmdline and at least 1 argument)
+      {
+        //get command line and arguments from the file:
+        std::string file_cmdline = commands[0];
+        commands.erase(commands.begin());
+        ra::strings::StringVector file_arguments = commands;
+
+        //CreateProcessArgumentCodec codec does not support CmdPrompt shell characters
+        bool hasCmdPromptShellCharacters = false;
+        {
+          libargvcodec::CmdPromptArgumentCodec tmp;
+          hasCmdPromptShellCharacters = tmp.hasShellCharacters(file_cmdline.c_str());
+        }
+        if (hasCmdPromptShellCharacters)
+        {
+          //next series of commands
+          commands.clear();
+          continue;
+        }
+
+        //compare againts codec
+        ra::strings::StringVector codec_arguments = toStringList(codec.decodeCommandLine(file_cmdline.c_str()));
+
+        //build a meaningful error message
+        std::string error_message = buildErrorString(file_cmdline, file_arguments, codec_arguments);
+
+        //assert codec arguments are equals to file arguments
+        ASSERT_EQ(file_arguments.size(), codec_arguments.size()) << error_message;
+        for(size_t j=0; j<file_arguments.size(); j++)
+        {
+          const std::string & expected_argument = file_arguments[j];
+          const std::string & codec_argument   = codec_arguments[j];
+          ASSERT_EQ(expected_argument, codec_argument) << error_message;
+        }
+
+#ifdef _WIN32
+        //On Windows system, also try to validate content of test file againts a system() call.
+
+        ra::strings::StringVector system_arguments;
+        bool system_success = getArgumentsFromCreateProcess(file_cmdline, system_arguments);
+        ASSERT_TRUE( system_success );
+
+        //build a meaningful error message
+        error_message = buildErrorString(file_cmdline, file_arguments, system_arguments);
+
+        //assert codec arguments are equals to file arguments
+        ASSERT_EQ(file_arguments.size(), system_arguments.size()) << error_message;
+        for(size_t j=0; j<file_arguments.size(); j++)
+        {
+          const std::string & expected_argument = file_arguments[j];
+          const std::string & system_argument   = system_arguments[j];
+          ASSERT_EQ(expected_argument, system_argument) << error_message;
+        }
+#endif //_WIN32
+      }
+
+      //this command is completed
+      commands.clear();
+    }
+    else
+    {
+      commands.push_back(line); //that is a command line string or an argument string
     }
   }
+
+  //all the file is now processed.
 #endif
 }
 

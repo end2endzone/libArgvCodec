@@ -8,6 +8,14 @@
 #include "rapidassist/process.h"
 #include "rapidassist/gtesthelp.h"
 
+//CreateProcess() unit test support
+#ifdef _WIN32
+#   ifndef WIN32_LEAN_AND_MEAN
+#       define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
+#   endif /* WIN32_LEAN_AND_MEAN */
+#   include <Windows.h>
+#endif
+
 DynamicStringList gStrings;
 
 //register a new string for the current test
@@ -180,6 +188,136 @@ bool getArgumentsFromSystem(const std::string & iCmdLineString, ra::strings::Str
 
   oArguments = system_arguments;
   return true;
+}
+
+bool getArgumentsFromCreateProcess(const std::string & iCmdline, ra::strings::StringVector & oArguments)
+{
+  oArguments.clear();
+
+#ifndef _WIN32
+  return true; // CreateProcess() API is not available.
+#else
+
+  //build a command using createprocess
+  // http://stackoverflow.com/questions/19398606/how-to-include-argument-with-createprocess-api-in-vc
+  // http://stackoverflow.com/questions/1135784/createprocess-doesnt-pass-command-line-arguments
+  // https://stackoverflow.com/questions/7018228/how-do-i-redirect-output-to-a-file-with-createprocess
+  // https://docs.microsoft.com/en-us/windows/desktop/ProcThread/creating-a-child-process-with-redirected-input-and-output
+
+  //define a tmp file and a batch file for testing
+  const std::string file_prefix = "showargs.";
+  std::string random_string = ra::random::getRandomString(10);
+  std::string tmp_file    = file_prefix + random_string + std::string(".output.tmp");
+
+  //build command line
+  static const int CMDLINE_SIZE = 20480;
+  char cmdline[CMDLINE_SIZE];
+  sprintf(cmdline, "%s %s", getShowArgsExecutablePath().c_str(), iCmdline.c_str());
+
+  //delete the tmp file if it already exists
+  if (ra::filesystem::fileExists(tmp_file.c_str()))
+  {
+    bool deleted = ra::filesystem::deleteFile(tmp_file.c_str());
+    if (!deleted)
+    {
+      printf("Failed deleting file '%s'\n", tmp_file.c_str());
+      return false;
+    }
+  }
+
+  //execute the command line
+  SECURITY_ATTRIBUTES sa;
+  sa.nLength = sizeof(sa);
+  sa.lpSecurityDescriptor = NULL;
+  sa.bInheritHandle = TRUE;
+
+  HANDLE hFileOut = CreateFile(tmp_file.c_str(),
+      FILE_APPEND_DATA,
+      FILE_SHARE_WRITE | FILE_SHARE_READ,
+      &sa,
+      OPEN_ALWAYS,
+      FILE_ATTRIBUTE_NORMAL,
+      NULL );
+  if ( hFileOut == INVALID_HANDLE_VALUE )
+    return false;
+
+  PROCESS_INFORMATION pi;
+  STARTUPINFO si;
+  BOOL bProcessCreated = FALSE;
+  DWORD flags = 0; //CREATE_NO_WINDOW;
+
+  ZeroMemory( &pi, sizeof(PROCESS_INFORMATION) );
+  ZeroMemory( &si, sizeof(STARTUPINFO) );
+  si.cb = sizeof(STARTUPINFO);
+  si.dwFlags |= STARTF_USESTDHANDLES;
+  si.hStdInput = NULL;
+  si.hStdError = hFileOut;
+  si.hStdOutput = hFileOut;
+
+  if (CreateProcess(getShowArgsExecutablePath().c_str(), cmdline, NULL, NULL, TRUE, flags, NULL, NULL, &si, &pi))
+  {
+    //wait for the process to finish
+    WaitForSingleObject(pi.hProcess, INFINITE);
+    CloseHandle(pi.hThread);
+    CloseHandle(pi.hProcess);
+  }  
+  else
+  {
+    //unable to start the process
+    return false;
+  }
+
+  //close file outout handle
+  if ( ! CloseHandle(hFileOut) ) 
+  {
+    printf("Failed closing output handle of file '%s'\n", tmp_file.c_str());
+    return false;
+  }
+
+  //expect the tmp file was created
+  if (!ra::filesystem::fileExists(tmp_file.c_str()))
+  {
+    printf("Command line '%s' failed to produce an output in file '%s'\n", cmdline, tmp_file.c_str());
+    return false;
+  }
+
+  //parse 'showargs' output
+  ra::strings::StringVector system_arguments;
+  bool argumentParsed = ra::gtesthelp::getTextFileContent(tmp_file.c_str(), system_arguments);
+  if (!argumentParsed)
+  {
+    printf("Failed parsing file '%s'\n", tmp_file.c_str());
+    return false;
+  }
+
+  //cleanup "argX: " line prefix.
+  for(size_t j=0; j<system_arguments.size(); j++)
+  {
+    std::string prefix = "arg" + ra::strings::toString(j) + ": ";
+    std::string & actual_argument = system_arguments[j];
+    int numTokenReplaced = ra::strings::replace(actual_argument, prefix.c_str(), "");
+  }
+
+  //remove arg[0] from the list
+  if (system_arguments.size() > 0)
+  {
+    system_arguments.erase(system_arguments.begin());
+  }
+
+  //delete the tmp file
+  if (ra::filesystem::fileExists(tmp_file.c_str()))
+  {
+    bool deleted = ra::filesystem::deleteFile(tmp_file.c_str());
+    if (!deleted)
+    {
+      printf("Failed deleting file '%s'\n", tmp_file.c_str());
+      return false;
+    }
+  }
+
+  oArguments = system_arguments;
+  return true;
+#endif //ifndef _WIN32
 }
 
 ra::strings::StringVector toStringList(const libargvcodec::ArgumentList & arguments)

@@ -1,4 +1,5 @@
 #include "ArgumentLister.h"
+#include "TestUtils.h"
 #include "libargvcodec/CmdPromptArgumentCodec.h"
 #include "rapidassist/strings.h"
 #include "rapidassist/process.h"
@@ -261,79 +262,7 @@ bool systemDecodeCommandLineArguments(const char * iCmdLine, ArgumentList::Strin
 
 bool createProcessDecodeCommandLineArguments(const char * iCmdLine, ArgumentList::StringList & oArguments)
 {
-  oArguments.clear();
-
-#ifndef _WIN32
-  return true; // CreateProcess() API is not available.
-#else
-  //build a command line to list arguments
-  std::string loggerExecPath = getLoggerExecFilePath();
-  
-  //build a command using createprocess
-  // http://stackoverflow.com/questions/19398606/how-to-include-argument-with-createprocess-api-in-vc
-  // http://stackoverflow.com/questions/1135784/createprocess-doesnt-pass-command-line-arguments
-
-  //Build command line
-  //The command line should include argv[0] (the path of the executable)
-  //The command line (second) parameter of CreateProcess() should be a pointer to modifiable memory
-  static const int CMDLINE_SIZE = 33000;
-  char cmdLine[CMDLINE_SIZE];
-  sprintf(cmdLine, "%s %s", loggerExecPath.c_str(), iCmdLine);
-
-  PROCESS_INFORMATION ProcessInfo; //This is what we get as an [out] parameter
-  STARTUPINFO StartupInfo; //This is an [in] parameter
-
-  ZeroMemory(&ProcessInfo, sizeof(ProcessInfo));
-  
-  ZeroMemory(&StartupInfo, sizeof(StartupInfo));
-  StartupInfo.cb = sizeof StartupInfo ; //Only compulsory field
-
-  if(CreateProcess(loggerExecPath.c_str(), cmdLine, 
-      NULL,NULL,FALSE,0,NULL,
-      NULL,&StartupInfo,&ProcessInfo))
-  {
-    //wait for the process to finish
-    WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
-    CloseHandle(ProcessInfo.hThread);
-    CloseHandle(ProcessInfo.hProcess);
-  }  
-  else
-  {
-    //unable to start the process
-    return false;
-  }
-
-  std::string logPath = getLogFilePath();
-  FILE * f = fopen(logPath.c_str(), "r");
-  if (!f)
-    return false;
-
-  static const int BUFFER_SIZE = 102400;
-  char buffer[BUFFER_SIZE];
-
-  int argNumber = 0;
-  while( fgets(buffer, BUFFER_SIZE, f) != NULL )
-  {
-    //expected to read: arg0=test
-    std::string line = buffer;
-
-    //build arg template
-    sprintf(buffer, "argv[%d]=", argNumber);
-
-    //remove from line;
-    ra::strings::replace(line, buffer, "");
-
-    //remove ending CRLF at the end of the line;
-    ra::strings::replace(line, "\n", "");
-
-    oArguments.push_back(line);
-
-    argNumber++;
-  }
-
-  fclose(f);
-  return true;
-#endif //ifndef _WIN32
+  return getArgumentsFromCreateProcess(std::string(iCmdLine), oArguments);
 }
 
 std::string createProcessDecodeArgument(const char * iValue)
@@ -342,9 +271,9 @@ std::string createProcessDecodeArgument(const char * iValue)
   bool success = createProcessDecodeCommandLineArguments(iValue, arguments);
   if (!success)
     return "";
-  if (arguments.size() != 2)
+  if (arguments.size() != 1)
     return "";
 
-  std::string confirmedArgumentValue = arguments[1];
+  std::string confirmedArgumentValue = arguments[0];
   return confirmedArgumentValue;
 }

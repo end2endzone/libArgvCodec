@@ -18,6 +18,7 @@ std::string getSequencedFile(const char * iPrefix, int iValue, const char * iPos
 
 std::string getShowArgsExecutablePath();
 bool getArgumentsFromSystem(const std::string & iCmdline, ra::strings::StringVector & oArguments);
+bool getArgumentsFromCreateProcess(const std::string & iCmdline, ra::strings::StringVector & oArguments);
 
 ra::strings::StringVector toStringList(const libargvcodec::ArgumentList & arguments);
 
