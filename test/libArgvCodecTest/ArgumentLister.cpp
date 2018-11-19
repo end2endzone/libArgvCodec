@@ -99,7 +99,7 @@ void duplicateExec(const char * iDestinationPath)
   char buffer[BUFFER_SIZE];
 #ifdef __linux__
   sprintf(buffer, "cp \"%s\" \"%s\" >/dev/null 2>/dev/null", localExec.c_str(), iDestinationPath);
-  int returncode = system(buffer);
+  int return_code = system(buffer);
   sprintf(buffer, "chmod 755 \"%s\" >/dev/null 2>/dev/null", iDestinationPath);
   return_code = system(buffer);
 #elif WIN32
