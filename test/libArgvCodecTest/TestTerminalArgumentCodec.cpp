@@ -459,143 +459,108 @@ TEST_F(TestTerminalArgumentCodec, testSystem)
   //The objective of this unit test is to validate the content of file 'Test.CommandLines.Linux.txt' with TerminalArgumentCodec::decodeCommandLine() implementation.
   //On Windows systems, the content of file 'Test.CommandLines.Linux.txt' is also validated with a system() call.
 
-  std::string test_file = "Test.CommandLines.Linux.txt";
-  ASSERT_TRUE( ra::filesystem::fileExists(test_file.c_str()) );
-
-  //load file in memory
-  ra::strings::StringVector content;
-  bool readSuccess = ra::gtesthelp::getTextFileContent(test_file.c_str(), content);
-  ASSERT_TRUE( readSuccess );
-
   libargvcodec::TerminalArgumentCodec codec;
 
-  //process each command lines
-  ra::strings::StringVector commands;
-  for(size_t i=0; i<content.size(); i++)
+  std::string test_file = "Test.CommandLines.Linux.txt";
+
+  TEST_DATA_LIST items;
+  bool file_loaded = loadCommandLineTestFile(test_file, items);
+  ASSERT_TRUE( file_loaded );
+
+  for(size_t i=0; i<items.size(); i++)
   {
+    const TEST_DATA & td = items[i];
+
     //show progress for each 10% step
     static int previous_progress_percent = 0;
-    int progress_percent = ((i+1)*100)/content.size();
+    int progress_percent = ((i+1)*100)/items.size();
     if (progress_percent % 10 == 0 && progress_percent > previous_progress_percent)
     {
       previous_progress_percent = progress_percent;
       printf("%d%%\n", progress_percent);
     }
 
-    const std::string & line = content[i];
-    if (isDashedLine(line))
+    //get command line and arguments from the file:
+    const std::string & file_cmdline = td.cmdline;
+    const ra::strings::StringVector & file_arguments = td.arguments;
+    
+    //compare againts codec
+    ra::strings::StringVector codec_arguments = toStringList(codec.decodeCommandLine(file_cmdline.c_str()));
+
+    //build a meaningful error message
+    std::string error_message = buildErrorString(file_cmdline, file_arguments, codec_arguments);
+
+    //assert codec arguments are equals to file arguments
+    ASSERT_EQ(file_arguments.size(), codec_arguments.size()) << error_message;
+    for(size_t j=0; j<file_arguments.size(); j++)
     {
-      //process current commands
-      if (commands.size() >= 2) //must be at least 2 lines long (a cmdline and at least 1 argument)
-      {
-        //get command line and arguments from the file:
-        std::string file_cmdline = commands[0];
-        commands.erase(commands.begin());
-        ra::strings::StringVector file_arguments = commands;
-
-        //compare againts codec
-        ra::strings::StringVector codec_arguments = toStringList(codec.decodeCommandLine(file_cmdline.c_str()));
-
-        //build a meaningful error message
-        std::string error_message = buildErrorString(file_cmdline, file_arguments, codec_arguments);
-
-        //assert codec arguments are equals to file arguments
-        ASSERT_EQ(file_arguments.size(), codec_arguments.size()) << error_message;
-        for(size_t j=0; j<file_arguments.size(); j++)
-        {
-          const std::string & expected_argument = file_arguments[j];
-          const std::string & codec_argument   = codec_arguments[j];
-          ASSERT_EQ(expected_argument, codec_argument) << error_message;
-        }
+      const std::string & expected_argument = file_arguments[j];
+      const std::string & codec_argument   = codec_arguments[j];
+      ASSERT_EQ(expected_argument, codec_argument) << error_message;
+    }
 
 #ifdef __linux__
-        //On Linux system, also try to validate content of test file againts a system() call.
+    //On Linux system, also try to validate content of test file againts a system() call.
 
-        ra::strings::StringVector system_arguments;
-        bool system_success = getArgumentsFromSystem(file_cmdline, system_arguments);
-        ASSERT_TRUE( system_success );
+    ra::strings::StringVector system_arguments;
+    bool system_success = getArgumentsFromSystem(file_cmdline, system_arguments);
+    ASSERT_TRUE( system_success );
 
-        //build a meaningful error message
-        error_message = buildErrorString(file_cmdline, file_arguments, system_arguments);
+    //build a meaningful error message
+    error_message = buildErrorString(file_cmdline, file_arguments, system_arguments);
 
-        //assert codec arguments are equals to file arguments
-        ASSERT_EQ(file_arguments.size(), system_arguments.size()) << error_message;
-        for(size_t j=0; j<file_arguments.size(); j++)
-        {
-          const std::string & expected_argument = file_arguments[j];
-          const std::string & system_argument   = system_arguments[j];
-          ASSERT_EQ(expected_argument, system_argument) << error_message;
-        }
-#endif //__linux__
-      }
-
-      //this command is completed
-      commands.clear();
-    }
-    else
+    //assert codec arguments are equals to file arguments
+    ASSERT_EQ(file_arguments.size(), system_arguments.size()) << error_message;
+    for(size_t j=0; j<file_arguments.size(); j++)
     {
-      commands.push_back(line); //that is a command line string or an argument string
+      const std::string & expected_argument = file_arguments[j];
+      const std::string & system_argument   = system_arguments[j];
+      ASSERT_EQ(expected_argument, system_argument) << error_message;
     }
+#endif //__linux__
   }
-
-  //all the file is now processed.
 }
 
 TEST_F(TestTerminalArgumentCodec, testLinuxCommandLine)
 {
-  std::string test_file = "Test.CommandLines.Linux.txt";
-  ASSERT_TRUE( ra::filesystem::fileExists(test_file.c_str()) );
-
-  //load file in memory
-  ra::strings::StringVector content;
-  bool readSuccess = ra::gtesthelp::getTextFileContent(test_file.c_str(), content);
-  ASSERT_TRUE( readSuccess );
-
   libargvcodec::TerminalArgumentCodec codec;
 
-  //process each command lines
-  ra::strings::StringVector commands;
-  for(size_t i=0; i<content.size(); i++)
+  std::string test_file = "Test.CommandLines.Linux.txt";
+
+  TEST_DATA_LIST items;
+  bool file_loaded = loadCommandLineTestFile(test_file, items);
+  ASSERT_TRUE( file_loaded );
+
+  for(size_t i=0; i<items.size(); i++)
   {
-    const std::string & line = content[i];
-    if (isDashedLine(line))
+    const TEST_DATA & td = items[i];
+
+    //show progress for each 10% step
+    static int previous_progress_percent = 0;
+    int progress_percent = ((i+1)*100)/items.size();
+    if (progress_percent % 10 == 0 && progress_percent > previous_progress_percent)
     {
-      //process current commands
-      if (commands.size() >= 2) //must be at least 2 lines long (a cmdline and at least 1 argument)
-      {
-        //get command line
-        std::string cmdline = commands[0];
-
-        //remove the command line from commands
-        commands.erase(commands.begin());
-
-        //remaining commands are expected arguments
-        ra::strings::StringVector expected_arguments = commands;
-
-        //decode with TerminalArgumentCodec
-        ra::strings::StringVector actual_arguments = toStringList(codec.decodeCommandLine(cmdline.c_str()));
-
-        //build a meaningful error message
-        std::string error_message = buildErrorString(cmdline, expected_arguments, actual_arguments);
-
-        //assert actual arguments are equals to expected arguments
-        ASSERT_EQ(expected_arguments.size(), actual_arguments.size()) << error_message;
-        for(size_t j=0; j<expected_arguments.size(); j++)
-        {
-          const std::string & expected_argument = expected_arguments[j];
-          const std::string & actual_argument   = actual_arguments[j];
-          ASSERT_EQ(expected_argument, actual_argument) << error_message;
-        }
-      }
-
-      //this command is completed
-      commands.clear();
+      previous_progress_percent = progress_percent;
+      printf("%d%%\n", progress_percent);
     }
-    else
+
+    //get command line and arguments from the file:
+    const std::string & cmdline = td.cmdline;
+    const ra::strings::StringVector & expected_arguments = td.arguments;  
+
+    //decode with TerminalArgumentCodec
+    ra::strings::StringVector actual_arguments = toStringList(codec.decodeCommandLine(cmdline.c_str()));
+
+    //build a meaningful error message
+    std::string error_message = buildErrorString(cmdline, expected_arguments, actual_arguments);
+
+    //assert actual arguments are equals to expected arguments
+    ASSERT_EQ(expected_arguments.size(), actual_arguments.size()) << error_message;
+    for(size_t j=0; j<expected_arguments.size(); j++)
     {
-      commands.push_back(line); //that is a command line string or an argument string
+      const std::string & expected_argument = expected_arguments[j];
+      const std::string & actual_argument   = actual_arguments[j];
+      ASSERT_EQ(expected_argument, actual_argument) << error_message;
     }
   }
-
-  //all the file is now processed.
 }
