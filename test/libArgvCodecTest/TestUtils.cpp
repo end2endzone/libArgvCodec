@@ -379,3 +379,50 @@ std::string buildErrorString(const std::string & iCmdLine, const ra::strings::St
 
   return desc;
 }
+
+bool loadCommandLineTestFile(const std::string & iPath, TEST_DATA_LIST & oItems)
+{
+  oItems.clear();
+
+  if (!ra::filesystem::fileExists(iPath.c_str()) )
+    return false;
+
+  //load file in memory
+  ra::strings::StringVector content;
+  bool readSuccess = ra::gtesthelp::getTextFileContent(iPath.c_str(), content);
+  if (!readSuccess)
+    return false;
+
+  //process each command lines
+  ra::strings::StringVector commands;
+  for(size_t i=0; i<content.size(); i++)
+  {
+    const std::string & line = content[i];
+    if (isDashedLine(line))
+    {
+      //process current commands
+      if (commands.size() >= 2) //must be at least 2 lines long (a cmdline and at least 1 argument)
+      {
+        //get command line and arguments from the file:
+        std::string file_cmdline = commands[0];
+        commands.erase(commands.begin());
+        ra::strings::StringVector file_arguments = commands;
+
+        //create a new item
+        TEST_DATA td;
+        td.cmdline = file_cmdline;
+        td.arguments = file_arguments;
+        oItems.push_back(td);
+      }
+
+      //this command is completed
+      commands.clear();
+    }
+    else
+    {
+      commands.push_back(line); //that is a command line string or an argument string
+    }
+  }
+
+  return true;
+}
