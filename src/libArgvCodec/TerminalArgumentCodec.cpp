@@ -113,6 +113,25 @@ std::string TerminalArgumentCodec::encodeArgument(const char * iValue)
 
   std::string escapedArg = iValue;
 
+  //Rule 4.*
+  if (!isStringArgument)
+  {
+    //Rule 4.1: The character `\` must be escaped with `\` (resulting in `\\`) when outside a string.
+    //relace \ characters by \\ characters
+    ra::strings::replace(escapedArg, "\\", "\\\\");
+  }
+  else if (isStringArgument && stringCharacter == '\"')
+  {
+    //Rule 4.4. Two consecutive `\` characters in a double-quotes string must be interpreted as a literal `\` character.
+    //relace \ characters by \\ characters
+    ra::strings::replace(escapedArg, "\\", "\\\\");
+  }
+  else if (isStringArgument && stringCharacter == '\'')
+  {
+    //Rule 4.5. The character `\` does not requires escaping when inside a single-quote string.
+    //nothing to do
+  }
+
   //Rule 3.*
   if (isStringArgument)
   {
@@ -144,25 +163,6 @@ std::string TerminalArgumentCodec::encodeArgument(const char * iValue)
 
     //relace ' by \'
     ra::strings::replace(escapedArg, "'", "\\'");
-  }
-
-  //Rule 4.*
-  if (!isStringArgument)
-  {
-    //Rule 4.1: The character `\` must be escaped with `\` (resulting in `\\`) when outside a string.
-    //relace \ characters by \\ characters
-    ra::strings::replace(escapedArg, "\\", "\\\\");
-  }
-  else if (isStringArgument && stringCharacter == '\"')
-  {
-    //Rule 4.4. Two consecutive `\` characters in a double-quotes string must be interpreted as a literal `\` character.
-    //relace \ characters by \\ characters
-    ra::strings::replace(escapedArg, "\\", "\\\\");
-  }
-  else if (isStringArgument && stringCharacter == '\'')
-  {
-    //Rule 4.5. The character `\` does not requires escaping when inside a single-quote string.
-    //nothing to do
   }
 
   //Rule 5.2: The shell characters `&`,`|`,`(`,`)`,`<`,`>` or `*` must be escapsed with `\` when outside a string.
