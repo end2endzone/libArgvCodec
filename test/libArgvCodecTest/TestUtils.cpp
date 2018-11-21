@@ -195,7 +195,7 @@ bool getArgumentsFromCreateProcess(const std::string & iCmdline, ra::strings::St
   oArguments.clear();
 
 #ifndef _WIN32
-  return true; // CreateProcess() API is not available.
+  return false; // CreateProcess() API is not available.
 #else
 
   //build a command using createprocess
@@ -371,6 +371,27 @@ std::string buildErrorString(const std::string & iCmdLine, const ra::strings::St
     desc += iExpectedArguments[j] + "\n";
   }
   desc += "but actually returned the following arguments:\n";
+  for(size_t j=0; j<iActualArguments.size(); j++)
+  {
+    desc += "  arg[" + ra::strings::toString(j) + "]: ";
+    desc += iActualArguments[j] + "\n";
+  }
+
+  return desc;
+}
+
+std::string buildErrorString(const ra::strings::StringVector & iArguments, const std::string & iActualCmdLine, const ra::strings::StringVector & iActualArguments)
+{
+  std::string desc;
+
+  desc += "The following arugments:\n";
+  for(size_t j=0; j<iArguments.size(); j++)
+  {
+    desc += "  arg[" + ra::strings::toString(j) + "]: ";
+    desc += iArguments[j] + "\n";
+  }
+  desc += "was encoded into the actual command line `" + iActualCmdLine + "`\n";
+  desc += "which decoded returns the following arguments:\n";
   for(size_t j=0; j<iActualArguments.size(); j++)
   {
     desc += "  arg[" + ra::strings::toString(j) + "]: ";

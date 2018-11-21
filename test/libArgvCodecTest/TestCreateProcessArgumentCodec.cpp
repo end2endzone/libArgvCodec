@@ -17,11 +17,15 @@ void TestCreateProcessArgumentCodec::TearDown()
 {
 }
 
-TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
+bool hasCommandPromptShellCharacters(const std::string & iCmdLine)
 {
-#ifndef _WIN32 //requires CreateProcess() API
-  return;
-#else
+  libargvcodec::CmdPromptArgumentCodec tmp;
+  bool hasCmdPromptShellCharacters = tmp.hasShellCharacters(iCmdLine.c_str());
+  return hasCmdPromptShellCharacters;
+}
+
+TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine_testfile)
+{
   libargvcodec::CreateProcessArgumentCodec codec;
 
   std::string test_file = "Test.CommandLines.Windows.txt";
@@ -48,12 +52,7 @@ TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
     const ra::strings::StringVector & file_arguments = td.arguments;
 
     //Skip this test if it contains command prompt shell characters because CreateProcessArgumentCodec codec does not support shell characters.
-    bool hasCmdPromptShellCharacters = false;
-    {
-      libargvcodec::CmdPromptArgumentCodec tmp;
-      hasCmdPromptShellCharacters = tmp.hasShellCharacters(file_cmdline.c_str());
-    }
-    if (hasCmdPromptShellCharacters)
+    if (hasCommandPromptShellCharacters(file_cmdline))
     {
       //next series of test data
       continue;
@@ -94,74 +93,89 @@ TEST_F(TestCreateProcessArgumentCodec, testDecodeCommandLine)
     }
 #endif //_WIN32
   }
-#endif
 }
 
-TEST_F(TestCreateProcessArgumentCodec, testEncodeCommandLine)
+TEST_F(TestCreateProcessArgumentCodec, testEncodeCommandLine_testfile)
 {
-#ifdef _WIN32 //requires CreateProcess() API
-  const char * inputFile = "TestShellCommandLines.txt";
+  libargvcodec::CreateProcessArgumentCodec codec;
 
-  ra::strings::StringVector testCmdLines;
-  ASSERT_TRUE( ra::gtesthelp::getTextFileContent(inputFile, testCmdLines) );
-  ASSERT_TRUE( testCmdLines.size() > 0 );
+  std::string test_file = "Test.CommandLines.Windows.txt";
 
-  printf("\n");
+  TEST_DATA_LIST items;
+  bool file_loaded = loadCommandLineTestFile(test_file, items);
+  ASSERT_TRUE( file_loaded );
 
-  //for each testCmdLines
-  for(size_t i=0; i<testCmdLines.size(); i++)
+  for(size_t i=0; i<items.size(); i++)
   {
-    std::string message;
+    const TEST_DATA & td = items[i];
 
-    //arrange
-    const std::string testCmdLine = testCmdLines[i];
-    message.append( ra::strings::format("Testing %d/%d\n", i+1, testCmdLines.size()) );
-    printf("%s", message.c_str());
+    //show progress for each 10% step
+    static int previous_progress_percent = 0;
+    int progress_percent = ((i+1)*100)/items.size();
+    if (progress_percent % 10 == 0 && progress_percent > previous_progress_percent)
+    {
+      previous_progress_percent = progress_percent;
+      printf("%d%%\n", progress_percent);
+    }
 
-    //compute the expected list of arguments
-    ArgumentList::StringList expectedArgs;
-    bool success = systemDecodeCommandLineArguments(testCmdLine.c_str(), expectedArgs);
-    ASSERT_TRUE(success) << message;
+    //get command line and arguments from the file:
+    const std::string & file_cmdline = td.cmdline;
+    ra::strings::StringVector file_arguments = td.arguments;
 
-    //build the list
+    //build an ArgumentList
     ArgumentList arglist;
-    arglist.init(expectedArgs);
-
-    //act
-    CreateProcessArgumentCodec c;
-    std::string cmdLine = c.encodeCommandLine(arglist);
-
-    //compute the actual list of arguments
-    ArgumentList::StringList actualArgs;
-    success = createProcessDecodeCommandLineArguments(cmdLine.c_str(), actualArgs);
-    ASSERT_TRUE(success) << message;
-
-    //debug
-    message.append("  Expecting\n");
-    for(size_t j=1; j<expectedArgs.size(); j++)
     {
-      const std::string & arg = expectedArgs[j];
-      message.append( ra::strings::format("    argv[%d]=%s\n", j, arg.c_str()) );
-    }
-    message.append("  Actuals:\n");
-    message.append( ra::strings::format("    cmdline=%s\n", cmdLine.c_str()) );
-    for(size_t j=1; j<actualArgs.size(); j++)
-    {
-      const std::string & arg = actualArgs[j];
-      message.append( ra::strings::format("    argv[%d]=%s\n", j, arg.c_str()) );
+      ra::strings::StringVector tmp_arguments = file_arguments;
+
+      //add a fake executable
+      #ifdef _WIN32
+      tmp_arguments.insert(tmp_arguments.begin(), "showargs.exe");
+      #elif defined(__linux__)
+      tmp_arguments.insert(tmp_arguments.begin(), "./showargs");
+      #endif
+
+      //initialize the ArgumentList class
+      arglist.init(tmp_arguments);
     }
 
-    //assert
-    ASSERT_EQ( expectedArgs.size(), actualArgs.size() ) << message;
-    //compare each argument
-    for(size_t j=1; j<expectedArgs.size(); j++) //skip first argument since executable names may differ
+    //encode the arguments into a command line
+    std::string generated_cmdline = codec.encodeCommandLine(arglist);
+
+    //decode the generated command line
+    ra::strings::StringVector actual_arguments = toStringList(codec.decodeCommandLine(generated_cmdline.c_str()));
+
+    //build a meaningful error message
+    std::string error_message = buildErrorString(file_arguments, generated_cmdline, actual_arguments);
+
+    //assert actual arguments are equals to expected arguments
+    ASSERT_EQ(file_arguments.size(), actual_arguments.size()) << error_message;
+    for(size_t j=0; j<file_arguments.size(); j++)
     {
-      const char * expectedArg = expectedArgs[j].c_str();
-      const char * actualArg = actualArgs[j].c_str();
-      ASSERT_STREQ(expectedArg, actualArg) << message;
+      const std::string & expected_argument = file_arguments[j];
+      const std::string & actual_argument   = actual_arguments[j];
+      ASSERT_EQ(expected_argument, actual_argument) << error_message;
     }
+
+#ifdef _WIN32
+    //On Windows system, also try to validate the generated command line with a CreateProcess() call.
+
+    ra::strings::StringVector system_arguments;
+    bool system_success = getArgumentsFromCreateProcess(generated_cmdline, system_arguments);
+    ASSERT_TRUE( system_success );
+
+    //build a meaningful error message
+    error_message = buildErrorString(file_arguments, generated_cmdline, system_arguments);
+
+    //assert codec arguments are equals to file arguments
+    ASSERT_EQ(file_arguments.size(), system_arguments.size()) << error_message;
+    for(size_t j=0; j<file_arguments.size(); j++)
+    {
+      const std::string & expected_argument = file_arguments[j];
+      const std::string & system_argument   = system_arguments[j];
+      ASSERT_EQ(expected_argument, system_argument) << error_message;
+    }
+#endif //_WIN32
   }
-#endif
 }
 
 void prepareTestCreateProcessEncodeArgument(const char * iRawArguementValue, std::string & oEscapedArgument, std::string & oCreateProcessArgumentValue)

@@ -454,7 +454,7 @@ TEST_F(TestTerminalArgumentCodec, testDecodeCommandLine)
   }
 }
 
-TEST_F(TestTerminalArgumentCodec, testSystem)
+TEST_F(TestTerminalArgumentCodec, testDecodeCommandLine_testfile)
 {
   //The objective of this unit test is to validate the content of file 'Test.CommandLines.Linux.txt' with TerminalArgumentCodec::decodeCommandLine() implementation.
   //On Windows systems, the content of file 'Test.CommandLines.Linux.txt' is also validated with a system() call.
@@ -521,7 +521,7 @@ TEST_F(TestTerminalArgumentCodec, testSystem)
   }
 }
 
-TEST_F(TestTerminalArgumentCodec, testLinuxCommandLine)
+TEST_F(TestTerminalArgumentCodec, testEncodeCommandLine_testfile)
 {
   libargvcodec::TerminalArgumentCodec codec;
 
@@ -545,22 +545,62 @@ TEST_F(TestTerminalArgumentCodec, testLinuxCommandLine)
     }
 
     //get command line and arguments from the file:
-    const std::string & cmdline = td.cmdline;
-    const ra::strings::StringVector & expected_arguments = td.arguments;  
+    const std::string & file_cmdline = td.cmdline;
+    const ra::strings::StringVector & file_arguments = td.arguments;
 
-    //decode with TerminalArgumentCodec
-    ra::strings::StringVector actual_arguments = toStringList(codec.decodeCommandLine(cmdline.c_str()));
+    //build an ArgumentList
+    ArgumentList arglist;
+    {
+      ra::strings::StringVector tmp_arguments = file_arguments;
+
+      //add a fake executable
+      #ifdef _WIN32
+      tmp_arguments.insert(tmp_arguments.begin(), "showargs.exe");
+      #elif defined(__linux__)
+      tmp_arguments.insert(tmp_arguments.begin(), "./showargs");
+      #endif
+
+      //initialize the ArgumentList class
+      arglist.init(tmp_arguments);
+    }
+
+    //encode the arguments into a command line
+    std::string generated_cmdline = codec.encodeCommandLine(arglist);
+
+    //decode the generated command line
+    ra::strings::StringVector actual_arguments = toStringList(codec.decodeCommandLine(generated_cmdline.c_str()));
 
     //build a meaningful error message
-    std::string error_message = buildErrorString(cmdline, expected_arguments, actual_arguments);
+    std::string error_message = buildErrorString(file_arguments, generated_cmdline, actual_arguments);
 
     //assert actual arguments are equals to expected arguments
-    ASSERT_EQ(expected_arguments.size(), actual_arguments.size()) << error_message;
-    for(size_t j=0; j<expected_arguments.size(); j++)
+    ASSERT_EQ(file_arguments.size(), actual_arguments.size()) << error_message;
+    for(size_t j=0; j<file_arguments.size(); j++)
     {
-      const std::string & expected_argument = expected_arguments[j];
+      const std::string & expected_argument = file_arguments[j];
       const std::string & actual_argument   = actual_arguments[j];
       ASSERT_EQ(expected_argument, actual_argument) << error_message;
     }
+
+#ifdef __linux__
+    //On Linux system, also try to validate the generated command line with a system() call.
+
+    ra::strings::StringVector system_arguments;
+    bool system_success = getArgumentsFromSystem(generated_cmdline, system_arguments);
+    ASSERT_TRUE( system_success );
+
+    //build a meaningful error message
+    error_message = buildErrorString(file_arguments, generated_cmdline, system_arguments);
+
+    //assert codec arguments are equals to file arguments
+    ASSERT_EQ(file_arguments.size(), system_arguments.size()) << error_message;
+    for(size_t j=0; j<file_arguments.size(); j++)
+    {
+      const std::string & expected_argument = file_arguments[j];
+      const std::string & system_argument   = system_arguments[j];
+      ASSERT_EQ(expected_argument, system_argument) << error_message;
+    }
+#endif //__linux__
+
   }
 }

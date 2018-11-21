@@ -42,14 +42,14 @@ int main(int argc, char* argv[])
   ::testing::GTEST_FLAG(filter) = "*";
   ::testing::InitGoogleTest(&argc, argv);
 
-  //Disable Windows tests on Linux
+  //Disable some tests on Linux
 #ifdef __linux__
-  ::testing::GTEST_FLAG(filter) = ra::gtesthelp::mergeFilter("", "TestCmdPromptArgumentCodec.*:TestCreateProcessArgumentCodec.*", ::testing::GTEST_FLAG(filter).c_str());
+  ::testing::GTEST_FLAG(filter) = ra::gtesthelp::mergeFilter("", "TestCmdPromptArgumentCodec.testEncodeArgument:TestCreateProcessArgumentCodec.testEncodeArgument", ::testing::GTEST_FLAG(filter).c_str());
 #endif
 
-  //Disable Linux tests on Windows
+  //Do not disable any test on Windows
 #ifdef _WIN32
-  ::testing::GTEST_FLAG(filter) = ra::gtesthelp::mergeFilter("", "TestTerminalArgumentCodec.testSystem", ::testing::GTEST_FLAG(filter).c_str());
+  //::testing::GTEST_FLAG(filter) = ra::gtesthelp::mergeFilter("", "", ::testing::GTEST_FLAG(filter).c_str());
 #endif
 
   int wResult = RUN_ALL_TESTS(); //Find and run all tests

@@ -16,7 +16,7 @@ void TestCmdPromptArgumentCodec::TearDown()
 {
 }
 
-TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
+TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine_testfile)
 {
   libargvcodec::CmdPromptArgumentCodec codec;
 
@@ -43,38 +43,59 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine)
     const std::string & file_cmdline = td.cmdline;
     ra::strings::StringVector file_arguments = td.arguments;
 
-    //add a fake executable
-#ifdef _WIN32
-    file_arguments.insert(file_arguments.begin(), "showargs.exe");
-#elif defined(__linux__)
-    file_arguments.insert(file_arguments.begin(), "./showargs");
-#endif
-
-    //build the list
+    //build an ArgumentList
     ArgumentList arglist;
-    arglist.init(file_arguments);
+    {
+      ra::strings::StringVector tmp_arguments = file_arguments;
 
-    //remove the fake executable
-    file_arguments.erase(file_arguments.begin());
+      //add a fake executable
+      #ifdef _WIN32
+      tmp_arguments.insert(tmp_arguments.begin(), "showargs.exe");
+      #elif defined(__linux__)
+      tmp_arguments.insert(tmp_arguments.begin(), "./showargs");
+      #endif
 
-    //act
-    std::string actual_cmdLine = codec.encodeCommandLine(arglist);
+      //initialize the ArgumentList class
+      arglist.init(tmp_arguments);
+    }
 
-    //validate the returned command line with decodeCommandLine() api
-    ra::strings::StringVector actual_arguments = toStringList(codec.decodeCommandLine(actual_cmdLine.c_str()));
+    //encode the arguments into a command line
+    std::string generated_cmdline = codec.encodeCommandLine(arglist);
 
-    ASSERT_EQ(file_arguments, actual_arguments) << buildErrorString("file_arguments", file_arguments, "actual_arguments", actual_arguments);
+    //decode the generated command line
+    ra::strings::StringVector actual_arguments = toStringList(codec.decodeCommandLine(generated_cmdline.c_str()));
+
+    //build a meaningful error message
+    std::string error_message = buildErrorString(file_arguments, generated_cmdline, actual_arguments);
+
+    //assert actual arguments are equals to expected arguments
+    ASSERT_EQ(file_arguments.size(), actual_arguments.size()) << error_message;
+    for(size_t j=0; j<file_arguments.size(); j++)
+    {
+      const std::string & expected_argument = file_arguments[j];
+      const std::string & actual_argument   = actual_arguments[j];
+      ASSERT_EQ(expected_argument, actual_argument) << error_message;
+    }
 
 #ifdef _WIN32
-    //if on the right platform, use a system() call to get the list of arguments back
-    //and compare against the expected list
+    //On Windows system, also try to validate the generated command line with a system() call.
 
     ra::strings::StringVector system_arguments;
-    bool system_ok = getArgumentsFromSystem(actual_cmdLine, system_arguments);
-    ASSERT_TRUE(system_ok);
+    bool system_success = getArgumentsFromSystem(generated_cmdline, system_arguments);
+    ASSERT_TRUE( system_success );
 
-    ASSERT_EQ(file_arguments, system_arguments) << buildErrorString("file_arguments", file_arguments, "system_arguments", system_arguments);
-#endif
+    //build a meaningful error message
+    error_message = buildErrorString(file_arguments, generated_cmdline, system_arguments);
+
+    //assert codec arguments are equals to file arguments
+    ASSERT_EQ(file_arguments.size(), system_arguments.size()) << error_message;
+    for(size_t j=0; j<file_arguments.size(); j++)
+    {
+      const std::string & expected_argument = file_arguments[j];
+      const std::string & system_argument   = system_arguments[j];
+      ASSERT_EQ(expected_argument, system_argument) << error_message;
+    }
+#endif //_WIN32
   }
 }
 
@@ -173,7 +194,7 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeArgument)
 #endif
 }
 
-TEST_F(TestCmdPromptArgumentCodec, testSystem)
+TEST_F(TestCmdPromptArgumentCodec, testDecodeArgument_testfile)
 {
   //The objective of this unit test is to validate the content of file 'Test.CommandLines.Windows.txt' with CmdPromptArgumentCodec::decodeCommandLine() implementation.
   //On Windows systems, the content of file 'Test.CommandLines.Windows.txt' is also validated with a system() call.
