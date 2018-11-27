@@ -137,7 +137,7 @@ bool getArgumentsFromSystem(const std::string & iCmdLineString, ra::strings::Str
     cmdline.append("\"");
 
     //and try again
-    returncode = system(cmdline.c_str());
+    return_code = system(cmdline.c_str());
   }
 #endif
   if (return_code != 0)
