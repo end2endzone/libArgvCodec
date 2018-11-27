@@ -8,21 +8,8 @@
 #include <gtest/gtest.h>
 #include "rapidassist/gtesthelp.h"
 
-#include "ArgumentLister.h"
-
 int main(int argc, char* argv[])
 {
-  //Handle argument stubs
-  if (isPrinterExec())
-  {
-    return printArgs(argc, argv);
-  }
-  if (isLoggerExec())
-  {
-    return logArgs(argc, argv);
-  }
-  initExecStubs();
-
   //init google test
   if (ra::gtesthelp::isProcessorX86())
   {

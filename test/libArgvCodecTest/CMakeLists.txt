@@ -2,8 +2,6 @@ add_executable(libargvcodec_unittest
   ${LIBARGVCODEC_EXPORT_HEADER}
   ${LIBARGVCODEC_VERSION_HEADER}
   ${LIBARGVCODEC_CONFIG_HEADER}
-  ArgumentLister.cpp
-  ArgumentLister.h
   main.cpp
   TestArgumentList.cpp
   TestArgumentList.h
