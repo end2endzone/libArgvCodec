@@ -134,10 +134,10 @@ bool getArgumentsFromSystem(const std::string & iCmdLineString, ra::strings::Str
     //Verify for the following error: "sh: 1: Syntax error: Unterminated quoted string"
     //These tests should be ignored since Linux bash does not support unterminated quoted string.
     //Endding the quoted command line string
-    cmdLine.append("\"");
+    cmdline.append("\"");
 
     //and try again
-    returncode = system(cmdLine.c_str());
+    returncode = system(cmdline.c_str());
   }
 #endif
   if (return_code != 0)
