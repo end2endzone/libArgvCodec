@@ -128,6 +128,18 @@ bool getArgumentsFromSystem(const std::string & iCmdLineString, ra::strings::Str
 
   //execute the command line
   int return_code = system(cmdline.c_str());
+#ifdef __linux__
+  if (return_code != 0)
+  {
+    //Verify for the following error: "sh: 1: Syntax error: Unterminated quoted string"
+    //These tests should be ignored since Linux bash does not support unterminated quoted string.
+    //Endding the quoted command line string
+    cmdLine.append("\"");
+
+    //and try again
+    returncode = system(cmdLine.c_str());
+  }
+#endif
   if (return_code != 0)
   {
     printf("Failed executing command line:%s\n", cmdline.c_str());

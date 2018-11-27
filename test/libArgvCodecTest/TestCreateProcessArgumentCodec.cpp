@@ -178,6 +178,19 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeCommandLine_testfile)
   }
 }
 
+std::string getFirstArgumentFromCreateProcess(const char * iValue)
+{
+  ra::strings::StringVector arguments;
+  bool success = getArgumentsFromCreateProcess(iValue, arguments);
+  if (!success)
+    return "";
+  if (arguments.size() != 1)
+    return "";
+
+  std::string confirmedArgumentValue = arguments[0];
+  return confirmedArgumentValue;
+}
+
 void prepareTestCreateProcessEncodeArgument(const char * iRawArguementValue, std::string & oEscapedArgument, std::string & oCreateProcessArgumentValue)
 {
 #ifdef _WIN32 //requires CreateProcess() API
@@ -193,7 +206,7 @@ void prepareTestCreateProcessEncodeArgument(const char * iRawArguementValue, std
   //act
   CreateProcessArgumentCodec c;
   oEscapedArgument = c.encodeArgument(iRawArguementValue);
-  oCreateProcessArgumentValue = createProcessDecodeArgument( oEscapedArgument.c_str() );
+  oCreateProcessArgumentValue = getFirstArgumentFromCreateProcess( oEscapedArgument.c_str() );
 
   //debug
   printf("Testing decoded argument argv[1]=%s\n", iRawArguementValue);

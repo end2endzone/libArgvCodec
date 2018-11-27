@@ -99,6 +99,19 @@ TEST_F(TestCmdPromptArgumentCodec, testEncodeCommandLine_testfile)
   }
 }
 
+std::string getFirstArgumentFromSystem(const char * iValue)
+{
+  ra::strings::StringVector arguments;
+  bool success = getArgumentsFromSystem(iValue, arguments);
+  if (!success)
+    return "";
+  if (arguments.size() != 1)
+    return "";
+
+  std::string confirmedArgumentValue = arguments[0];
+  return confirmedArgumentValue;
+}
+
 void prepareTestCmdPromptEncodeArgument(const char * iRawArguementValue, std::string & oEscapedArgument, std::string & oSystemArgumentValue)
 {
 #ifdef _WIN32
@@ -113,7 +126,7 @@ void prepareTestCmdPromptEncodeArgument(const char * iRawArguementValue, std::st
   //act
   CmdPromptArgumentCodec c;
   oEscapedArgument = c.encodeArgument(iRawArguementValue);
-  oSystemArgumentValue = systemDecodeArgument( oEscapedArgument.c_str() );
+  oSystemArgumentValue = getFirstArgumentFromSystem( oEscapedArgument.c_str() );
 
   //debug
   printf("Testing decoded argument argv[1]=%s\n", iRawArguementValue);
