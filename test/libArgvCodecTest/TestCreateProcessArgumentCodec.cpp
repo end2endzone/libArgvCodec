@@ -4,6 +4,7 @@
 #include "rapidassist/strings.h"
 #include "rapidassist/gtesthelp.h"
 #include "rapidassist/filesystem.h"
+#include "rapidassist/cppencoder.h"
 #include "TestUtils.h"
 
 using namespace libargvcodec;
@@ -286,4 +287,64 @@ TEST_F(TestCreateProcessArgumentCodec, testEncodeArgument)
   //-----------------------------------------------------------------------------------
 
 #endif
+}
+
+TEST_F(TestCreateProcessArgumentCodec, testPrintableCharacters)
+{
+  libargvcodec::CreateProcessArgumentCodec codec;
+ 
+  //build the list of test items
+  TEST_DATA_LIST items;
+  for(int i=-128; i<=127; i++)
+  {
+    char c = (char)i;
+    char cStr[] = {c, 0};
+ 
+    if (!ra::cppencoder::isPrintableCharacter(c))
+      continue;
+    if (c == '\n') //not a supported argument character
+      continue;
+    if (c == '\r') //not a supported argument character
+      continue;
+ 
+    //create test data
+    TEST_DATA td;
+    td.cmdline = codec.encodeArgument(cStr); //encode with codec
+    td.arguments.push_back( std::string(cStr) );
+    items.push_back(td);
+  }
+ 
+  //test each items
+  for(size_t i=0; i<items.size(); i++)
+  {
+    const TEST_DATA & td = items[i];
+ 
+    //show progress for each 10% step
+    static int previous_progress_percent = 0;
+    int progress_percent = ((i+1)*100)/items.size();
+    if (progress_percent % 10 == 0 && progress_percent > previous_progress_percent)
+    {
+      previous_progress_percent = progress_percent;
+      printf("%d%%\n", progress_percent);
+    }
+ 
+    //get command line and arguments from the file:
+    const std::string & test_cmdline = td.cmdline;
+    const ra::strings::StringVector & test_arguments = td.arguments;
+ 
+    //compare againts codec
+    ra::strings::StringVector codec_arguments = toStringList(codec.decodeCommandLine(test_cmdline.c_str()));
+ 
+    //build a meaningful error message
+    std::string error_message = buildErrorString(test_cmdline, test_arguments, codec_arguments);
+ 
+    //assert codec arguments are equals to file arguments
+    ASSERT_EQ(test_arguments.size(), codec_arguments.size()) << error_message;
+    for(size_t j=0; j<test_arguments.size(); j++)
+    {
+      const std::string & expected_argument = test_arguments[j];
+      const std::string & codec_argument   = codec_arguments[j];
+      ASSERT_EQ(expected_argument, codec_argument) << error_message;
+    }
+  }
 }
