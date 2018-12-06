@@ -50,9 +50,10 @@ int main(int argc, char* argv[])
   ArgumentList arglist;
   arglist.insert("foo.exe"); //argv[0] is always the path of the current process
 
+  cout << "Enter the value of each arguments: " << endl;
   for(int i=0; i<numArguments; i++)
   {
-    cout << "Enter the value of argument #" << i+1 << ": ";
+    cout << "#" << i+1 << ": ";
 
     std::string value;
     std::getline(std::cin, value);
@@ -62,25 +63,28 @@ int main(int argc, char* argv[])
   cout << "done." << endl;
   cout << endl;
 
+  cout << "The result command line for each encoder is the following:" << endl;
+  cout << endl;
+
   //Encode
   {
     CmdPromptArgumentCodec codec;
     std::string cmdLine = codec.encodeCommandLine(arglist);
-    cout << "The encoded command line for the Windows Command Prompt is the following:" << endl;
+    cout << "Windows Command Prompt:" << endl;
     cout << cmdLine << endl;
     cout << endl;
   }
   {
     CreateProcessArgumentCodec codec;
     std::string cmdLine = codec.encodeCommandLine(arglist);
-    cout << "The encoded command line for Windows CreateProcess() api is the following:" << endl;
+    cout << "Windows CreateProcess() API:" << endl;
     cout << cmdLine << endl;
     cout << endl;
   }
   {
     TerminalArgumentCodec codec;
     std::string cmdLine = codec.encodeCommandLine(arglist);
-    cout << "The encoded command line for the Linux Terminal is the following:" << endl;
+    cout << "Linux Terminal:" << endl;
     cout << cmdLine << endl;
     cout << endl;
   }
