@@ -7,6 +7,7 @@
 #include "rapidassist/filesystem.h"
 #include "rapidassist/process.h"
 #include "rapidassist/gtesthelp.h"
+#include "rapidassist/environment.h"
 
 //CreateProcess() unit test support
 #ifdef _WIN32
@@ -84,36 +85,16 @@ bool getArgumentsFromSystem(const std::string & iCmdLineString, ra::strings::Str
   //define a tmp file and a batch file for testing
   const std::string file_prefix = "showargs.";
   std::string random_string = ra::random::getRandomString(10);
-  std::string tmp_file    = file_prefix + random_string + std::string(".output.tmp");
-#if defined(_WIN32)
-  const std::string call_method = "call ";
-  std::string script_file = file_prefix + random_string + std::string(".script.bat");
-#elif defined(__linux__)
-  const std::string call_method = "source ";
-  std::string script_file = file_prefix + random_string + std::string(".script.sh");
-#endif
-
-  //build the script file
-  FILE * f = fopen(script_file.c_str(), "w");
-  if (!f)
-  {
-    printf("Unable to create script file '%s'\n", script_file.c_str());
-    return false;
-  }
-#if defined(_WIN32)
-  fprintf(f, "@echo off\n");
-  fprintf(f, "\"%s\" %s\n", getShowArgsExecutablePath().c_str(), iCmdLineString.c_str());
-#elif defined(__linux__)
-  fprintf(f, "./\"%s\" %s\n", getShowArgsExecutablePath().c_str(), iCmdLineString.c_str());
-#endif
-  fclose(f);
+  std::string tmp_file = file_prefix + random_string + std::string(".output.tmp");
 
   //build command line
   std::string cmdline;
-  cmdline = call_method;
-  cmdline += script_file;
-  cmdline += " >>";
-  cmdline += tmp_file;
+#ifdef __linux__
+  cmdline += "./";
+#endif
+  cmdline += getShowArgsExecutablePath();
+  cmdline += " ";
+  cmdline += iCmdLineString;
 
   //delete the tmp file if it already exists
   if (ra::filesystem::fileExists(tmp_file.c_str()))
@@ -125,6 +106,9 @@ bool getArgumentsFromSystem(const std::string & iCmdLineString, ra::strings::Str
       return false;
     }
   }
+
+  //define environment variable to force showargs executable to output to a file instead of stdout
+  ra::environment::setEnvironmentVariable("showargs_output", tmp_file.c_str());
 
   //execute the command line
   int return_code = system(cmdline.c_str());
@@ -183,17 +167,6 @@ bool getArgumentsFromSystem(const std::string & iCmdLineString, ra::strings::Str
     if (!deleted)
     {
       printf("Failed deleting file '%s'\n", tmp_file.c_str());
-      return false;
-    }
-  }
-
-  //delete the script file
-  if (ra::filesystem::fileExists(script_file.c_str()))
-  {
-    bool deleted = ra::filesystem::deleteFile(script_file.c_str());
-    if (!deleted)
-    {
-      printf("Failed deleting file '%s'\n", script_file.c_str());
       return false;
     }
   }
