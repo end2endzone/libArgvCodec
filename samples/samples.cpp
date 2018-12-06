@@ -30,19 +30,19 @@
 int demo_find_arguments(int argc, char **argv)
 {
   //The ArgumentList class encapsulates a list of arguments.
-  //Call the `init()` method using the application’s `argc` and `argv` parameters.
+  //Call the `init()` method using the application's `argc` and `argv` parameters.
   //This initialize the instance with a copy of all the parameters.
   libargvcodec::ArgumentList args;
   args.init(argc, argv); //copy the arguments for manipulation
   
-  //Find optional application arguments
+  //Find optional application arguments:
   bool isVerbose = args.findOption("verbose"); // searching for `-verbose`, `--verbose` or `/verbose`.
   
   //Find mandatory application arguments:
-  //  application input file:
+  // input_file:
   std::string input_file;
   int input_file_index = -1;
-  bool has_input_file = args.findValue("input_file", input_file_index, input_file); // searching for `-file=foobar`, `--file=foobar` or `/file=foobar`.
+  bool has_input_file = args.findValue("input_file", input_file_index, input_file); // searching for `-input_file=foobar`, `--input_file=foobar` or `/input_file=foobar`.
   if (!has_input_file)
   {
     printf("Missing mandatory argument 'input_file'.\n");
@@ -64,24 +64,24 @@ int demo_find_arguments(int argc, char **argv)
 
 int demo_unknown_arguments(int argc, char **argv)
 {
-  //This initialize the instance with a copy of all the parameters.
+  //initialize the instance with a copy of all the parameters.
   libargvcodec::ArgumentList args;
   args.init(argc, argv);
 
-  //Find optional application arguments
+  //find optional application arguments:
   bool isVerbose = args.extractOption("verbose");
   
-  //Find mandatory application arguments:
+  //find mandatory application arguments:
   std::string input_file;
   bool has_input_file = args.extractValue("input_file", input_file);
-  //do something if 'has_input_file' is false
+  //TODO: do something if 'has_input_file' is false
 
   int repeat = 0;
   bool has_repeat = args.extractValue("repeat", repeat);
-  //do something if 'has_repeat' is false
+  //TODO: do something if 'has_repeat' is false
 
-  //remaining arguments are unknown to the application
-  //return an error if user entered unknown arguments
+  //remaining arguments are unknown to the application.
+  //return an error if user entered unknown arguments.
   if (args.getArgc() > 1)
   {
     for(int i=1; i<args.getArgc(); i++)
