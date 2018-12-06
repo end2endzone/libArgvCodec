@@ -283,8 +283,7 @@ bool CmdPromptArgumentCodec::isShellCharacter(const char c)
   case ')':
   case '<':
   case '>':
-  case '%':
-  case '!':
+  case '%': // % is a special character, not a shell character. It must be escaped to protect against "%PATH%" constructions. The character is a shell character in batch files.
     return true;
   default:
     return false;
