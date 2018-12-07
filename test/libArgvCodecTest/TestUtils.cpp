@@ -108,7 +108,10 @@ bool getArgumentsFromSystem(const std::string & iCmdLineString, ra::strings::Str
   }
 
   //define environment variable to force showargs executable to output to a file instead of stdout
-  ra::environment::setEnvironmentVariable("showargs_output", tmp_file.c_str());
+  const char * env_var_name = "showargs_output";
+  const char * env_var_value = tmp_file.c_str();
+  ra::environment::setEnvironmentVariable(env_var_name, env_var_value);
+  env_var_value = NULL;
 
   //execute the command line
   int return_code = system(cmdline.c_str());
@@ -124,6 +127,10 @@ bool getArgumentsFromSystem(const std::string & iCmdLineString, ra::strings::Str
     return_code = system(cmdline.c_str());
   }
 #endif
+
+  //undefine environment variable to prevent issues when other functions calls showargs executable.
+  ra::environment::setEnvironmentVariable(env_var_name, env_var_value);
+
   if (return_code != 0)
   {
     printf("Failed executing command line:%s\n", cmdline.c_str());
