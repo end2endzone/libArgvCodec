@@ -66,7 +66,7 @@ Note: The character sequence `\^"` can also be visible outside a string.
 | ^"a b^"c     | a bc    |         |         |
 | a^"b c^"     | ab c    |         |         |
 
-5. The following characters are special shell characters:   &,<,>,(,),|,% or !
+5. The following characters are special shell characters:   &,<,>,(,),| or %
     1. Shell characters must be read as plain text when inside a string.
 
 | Command Line | argv[1] | argv[2] | argv[3] |
