@@ -3,6 +3,7 @@ Changes for 1.2.0:
 * New Feature: Created TerminalArgumentCodec class to encode/decode arguments on Linux.
 * Fixed issue #1 : Drop support for arguments parsing and validation.
 * Fixed issue #6 : Unit test failure on Windows.
+* Fixed issue #3 : Missing MIT License header in source files.
 
 Changes for 1.1.0:
 
