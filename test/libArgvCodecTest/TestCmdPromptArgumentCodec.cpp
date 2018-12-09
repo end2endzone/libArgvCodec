@@ -378,3 +378,83 @@ TEST_F(TestCmdPromptArgumentCodec, testPrintableCharacters)
 #endif // _WIN32
   }
 }
+
+TEST_F(TestCmdPromptArgumentCodec, testEnvironmentVariables)
+{
+  libargvcodec::CmdPromptArgumentCodec codec;
+
+  //prepare encoding that refers to environment variables.
+  const char * base_tests[] = {
+    "a%ABCDEFGH%z",   // does NOT exists
+    "a%TEMP%z",       // does exists
+    "a^%TEMP^%z",     // pre-escaped string for command prompt.
+    "a%%TEMP%%z",     // pre-escaped string for batch files.
+    "a\"%%TEMP%%\"z", // unknown
+  };
+  size_t num_base_tests = sizeof(base_tests)/sizeof(base_tests[0]);
+
+  //build the list of test items
+  TEST_DATA_LIST items;
+  for(int i=0; i<num_base_tests; i++)
+  { 
+    //create test data
+    TEST_DATA td;
+    td.cmdline = codec.encodeArgument(base_tests[i]); //encode with codec
+    td.arguments.push_back( std::string(base_tests[i]) );
+    items.push_back(td);
+  }
+ 
+  //test each items
+  for(size_t i=0; i<items.size(); i++)
+  {
+    const TEST_DATA & td = items[i];
+ 
+    //show progress for each 10% step
+    static int previous_progress_percent = 0;
+    int progress_percent = ((i+1)*100)/items.size();
+    if (progress_percent % 10 == 0 && progress_percent > previous_progress_percent)
+    {
+      previous_progress_percent = progress_percent;
+      printf("%d%%\n", progress_percent);
+    }
+ 
+    //get command line and arguments from the file:
+    const std::string & test_cmdline = td.cmdline;
+    const ra::strings::StringVector & test_arguments = td.arguments;
+ 
+    //compare againts codec
+    ra::strings::StringVector codec_arguments = toStringList(codec.decodeCommandLine(test_cmdline.c_str()));
+ 
+    //build a meaningful error message
+    std::string error_message = buildErrorString(test_cmdline, test_arguments, codec_arguments);
+ 
+    //assert codec arguments are equals to file arguments
+    ASSERT_EQ(test_arguments.size(), codec_arguments.size()) << error_message;
+    for(size_t j=0; j<test_arguments.size(); j++)
+    {
+      const std::string & expected_argument = test_arguments[j];
+      const std::string & codec_argument   = codec_arguments[j];
+      ASSERT_EQ(expected_argument, codec_argument) << error_message;
+    }
+ 
+#ifdef _WIN32
+    //On Windows system, also try to validate content of test file againts a system() call.
+ 
+    ra::strings::StringVector system_arguments;
+    bool system_success = getArgumentsFromSystem(test_cmdline, system_arguments);
+    ASSERT_TRUE( system_success );
+ 
+    //build a meaningful error message
+    error_message = buildErrorString(test_cmdline, test_arguments, system_arguments);
+ 
+    //assert codec arguments are equals to file arguments
+    ASSERT_EQ(test_arguments.size(), system_arguments.size()) << error_message;
+    for(size_t j=0; j<test_arguments.size(); j++)
+    {
+      const std::string & expected_argument = test_arguments[j];
+      const std::string & system_argument   = system_arguments[j];
+      ASSERT_EQ(expected_argument, system_argument) << error_message;
+    }
+#endif // _WIN32
+  }
+}
