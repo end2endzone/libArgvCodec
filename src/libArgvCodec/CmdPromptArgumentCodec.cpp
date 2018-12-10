@@ -131,9 +131,19 @@ std::string CmdPromptArgumentCodec::encodeArgument(const char * iValue)
       //escape character
       if (isStringArgument && !isCaretStringArgument)
       {
-        //Rule 5.1.
-        //special shell character inside a string which is safe to *NOT* escape
-        escapedArg.append(1, c);
+        if (c == '%')
+        {
+          //Rule 5.1 (EXCEPTION).
+          //The `%` character cannot be escaped when inside a string. To prevent environment string expansion with the `%` character (for example `%TEMP%`), the string can be closed right after the `%` character. The following characters should be inserted in the same string. For example, the character sequence `%TEMP%` in a string must be escaped as `"%"TEMP%""`.
+          escapedArg.append(1, c);
+          escapedArg.append(1, '\"');
+        }
+        else
+        {
+          //Rule 5.1.
+          //special shell character inside a string which is safe to *NOT* escape
+          escapedArg.append(1, c);
+        }
       }
       else
       {

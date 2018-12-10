@@ -385,11 +385,11 @@ TEST_F(TestCmdPromptArgumentCodec, testEnvironmentVariables)
 
   //prepare encoding that refers to environment variables.
   const char * base_tests[] = {
-    "a%ABCDEFGH%z",   // does NOT exists
-    "a%TEMP%z",       // does exists
+    "a%ABCDEFGH%z",   // environment variable ABCDEFG does NOT exists
+    "a%TEMP%z",       // environment variable TEMP does exists
     "a^%TEMP^%z",     // pre-escaped string for command prompt.
     "a%%TEMP%%z",     // pre-escaped string for batch files.
-    "a\"%%TEMP%%\"z", // unknown
+    "a\"%TEMP%\"z",   // environment variable TEMP in a string. Should be encoded as `"%"TEMP%""`.
   };
   size_t num_base_tests = sizeof(base_tests)/sizeof(base_tests[0]);
 
