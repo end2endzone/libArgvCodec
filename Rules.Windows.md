@@ -81,7 +81,7 @@ Note: The character sequence `\^"` can also be visible outside a string.
 | "a ^< b" c   | a ^< b  | c       |         |
 
 Exception:
-The `%` character cannot be escaped when inside a string. To prevent environment string expansion with the `%` character (for example `%TEMP%`), the string can be closed right after the `%` character. The following characters should be inserted next to the . For example, the character sequence `%TEMP%` in a string must be escaped as `"%"TEMP%""`.
+The `%` character cannot be escaped when inside a string. To prevent environment string expansion with the `%` character (for example `%TEMP%`), the string can be closed right after the `%` character. The following characters should be inserted in the same string. For example, the character sequence `%TEMP%` in a string must be escaped as `"%"TEMP%""`.
 
 
 5. 2. Plain shell characters must be escaped with ^ when inside a caret-string or outside a string.
