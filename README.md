@@ -1,3 +1,6 @@
+![libArgvCodec logo](docs/libArgvCodec-splashscreen.jpg?raw=true)
+
+
 # libArgvCodec #
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Github Releases](https://img.shields.io/github/release/end2endzone/libargvcodec.svg)](https://github.com/end2endzone/libargvcodec/releases)
