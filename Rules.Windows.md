@@ -16,6 +16,7 @@ The list of rules applies to the Command Prompt environment of the Windows platf
 |--------------|---------|---------|---------|
 | a b c        | a       | b       | c       |
 
+
 1. 1. Double quotes character `"` starts/ends a string. The `"` character is omitted from the argument. Strings **may** not always be ended (the end of the command line may be hit without the end-of-string character). If a string is juxtaposed to another argument (not separated by a delimiter character), they are part of the same argument.
 
 | Command Line | argv[1] | argv[2] | argv[3] |
@@ -23,6 +24,7 @@ The list of rules applies to the Command Prompt environment of the Windows platf
 | "a b c"      | a b c   |         |         |
 | a" b" c      | a b     | c       |         |
 | "a "b c      | a b     | c       |         |
+
 
 2. Plain `"` character must be escaped with `\"` (or escaped with `""`) and does not ends the string. (If not escaped, they act as rule #1). Characters escaped with `\"` can be seen inside or outside strings but characters escaped with `""` can **ONLY** be seen inside a string.
 
@@ -34,6 +36,7 @@ The list of rules applies to the Command Prompt environment of the Windows platf
 | a ""b c      | a       | b       | c       |
 | """"         | "       |         |         |
 
+
 2. 1. Plain `"` character must be escaped with `\^"` when inside a caret-string.
 
 Note: The character sequence `\^"` can also be visible outside a string.
@@ -43,6 +46,7 @@ Note: The character sequence `\^"` can also be visible outside a string.
 | ^"a \^" b^" c | a " b   | c       |         |
 | ^"a \" b^" c  | a " b^  | c       |         |
 | a b\^"c       | a       | b"c     |         |
+
 
 3. Plain `\` character must be escaped with `\\` **ONLY** if they precedes a `"` character or `^"` character sequence. (string or caret-string termination).
 
@@ -57,6 +61,7 @@ Note: The character sequence `\^"` can also be visible outside a string.
 | a\\^"b c"    | a\b c   |         |         |
 | "a\\\^"b c"  | a\\\^b  | c       |         |
 
+
 4. The character sequence `^"` starts/ends a caret-string. Caret-strings are different than normal strings. Caret-strings may be ended with an unescaped `"` character. Caret-string may not be ended. If a caret-string is juxtaposed to another argument (not separated by a delimiter character), they are part of the same argument.
 
 | Command Line | argv[1] | argv[2] | argv[3] |
@@ -66,13 +71,18 @@ Note: The character sequence `\^"` can also be visible outside a string.
 | ^"a b^"c     | a bc    |         |         |
 | a^"b c^"     | ab c    |         |         |
 
-5. The following characters are special shell characters:   &,<,>,(,),|,% or !
+
+5. The following characters are special shell characters:   &,<,>,(,),| or %
     1. Shell characters must be read as plain text when inside a string.
 
 | Command Line | argv[1] | argv[2] | argv[3] |
 |--------------|---------|---------|---------|
 | "a < b" c    | a < b   | c       |         |
 | "a ^< b" c   | a ^< b  | c       |         |
+
+Exception:
+The `%` character cannot be escaped when inside a string. To prevent environment string expansion with the `%` character (for example `%TEMP%`), the string can be closed right after the `%` character. The following characters should be inserted in the same string. For example, the character sequence `%TEMP%` in a string must be escaped as `"%"TEMP%""`.
+
 
 5. 2. Plain shell characters must be escaped with ^ when inside a caret-string or outside a string.
 
@@ -90,13 +100,13 @@ For examples, the following command line examples are malformed and produces err
 * The command `^"a &whoami^"` returns `%USERDOMAIN%\%USERNAME%` (expanded). The `&` character is a shell character which makes the command `whoami` execute. This can be used as an attack. 
 
 
-
 5. 3. Non-shell characters that are escaped with `^` when inside a caret-string or outside a string must be read as plain characters.
 
 | Command Line | argv[1] | argv[2] | argv[3] |
 |--------------|---------|---------|---------|
 | ^a^b ^c      | ab      | c       |         |
 | "^a^b" ^c    | ^a^b    | c       |         |
+
 
 6. Empty arguments must be specified with `""` and must be enclosed by argument delimiters or located at the start or the end of the command line. Empty arguments can also be specified with `^"^"` or a combination of the two.
 

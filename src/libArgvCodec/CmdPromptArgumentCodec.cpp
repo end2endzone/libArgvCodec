@@ -1,3 +1,27 @@
+/**********************************************************************************
+ * MIT License
+ * 
+ * Copyright (c) 2018 Antoine Beauchamp
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *********************************************************************************/
+
 #include "libargvcodec/CmdPromptArgumentCodec.h"
 #include "rapidassist/strings.h"
 #include "rapidassist/process.h"
@@ -107,9 +131,19 @@ std::string CmdPromptArgumentCodec::encodeArgument(const char * iValue)
       //escape character
       if (isStringArgument && !isCaretStringArgument)
       {
-        //Rule 5.1.
-        //special shell character inside a string which is safe to *NOT* escape
-        escapedArg.append(1, c);
+        if (c == '%')
+        {
+          //Rule 5.1 (EXCEPTION).
+          //The `%` character cannot be escaped when inside a string. To prevent environment string expansion with the `%` character (for example `%TEMP%`), the string can be closed right after the `%` character. The following characters should be inserted in the same string. For example, the character sequence `%TEMP%` in a string must be escaped as `"%"TEMP%""`.
+          escapedArg.append(1, c);
+          escapedArg.append(1, '\"');
+        }
+        else
+        {
+          //Rule 5.1.
+          //special shell character inside a string which is safe to *NOT* escape
+          escapedArg.append(1, c);
+        }
       }
       else
       {
